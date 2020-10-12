@@ -1,0 +1,7 @@
+Dockerfile
+_lib
+.venv/
+.env/
+.pytest_cache
+build/
+.gitlab-ci.yml

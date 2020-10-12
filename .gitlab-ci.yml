@@ -1,0 +1,80 @@
+image: docker:latest
+services:
+  - docker:dind
+
+before_script:
+  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
+  - docker pull $IMG_TAG || true
+  - apk update && apk add --no-cache git bash
+
+variables:
+  IMG_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  GIT_STRATEGY: clone
+
+stages:
+  - build
+  - test
+
+
+build_image:
+  tags:
+    - docker
+  stage: build
+  script:
+    - >
+      docker build
+      --build-arg STORAGE_HOST
+      --build-arg BUCKET_NAME
+      --build-arg STORAGE_REMOTE
+      --cache-from $IMG_TAG
+      -t $IMG_TAG
+      .
+    - docker push $IMG_TAG
+  after_script:
+    - docker container prune -f || true
+    - docker image prune -f || true
+
+
+read_notebooks:
+  tags:
+    - docker
+  stage: test
+  script:
+    - > 
+      docker run -i --rm
+      $IMG_TAG 
+      /bin/bash -c "poetry run nbdev_read_nbs"
+
+
+check_notebooks_clean:
+  tags:
+    - docker
+  stage: test
+  script:
+    - >
+      docker run -i --rm
+      $IMG_TAG
+      /bin/bash -c "./scripts/check_clean_nb.sh"
+
+
+check_diff_lib_nbs:
+  tags:
+    - docker
+  stage: test
+  script:
+    - > 
+      docker run -i --rm
+      $IMG_TAG
+      /bin/bash -c "./scripts/check_lib_diff.sh"
+
+
+run_tests:
+  tags:
+    - docker
+  stage: test
+  script:
+    - >
+      docker run -i --rm
+      --env MASTER_TOKEN=$MASTER_TOKEN
+      $IMG_TAG
+      /bin/bash -c "./scripts/test_nb.sh"
