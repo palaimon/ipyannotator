@@ -54,4 +54,4 @@ jobs:
         run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup #  todo (AP): fix img-tag
 
       - name: Run image in container
-        run: docker run --rm ipyannotator:github-setup /bin/bash -c "poetry run nbdev_read_nbs"
+        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "poetry run nbdev_read_nbs"
