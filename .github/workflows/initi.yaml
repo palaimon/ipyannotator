@@ -41,3 +41,17 @@ jobs:
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+  test_1:
+    name: "Read Notebooks"
+    runs-on: ubuntu-latest
+
+    steps:
+      - needs: ghr_push
+      - name: Log into GCR
+        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Pull image from DockerHub
+        run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup #  todo (AP): fix img-tag
+
+      - name: Run image in container
+        run: docker run --rm ipyannotsator:github-setup /bin/bash -c "poetry run nbdev_read_nbs"
