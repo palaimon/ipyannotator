@@ -114,7 +114,7 @@ jobs:
         run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup
 
       - name: Run image in container
-        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "./scripts/build_whl.sh"
+        run: docker run --rm -v $(pwd)/dist:/app/dist ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "./scripts/build_whl.sh"
 
       - name: Archive whls
         uses: actions/upload-artifact@v2
