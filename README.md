@@ -1,6 +1,6 @@
 # ipyannotator - the infinitely hackable annotation framework
 
-
+![CI-Badge](https://github.com/AlexJoz/ipyannotator/workflows/CI/badge.svg)
 
 
 ![jupytercon 2020](https://jupytercon.com/_nuxt/img/5035c8d.svg)
