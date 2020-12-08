@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ipyannotator2"
+name = "ipyannotator"
 version = "0.2.5"
 description = ""
 authors = ["Your Name <you@example.com>"]
