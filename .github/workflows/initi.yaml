@@ -132,3 +132,16 @@ jobs:
         with:
           name: dist-${{ matrix.os }}-${{ matrix.python-version }}
           path: dist-${{ matrix.os }}-${{ matrix.python-version }}
+
+  release_whl:
+    name: "Upload to pypi"
+    runs-on: ubuntu-latest
+    needs: multios_whl
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist*
+      - name: Display downloaded
+        run: ls -R
