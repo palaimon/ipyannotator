@@ -123,10 +123,12 @@ jobs:
           poetry-version: ${{ matrix.poetry-version }}
       - name: View poetry --help
         run: poetry --help
-      - name: Install annotator
+      - name: Build annotator whl
         run: poetry build -f wheel
+      - name: Rename dir
+        run: mv dist dist-${{ matrix.os }}-${{ matrix.python-version }}
       - name: Archive whls
         uses: actions/upload-artifact@v2
         with:
-          name: dist
-          path: dist/**.whl
+          name: dist-${{ matrix.os }}-${{ matrix.python-version }}
+          path: dist-${{ matrix.os }}-${{ matrix.python-version }}
