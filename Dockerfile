@@ -61,7 +61,8 @@ RUN wget -c https://downloads.kitenet.net/git-annex/linux/current/git-annex-stan
 
 ENV PATH=/git-annex.linux:$PATH
 
-RUN git-annex version
+# docker build os might not be compatible with git-annex binary
+#RUN git-annex version
 
 WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
