@@ -14,107 +14,115 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build ipyannotator image
-        run: docker build -t $IMAGE_NAME .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Log into GCR
-        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Push ipyannotator image to GCR
-        run: |
-          IMAGE_ID=ghcr.io/${{ github.repository }}/$IMAGE_NAME
-
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
-
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
-
-  test_1:
-    name: "Read Notebooks"
-    runs-on: ubuntu-latest
-    needs: ghr_push
-
-    steps:
-      - name: Log into GCR
-        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Pull image from DockerHub
-        run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup #  todo (AP): fix img-tag
-
-      - name: Run image in container
-        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "poetry run nbdev_read_nbs"
-
-  test_2:
-    name: "Check Notebooks Clean"
-    runs-on: ubuntu-latest
-    needs: ghr_push
-
-    steps:
-      - name: Log into GCR
-        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Pull image from DockerHub
-        run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup
-
-      - name: Run image in container
-        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "./scripts/check_clean_nb.sh"
-
-  test_3:
-    name: "Check Notebooks - Lib Diff"
-    runs-on: ubuntu-latest
-    needs: ghr_push
-
-    steps:
-      - name: Log into GCR
-        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Pull image from DockerHub
-        run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup
-
-      - name: Run image in container
-        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "./scripts/check_lib_diff.sh"
-
-  test_4:
-    name: "Run Notebooks tests"
-    runs-on: ubuntu-latest
-    needs: ghr_push
-
-    steps:
-      - name: Log into GCR
-        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Pull image from DockerHub
-        run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup
-
-      - name: Run image in container
-        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "./scripts/test_nb.sh"
-
-  release_whl:
-    name: "Upload to pypi"
-    runs-on: ubuntu-latest
-    needs: test_4
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - uses: abatilo/actions-poetry@v2.0.0
+      - name: Cache Docker layers
+        uses: actions/cache@v2
         with:
-            poetry-version: 1.0.5
-      - name: Upload
-        run: poetry publish --build -r palaimon -u $POETRY_HTTP_BASIC_PYPI_USERNAME -p $POETRY_HTTP_BASIC_PYPI_PASSWORD
-        env:
-          POETRY_HTTP_BASIC_PYPI_USERNAME: ${{ secrets.POETRY_HTTP_BASIC_PYPI_USERNAME }}
-          POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.POETRY_HTTP_BASIC_PYPI_PASSWORD }}
-          POETRY_REPOSITORIES_PALAIMON_URL: ${{ secrets.POETRY_REPOSITORIES_PALAIMON_URL }}
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.REP_PAT }}
+
+     -  name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+#          push: ${{ github.event_name != 'pull_request' }}
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
+    - name: CheckName
+      run: echo $tagz
+      env:
+        tagz: ${{ steps.docker_meta.outputs.tags }}
+
+
+#
+#  test_1:
+#    name: "Read Notebooks"
+#    runs-on: ubuntu-latest
+#    needs: ghr_push
+#
+#    steps:
+#      - name: Log into GCR
+#        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+#
+#      - name: Pull image from DockerHub
+#        run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup #  todo (AP): fix img-tag
+#
+#      - name: Run image in container
+#        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "poetry run nbdev_read_nbs"
+#
+#  test_2:
+#    name: "Check Notebooks Clean"
+#    runs-on: ubuntu-latest
+#    needs: ghr_push
+#
+#    steps:
+#      - name: Log into GCR
+#        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+#
+#      - name: Pull image from DockerHub
+#        run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup
+#
+#      - name: Run image in container
+#        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "./scripts/check_clean_nb.sh"
+#
+#  test_3:
+#    name: "Check Notebooks - Lib Diff"
+#    runs-on: ubuntu-latest
+#    needs: ghr_push
+#
+#    steps:
+#      - name: Log into GCR
+#        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+#
+#      - name: Pull image from DockerHub
+#        run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup
+#
+#      - name: Run image in container
+#        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "./scripts/check_lib_diff.sh"
+#
+#  test_4:
+#    name: "Run Notebooks tests"
+#    runs-on: ubuntu-latest
+#    needs: ghr_push
+#
+#    steps:
+#      - name: Log into GCR
+#        run: echo "${{ secrets.REP_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+#
+#      - name: Pull image from DockerHub
+#        run: docker pull ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup
+#
+#      - name: Run image in container
+#        run: docker run --rm ghcr.io/alexjoz/ipyannotator/ipyannotator:github-setup /bin/bash -c "./scripts/test_nb.sh"
+#
+#  release_whl:
+#    name: "Upload to pypi"
+#    runs-on: ubuntu-latest
+#    needs: test_4
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-python@v2
+#      - uses: abatilo/actions-poetry@v2.0.0
+#        with:
+#            poetry-version: 1.0.5
+#      - name: Upload
+#        run: poetry publish --build -r palaimon -u $POETRY_HTTP_BASIC_PYPI_USERNAME -p $POETRY_HTTP_BASIC_PYPI_PASSWORD
+#        env:
+#          POETRY_HTTP_BASIC_PYPI_USERNAME: ${{ secrets.POETRY_HTTP_BASIC_PYPI_USERNAME }}
+#          POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.POETRY_HTTP_BASIC_PYPI_PASSWORD }}
+#          POETRY_REPOSITORIES_PALAIMON_URL: ${{ secrets.POETRY_REPOSITORIES_PALAIMON_URL }}
