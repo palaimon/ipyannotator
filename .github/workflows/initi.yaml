@@ -31,22 +31,21 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.REP_PAT }}
-
-     -  name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./Dockerfile
+      -  name: Build and push
+         uses: docker/build-push-action@v2
+         with:
+           context: .
+           file: ./Dockerfile
 #          push: ${{ github.event_name != 'pull_request' }}
-          push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
-    - name: CheckName
-      run: echo $tagz
-      env:
-        tagz: ${{ steps.docker_meta.outputs.tags }}
+           push: true
+           tags: ${{ steps.docker_meta.outputs.tags }}
+           labels: ${{ steps.docker_meta.outputs.labels }}
+           cache-from: type=local,src=/tmp/.buildx-cache
+           cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
+      - name: CheckName
+        run: echo $tagz
+        env:
+          tagz: ${{ steps.docker_meta.outputs.tags }}
 
 
 #
