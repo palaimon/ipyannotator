@@ -81,7 +81,7 @@ jobs:
         run: docker pull ${{ steps.prep.outputs.tags }}
 
       - name: Run image in container
-        run: docker run --rm docker pull ${{ steps.prep.outputs.tags }} /bin/bash -c "poetry run nbdev_read_nbs"
+        run: docker run --rm ${{ steps.prep.outputs.tags }} /bin/bash -c "poetry run nbdev_read_nbs"
 
   test_2:
     name: "Check Notebooks Clean"
@@ -176,7 +176,7 @@ jobs:
   release_whl:
     name: "Upload to pypi"
     runs-on: ubuntu-latest
-    needs: test_4
+    needs: [test_1, test_2, test_3, test_4]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
