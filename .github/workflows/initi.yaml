@@ -173,19 +173,19 @@ jobs:
       - name: Run image in container
         run: docker run --rm ${{ steps.prep.outputs.tags }} /bin/bash -c "./scripts/test_nb.sh"
 
-  release_whl:
-    name: "Upload to pypi"
-    runs-on: ubuntu-latest
-    needs: [test_1, test_2, test_3, test_4]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - uses: abatilo/actions-poetry@v2.0.0
-        with:
-            poetry-version: 1.0.5
-      - name: Upload
-        run: poetry publish --build -r palaimon -u $POETRY_HTTP_BASIC_PYPI_USERNAME -p $POETRY_HTTP_BASIC_PYPI_PASSWORD
-        env:
-          POETRY_HTTP_BASIC_PYPI_USERNAME: ${{ secrets.POETRY_HTTP_BASIC_PYPI_USERNAME }}
-          POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.POETRY_HTTP_BASIC_PYPI_PASSWORD }}
-          POETRY_REPOSITORIES_PALAIMON_URL: ${{ secrets.POETRY_REPOSITORIES_PALAIMON_URL }}
+#  release_whl:
+#    name: "Upload to pypi"
+#    runs-on: ubuntu-latest
+#    needs: [test_1, test_2, test_3, test_4]
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-python@v2
+#      - uses: abatilo/actions-poetry@v2.0.0
+#        with:
+#            poetry-version: 1.0.5
+#      - name: Upload
+#        run: poetry publish --build -r palaimon -u $POETRY_HTTP_BASIC_PYPI_USERNAME -p $POETRY_HTTP_BASIC_PYPI_PASSWORD
+#        env:
+#          POETRY_HTTP_BASIC_PYPI_USERNAME: ${{ secrets.POETRY_HTTP_BASIC_PYPI_USERNAME }}
+#          POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.POETRY_HTTP_BASIC_PYPI_PASSWORD }}
+#          POETRY_REPOSITORIES_PALAIMON_URL: ${{ secrets.POETRY_REPOSITORIES_PALAIMON_URL }}
