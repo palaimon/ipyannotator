@@ -1,7 +1,7 @@
-name: 'ImageTager'
-description: 'Construct docker image tag based on current repo'
+name: 'ImageTagger'
+description: 'Construct docker image tag based on current branch name'
 outputs:
-  tagz:
+  tag:
     description: "Image tag"
     value: ${{ steps.imtag-generator.outputs.tags }}
 runs:
