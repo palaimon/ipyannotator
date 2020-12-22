@@ -10,18 +10,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-#      todo: make action?
       - name: Prepare
         id: prep
-        run: |
-          GHCR_IMAGE=ghcr.io/${{ github.repository  }}
-          # Change all uppercase to lowercase
-          GHCR_IMAGE=$(echo $GHCR_IMAGE | tr '[A-Z]' '[a-z]')
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          TAGS="${GHCR_IMAGE}:${VERSION}"
-          echo ::set-output name=ghcr_image::${GHCR_IMAGE}
-          echo ::set-output name=tags::${TAGS}
+        uses: ./.github/actions/docker-image-tag
+      - run: echo gotimtag ${{ steps.prep.outputs.tagz }}
+        shell: bash
+#        run: |
+#          GHCR_IMAGE=ghcr.io/${{ github.repository  }}
+#          # Change all uppercase to lowercase
+#          GHCR_IMAGE=$(echo $GHCR_IMAGE | tr '[A-Z]' '[a-z]')
+#          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+#          TAGS="${GHCR_IMAGE}:${VERSION}"
+#          echo ::set-output name=ghcr_image::${GHCR_IMAGE}
+#          echo ::set-output name=tags::${TAGS}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1

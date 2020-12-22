@@ -1,0 +1,21 @@
+name: 'ImageTager'
+description: 'Construct docker image tag based on current repo'
+outputs:
+  tagz:
+    description: "Image tag"
+    value: ${{ steps.imtag-generator.outputs.tags }}
+runs:
+  using: "composite"
+  steps:
+    - run: echo Hello from action!
+      shell: bash
+    - id: imtag-generator
+      run: |
+          GHCR_IMAGE=ghcr.io/${{ github.repository  }}
+          # Change all uppercase to lowercase
+          GHCR_IMAGE=$(echo $GHCR_IMAGE | tr '[A-Z]' '[a-z]')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          TAGS="${GHCR_IMAGE}:${VERSION}"
+          echo "::set-output name=ghcr_image::${GHCR_IMAGE}"
+          echo "::set-output name=tags::${TAGS}"
+      shell: bash
