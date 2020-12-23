@@ -50,6 +50,7 @@ jobs:
     needs: ghr_push
 
     steps:
+      - uses: actions/checkout@v2
       - name: Prepare
         id: prep
         uses: ./.github/actions/docker-image-tag
@@ -73,6 +74,7 @@ jobs:
     needs: ghr_push
 
     steps:
+      - uses: actions/checkout@v2
       - name: Prepare
         id: prep
         uses: ./.github/actions/docker-image-tag
@@ -96,6 +98,7 @@ jobs:
     needs: ghr_push
 
     steps:
+      - uses: actions/checkout@v2
       - name: Prepare
         id: prep
         uses: ./.github/actions/docker-image-tag
@@ -119,6 +122,7 @@ jobs:
     needs: ghr_push
 
     steps:
+      - uses: actions/checkout@v2
       - name: Prepare
         id: prep
         uses: ./.github/actions/docker-image-tag
