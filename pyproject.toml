@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ipyannotator"
-version = "0.2.8"
+version = "0.2.10"
 description = "The infinitely hackable annotation framework"
 authors = ["palaimon.io <oss@mail.palaimon.io>"]
 license = "Apache License 2.0"
@@ -27,6 +27,6 @@ nbdime = "^2.0.0"
 #voila = { git = "https://github.com/voila-dashboards/voila.git", rev = "e23fcca926584a5aa837c3354804aa2d761edda3" }
 
 [build-system]
-requires = ["poetry>=1.0"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
