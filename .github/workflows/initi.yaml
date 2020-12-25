@@ -44,7 +44,7 @@ jobs:
            cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
 
 
-  test_1:
+  read_notebooks:
     name: "Read Notebooks"
     runs-on: ubuntu-latest
     needs: ghr_push
@@ -68,7 +68,7 @@ jobs:
       - name: Run image in container
         run: docker run --rm ${{ steps.prep.outputs.tag }} /bin/bash -c "poetry run nbdev_read_nbs"
 
-  test_2:
+  check_notebooks_clean:
     name: "Check Notebooks Clean"
     runs-on: ubuntu-latest
     needs: ghr_push
@@ -86,13 +86,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.REP_PAT }}
 
-      - name: Pull image from DockerHub
+      - name: Pull image from GitHub Container Registry
         run: docker pull ${{ steps.prep.outputs.tag }}
 
-      - name: Run image in container
+      - name: Run image [Check Notebooks Clean]
         run: docker run --rm ${{ steps.prep.outputs.tag }} /bin/bash -c "./scripts/check_clean_nb.sh"
 
-  test_3:
+  check_diff_lib_nbs:
     name: "Check Notebooks - Lib Diff"
     runs-on: ubuntu-latest
     needs: ghr_push
@@ -110,13 +110,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.REP_PAT }}
 
-      - name: Pull image from DockerHub
+      - name: Pull image from GitHub Container Registry
         run: docker pull ${{ steps.prep.outputs.tag }}
 
-      - name: Run image in container
+      - name: Run image [Check lib diff]
         run: docker run --rm ${{ steps.prep.outputs.tag }} /bin/bash -c "./scripts/check_lib_diff.sh"
 
-  test_4:
+  run_tests:
     name: "Run Notebooks tests"
     runs-on: ubuntu-latest
     needs: ghr_push
@@ -134,8 +134,8 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.REP_PAT }}
 
-      - name: Pull image from DockerHub
+      - name: Pull image from GitHub Container Registry
         run: docker pull ${{ steps.prep.outputs.tag }}
 
-      - name: Run image in container
+      - name: Run image [Execute nb tests]
         run: docker run --rm ${{ steps.prep.outputs.tag }} /bin/bash -c "./scripts/test_nb.sh"
