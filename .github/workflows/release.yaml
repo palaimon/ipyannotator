@@ -1,9 +1,35 @@
-name: Manual Release
+name: WHL
 
-on: [workflow_dispatch]
+on: [push, workflow_dispatch]
 
 jobs:
+  all_tests:
+    name "Run NB Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.1.0
+      - name: Install ipyannotator
+        run: poetry install
+
+      - name: Read Notebooks
+        run: poetry run nbdev_read_nbs
+
+      - name: Check Notebooks Clean
+        run: ./scripts/check_clean_nb.sh
+
+      - name: Check Notebooks - Lib Diff
+        run: ./scripts/check_lib_diff.sh
+
+      - name: Run Notebooks tests
+        run: poetry run nbdev_test_nbs
+
+
   release_whl:
+    needs: all_tests
     name: "Upload to pypi"
     runs-on: ubuntu-latest
     steps:
@@ -11,7 +37,7 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: abatilo/actions-poetry@v2.0.0
         with:
-            poetry-version: 1.0.5
+            poetry-version: 1.1.0
       - name: Upload
         run: poetry publish --build -r palaimon -u $POETRY_HTTP_BASIC_PYPI_USERNAME -p $POETRY_HTTP_BASIC_PYPI_PASSWORD
         env:
