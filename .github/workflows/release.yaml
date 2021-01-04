@@ -1,0 +1,47 @@
+name: CI
+
+on: [push, workflow_dispatch]
+
+jobs:
+  all_tests:
+    name: "Run NB Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.1.0
+      - name: Install ipyannotator
+        run: poetry install
+
+      - name: Read Notebooks
+        run: poetry run nbdev_read_nbs
+
+      - name: Check Notebooks Clean
+        run: ./scripts/check_clean_nb.sh
+
+      - name: Check Notebooks - Lib Diff
+        run: ./scripts/check_lib_diff.sh
+
+      - name: Run Notebooks tests
+        run: poetry run nbdev_test_nbs
+
+
+  release_whl:
+    needs: all_tests
+    name: "Upload to pypi"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: abatilo/actions-poetry@v2.0.0
+        with:
+            poetry-version: 1.1.0
+      - name: Upload
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        run: poetry publish --build -r palaimon -u $POETRY_HTTP_BASIC_PYPI_USERNAME -p $POETRY_HTTP_BASIC_PYPI_PASSWORD
+        env:
+          POETRY_HTTP_BASIC_PYPI_USERNAME: ${{ secrets.POETRY_HTTP_BASIC_PYPI_USERNAME }}
+          POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.POETRY_HTTP_BASIC_PYPI_PASSWORD }}
+          POETRY_REPOSITORIES_PALAIMON_URL: ${{ secrets.POETRY_REPOSITORIES_PALAIMON_URL }}
