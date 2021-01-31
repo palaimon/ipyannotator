@@ -45,7 +45,7 @@ RUN git clone git://github.com/yyuu/pyenv.git .pyenv
 
 RUN pyenv install 3.7.3 -f && pyenv global 3.7.3
 
-ENV POETRY_VERSION=1.0.5             \
+ENV POETRY_VERSION=1.1.0             \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     POETRY_NO_INTERACTION=1          \
     POETRY_VIRTUALENVS_CREATE=false  \
