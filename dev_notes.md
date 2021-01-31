@@ -158,3 +158,12 @@ For clean (re)install:
  
  `nbdime extensions --enable [--sys-prefix/--user/--system]`
  
+ <HR>
+
+To automatically install `voila` together with `nbdev` an old revision can be used, however this is not included in current `pyproject.toml` file to avoid a very time consuming `git clone`, which slows down the poetry dependency resolution dramatically.
+
+```toml
+voila = { git = "https://github.com/voila-dashboards/voila.git", rev = "e23fcca926584a5aa837c3354804aa2d761edda3" }
+```
+
+Manual workaround with viola app described in `README.md`.

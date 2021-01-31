@@ -2,7 +2,7 @@
 
 __all__ = ['ImageButton']
 
-# Cell
+# Internal Cell
 from functools import partial
 
 import base64
@@ -15,6 +15,10 @@ from traitlets import Bool, Unicode, HasTraits, Bytes, link, dlink, observe
 # Cell
 
 class ImageButton(VBox, HasTraits):
+    """
+    Represents simple image with lable and toggle button functionality.
+
+    """
     debug_output = Output(layout={'border': '1px solid black'})
     active = Bool()
     image_path = Unicode()
