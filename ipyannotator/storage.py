@@ -2,7 +2,7 @@
 
 __all__ = ['AnnotationStorage']
 
-# Internal Cell
+# Cell
 
 import os
 import json
@@ -13,15 +13,24 @@ from collections.abc import MutableMapping
 
 # Internal Cell
 
-def setup_project_paths(project_path:Path, image_dir='pics', label_dir=None):
-    assert project_path.exists(), "Project path should point to " \
+def setup_project_paths(project_path:Path, file_name=None, image_dir='pics', label_dir=None, results_dir=None):
+    assert project_path.exists(), "WARNING: Project path should point to " \
                                        "existing directory"
-    assert project_path.is_dir(), "Project path should point to " \
+    assert project_path.is_dir(), "WARNING: Project path should point to " \
                                        "existing directory"
     im_dir = Path(project_path, image_dir)
-    results_dir = Path(project_path, 'results')
+
+    if file_name is not None:
+        annotation_file_path = Path(file_name)
+        results_dir = annotation_file_path.parent
+        print(f"WARNING: `results_dir` is deduced from `file_name` path: {results_dir}")
+    else:
+        results_dir = Path(project_path, 'results') if results_dir is None else Path(project_path, results_dir)
+        annotation_file_path = Path(results_dir, 'annotations.json')
+        if annotation_file_path.is_file():
+            print(f"WARNING: Annotations file already exists in {results_dir}!\n         If you want to create annotations from scratch - use empty dir isntead.")
+
     results_dir.mkdir(parents=True, exist_ok=True)
-    annotation_file_path = Path(results_dir, 'annotations.json')
 
     project_paths = (im_dir, annotation_file_path)
 
@@ -31,12 +40,16 @@ def setup_project_paths(project_path:Path, image_dir='pics', label_dir=None):
     return project_paths
 
 # Internal Cell
+import glob
 
 def get_image_list_from_folder(image_dir, strip_path=False):
     ''' Scans <image_dir> to construct list of existing images as <Path> objects
     '''
-
-    path_list = [Path(image_dir, f) for f in os.listdir(image_dir) if
+    # if no files in `image_dir` assume all images are under `class_name` directories
+    if all([Path(image_dir, f).is_dir() for f in os.listdir(image_dir)]):
+        path_list = [Path(p) for p in glob.glob(f'{image_dir}/*/*')]
+    else:
+        path_list = [Path(image_dir, f) for f in os.listdir(image_dir) if
                  os.path.isfile(os.path.join(image_dir, f))]
 
     if strip_path:
@@ -53,10 +66,13 @@ class AnnotationStorage(MutableMapping):
 
     im_paths - list of existing images as <Path> objects
 
+    dir_in_label - use parent folder name in label (`class/file.jpg`)
+
     """
-    def __init__(self, im_paths):
+    def __init__(self, im_paths, dir_in_label=False):
         self.mapping = {}
-        self.update({p.name: None for p in im_paths})
+#         self.update({os.path.join(*p.parts[-2:]) if dir_in_label else p.name: None for p in im_paths})
+        self.update({str(p): None for p in im_paths})
 
     def __getitem__(self, key):
         return self.mapping[key]

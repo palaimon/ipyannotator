@@ -153,13 +153,16 @@ class CaptureAnnotatorLogic(HasTraits):
     all_none = Bool()
 
 
-    def __init__(self, project_path, question=None, image_dir='pics', filter_files=None):
+    def __init__(self, project_path, question=None, image_dir='pics', filter_files=None, results_dir=None):
         self.project_path = Path(project_path)
-        self.image_dir, self.annotation_file_path = setup_project_paths(self.project_path, image_dir=image_dir)
+        self.image_dir, self.annotation_file_path = setup_project_paths(self.project_path, image_dir=image_dir, results_dir=results_dir)
 
         self.image_paths = sorted(get_image_list_from_folder(self.image_dir)) #todo: use sorted in storage?
+
         if filter_files:
-            self.image_paths = [p for p in self.image_paths if p.name in filter_files]
+            self.image_paths = [p for p in self.image_paths if str(p) in filter_files]
+        if not self.image_paths:
+            raise UserWarning("No image files to display! Check image_dir of filter.")
         self.current_im_num = len(self.image_paths)
         self.annotations = AnnotationStorage(self.image_paths)
         if question:
@@ -172,15 +175,14 @@ class CaptureAnnotatorLogic(HasTraits):
         state_images = self._get_state_names(self.index)
         current_state = {}
         for im_path in state_images:
-            in_name = im_path.name
-            current_state[im_path] = self.annotations.get(in_name) or {}
+            current_state[str(im_path)] = self.annotations.get(str(im_path)) or {}
         self.all_none = all(value == {'answer': False} for value in current_state.values())
         self.current_state = current_state
 
+
     def _update_annotations(self, index): # from screen
         for p, anno in self.current_state.items():
-            self.annotations[Path(p).name] = anno
-
+            self.annotations[str(p)] = anno
 
     def _save_annotations(self, *args, **kwargs): # to disk
         index = kwargs.pop('old_index', self.index)
@@ -213,7 +215,7 @@ class CaptureAnnotatorLogic(HasTraits):
         p = Path(self.image_dir, name)
         current_state = self.current_state.copy()
         if not p.is_dir():
-            current_state[p] = {'answer': not self.current_state[p].get('answer', False)}
+            current_state[str(p)] = {'answer': not self.current_state[str(p)].get('answer', False)}
             if self.all_none:
                 self.all_none = False
         else:
@@ -237,12 +239,12 @@ class CaptureAnnotator(CaptureAnnotatorGUI):
     """
 
     def __init__(self, project_path, image_dir='pics', image_width=150, image_height=150,
-                 n_rows=3, n_cols=3, question=None, filter_files=None):
+                 n_rows=3, n_cols=3, question=None, filter_files=None, results_dir=None):
 
         super().__init__(image_width, image_height, n_rows, n_cols)
 
         self._model = CaptureAnnotatorLogic(project_path, question, image_dir,
-                                           filter_files=filter_files)
+                                           filter_files=filter_files, results_dir=results_dir)
 
         self._save_btn.on_click(self._model._save_annotations)
 

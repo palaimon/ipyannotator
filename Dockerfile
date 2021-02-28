@@ -45,12 +45,18 @@ RUN git clone git://github.com/yyuu/pyenv.git .pyenv
 
 RUN pyenv install 3.7.3 -f && pyenv global 3.7.3
 
+# Poetry publish command has some bugs in handling config and env variables:
+# https://github.com/python-poetry/poetry/issues/2210
+# https://github.com/python-poetry/poetry/issues/858
+# _URL ending for repositories environment variable
+# and NO /simple/ or /legacy/ etc. endpoint for real url is a must
 ENV POETRY_VERSION=1.1.0             \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     POETRY_NO_INTERACTION=1          \
     POETRY_VIRTUALENVS_CREATE=false  \
     PYTHONUNBUFFERED=1               \
-    POETRY_HOME=/poetry
+    POETRY_HOME=/poetry              \
+    POETRY_REPOSITORIES_PALAIMON_URL=https://pypi.palaimon.io/
 
 # uses $POETRY_VERSION & $POETRY_HOME internally
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python

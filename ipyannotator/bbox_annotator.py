@@ -53,23 +53,43 @@ class BBoxAnnotatorLogic(HasTraits):
     bbox_coords = Dict()
     current_im_num = Int()
 
-    def __init__(self, project_path, image_dir='pics'):
+    def __init__(self, project_path, file_name=None, image_dir='pics', results_dir=None):
         self.project_path = Path(project_path)
-        self.image_dir, self.annotation_file_path = setup_project_paths(self.project_path, image_dir=image_dir)
-        self.image_paths = get_image_list_from_folder(self.image_dir)
+        self.image_dir, self.annotation_file_path = setup_project_paths(self.project_path,
+                                                                        file_name=file_name,
+                                                                        image_dir=image_dir,
+                                                                        results_dir=results_dir)
+
+        # select images and bboxes only from given annotatin file
+        if self.annotation_file_path.is_file():
+            with self.annotation_file_path.open() as json_file:
+                data = json.load(json_file)
+                im_names = data.keys()
+            self.image_paths = sorted(im for im in get_image_list_from_folder(self.image_dir) if str(im) in im_names)
+        else:
+            self.image_paths = sorted(get_image_list_from_folder(self.image_dir))
+
+
+        if not self.image_paths:
+            raise Exception ("!! No Images to dipslay !!")
+
         self.current_im_num = len(self.image_paths)
+
         self.annotations = AnnotationStorage(self.image_paths)
+
+        if self.annotation_file_path.exists():
+            self.annotations.load(self.annotation_file_path)
+        else:
+            self.annotations.save(self.annotation_file_path)
 
     def _update_im(self):
         self.image_path = str(self.image_paths[self.index])
 
     def _update_coords(self): # from annotations
-        im_name = self.__get_name_by_index(self.index)
-        self.bbox_coords = self.annotations.get(im_name) or {}
+        self.bbox_coords = self.annotations.get(self.image_path) or {}
 
     def _update_annotations(self, index): # from coordinates
-        im_name = self.__get_name_by_index(index)
-        self.annotations[im_name] = self.bbox_coords
+        self.annotations[str(self.image_paths[index])] = self.bbox_coords
 
     def _save_annotations(self, *args, **kwargs): # to disk
         index = kwargs.pop('old_index', self.index)
@@ -90,9 +110,6 @@ class BBoxAnnotatorLogic(HasTraits):
         self._update_im()
         self._update_coords()
 
-    def __get_name_by_index(self, idx):
-        return self.image_paths[idx].name
-
 # Cell
 
 class BBoxAnnotator(BBoxAnnotatorGUI):
@@ -106,8 +123,9 @@ class BBoxAnnotator(BBoxAnnotatorGUI):
     """
     debug_output = Output()
 
-    def __init__(self, project_path, canvas_size=(200, 400), image_dir='pics'):
-        self._model = BBoxAnnotatorLogic(project_path, image_dir=image_dir)
+    def __init__(self, project_path, canvas_size=(200, 400), file_name=None, image_dir='pics', results_dir=None):
+        self._model = BBoxAnnotatorLogic(project_path, file_name=file_name,
+                                         image_dir=image_dir, results_dir=results_dir)
 
         super().__init__(canvas_size=canvas_size)
 
