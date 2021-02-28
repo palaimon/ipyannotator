@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ipyannotator"
-version = "0.3.0"
+version = "0.4.0"
 description = "The infinitely hackable annotation framework"
 authors = ["palaimon.io <oss@mail.palaimon.io>"]
 license = "Apache License 2.0"

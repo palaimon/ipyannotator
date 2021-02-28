@@ -4,7 +4,7 @@ set -x
 
 poetry install
 
-poetry run nbdev_clean_nbs
+poetry run nbdev_clean_nbs --clear_all CLEAR_ALL
 
 MODIFIED=$(git status -uno -s | grep '.*\.ipynb')
 

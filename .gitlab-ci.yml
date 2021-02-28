@@ -2,18 +2,19 @@ image: docker:latest
 services:
   - docker:dind
 
+variables:
+  IMG_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  GIT_STRATEGY: clone
+
 before_script:
   - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
   - docker pull $IMG_TAG || true
   - apk update && apk add --no-cache git bash
 
-variables:
-  IMG_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-  GIT_STRATEGY: clone
-
 stages:
   - build
   - test
+  - release
 
 
 build_image:
@@ -78,3 +79,15 @@ run_tests:
       --env MASTER_TOKEN=$MASTER_TOKEN
       $IMG_TAG
       /bin/bash -c "./scripts/test_nb.sh"
+
+
+build_whls:
+  tags:
+    - docker
+  stage: release
+  when: manual
+  script:
+    - >
+      docker run -i --rm
+      $IMG_TAG
+      /bin/bash -c "poetry build -f wheel && poetry publish -r palaimon -u $POETRY_HTTP_BASIC_PYPI_USERNAME -p $POETRY_HTTP_BASIC_PYPI_PASSWORD"

@@ -175,10 +175,11 @@ class BBoxCanvas(HBox, traitlets.HasTraits):
 #         print('-> Observe bbox_coords: ', change)
 
         if change['new'] == self._canvas_bbox_coords: # change event from gui, do nothing
-            print('-> GUI')
+            pass
+#             print('-> GUI')
         else: # recalculate canvas coordinates as bbox was set by backend:
             self._canvas_bbox_coords = {k: v * self._image_scale for k, v in self.bbox_coords.items()}
-            print('-> Backend')
+#             print('-> Backend')
 #         print('<- Observe bbox_coords')
 
 

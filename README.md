@@ -85,8 +85,7 @@ Also check out the following notebook for a more high level overview.
     data science workflow. `nbs/08_tutorial_road_damage.ipynb`
 - Slides + recoding of jupytercon 2020 talk explaining the high level concepts / vision
     of ipyannotator. TODO add public link
-    
-    
+
 ## Jupyter lab trouble shooting
 
 For clean (re)install make sure to have all the lab extencions active:
