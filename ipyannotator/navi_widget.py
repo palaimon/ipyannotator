@@ -5,17 +5,20 @@ __all__ = ['Navi']
 # Internal Cell
 from ipywidgets import (AppLayout, Button, IntSlider,
                         HBox, Output,
-                        Layout, Label)
-from traitlets import Int, observe, link, HasTraits
+                        Layout, Label, Dropdown)
+from IPython.display import display, HTML
+from traitlets import Int, Bool, observe, link, HasTraits
 
 # Internal Cell
 
 class NaviGUI(HBox):
     max_im_number = Int(0)
+    disable_resize = Bool(True)
 
     def __init__(self):
         self._im_number_slider = IntSlider(min=0, max=self.max_im_number-1,
-                                           value=0, description='Image Nr.')
+                                           value=0, description='Image Nr.', style={'description_width': 'initial'},
+                                           layout=Layout(width='250px'))
 
         self._prev_btn = Button(description='< Previous',
                                layout=Layout(width='auto'))
@@ -23,8 +26,23 @@ class NaviGUI(HBox):
         self._next_btn = Button(description='Next >',
                                layout=Layout(width='auto'))
 
-        super().__init__(children=[self._prev_btn, self._im_number_slider, self._next_btn],
-                         layout=Layout(display='flex', flex_flow='row wrap', align_items='center'))
+        self._size_dropdown = Dropdown(options=['50', '75', '100', '150', '200'],
+                                      value='100', description="Size", disabled=self.disable_resize,
+                                      layout=Layout(width='auto'), style={'description_width': 'initial'})
+
+        self._im_number_slider.add_class("navi-class")
+        self._prev_btn.add_class("navi-class")
+        self._next_btn.add_class("navi-class")
+        self._size_dropdown.add_class("navi-class")
+
+        display(HTML("<style>.navi-class {margin-left: 5px; margin-right: 5px;}</style>"))
+        display(HTML("<style>.navi-class .widget-readout {border-style: groove; display: flex; align-items: center; justify-content: center}</style>"))
+
+        super().__init__(children=[self._prev_btn, self._im_number_slider, self._size_dropdown,
+                                   self._next_btn], layout=Layout(display='inline-flex',
+                                                                  flex_flow='row wrap',
+                                                                  align_items='center',
+                                                                  justify_content='space-around'))
 
     @observe('max_im_number')
     def check_im_num(self, change):
@@ -37,6 +55,7 @@ class NaviGUI(HBox):
 class NaviLogic(HasTraits):
     index = Int(0)
     max_im_number = Int(0)
+    disable_resize = Bool(True)
 
     def __init__(self):
         super().__init__()
@@ -52,8 +71,9 @@ class Navi(NaviGUI):
     Represents simple navigation module with slider.
 
     """
-    def __init__(self, max_im_number=1):
+    def __init__(self, max_im_number=1, disable_resize=True):
         self.max_im_number = max_im_number
+        self.disable_resize = disable_resize
 
         super().__init__()
 
@@ -65,3 +85,4 @@ class Navi(NaviGUI):
         # link slider value to button increment logic
         link((self._im_number_slider, 'value'), (self.model, 'index'))
         link((self, 'max_im_number'), (self.model, 'max_im_number'))
+        link((self, 'disable_resize'), (self.model, 'disable_resize'))
