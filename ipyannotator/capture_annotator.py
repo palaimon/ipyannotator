@@ -120,6 +120,9 @@ class CaptureAnnotatorGUI(AppLayout):
                                        indent=False,
                                        layout=Layout(width='100px'))
 
+        self._none_checkbox.add_class("none-checkbox-class")
+        display(HTML("<style>.none-checkbox-class {margin-left: 10px;}</style>"))
+
         self._controls_box = HBox([self._navi, self._save_btn, self._none_checkbox],
                                  layout=Layout(display='flex', justify_content='center', flex_flow='wrap', align_items='center'))
 

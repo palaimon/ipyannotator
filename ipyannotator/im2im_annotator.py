@@ -32,21 +32,38 @@ from .bbox_canvas import draw_img
 class ImCanvas(HBox, HasTraits):
     image_path = Unicode()
     _image_scale = Float()
+    _image_rescale = Float(1.0)
 
     def __init__(self, width=150, height=150):
 
         self._canvas = Canvas(width=width, height=height)
+        self._initial_canvas_size = self._canvas.size
 
         super().__init__([self._canvas])
 
+    def _draw_image(self, canvas_size=None):
+        self._image_scale = draw_img(self._canvas, self.image_path, clear=True,
+                                     canvas_size=canvas_size, rescale=self._image_rescale)
+
     @observe('image_path')
-    def _draw_image(self, change):
-        self._image_scale = draw_img(self._canvas, self.image_path, clear=True)
+    def _call_draw_image(self, change):
+        self._draw_image(self._initial_canvas_size)
 
     # Add value as a read-only property
     @property
     def image_scale(self):
         return self._image_scale
+
+    @observe('_image_rescale')
+    def _redraw_image(self, change):
+        # Resize canvas
+        new_width = self._initial_canvas_size[0] * self._image_rescale
+        new_height = self._initial_canvas_size[1] * self._image_rescale
+        self._canvas.size = (new_width, new_height)
+
+        # As draw_image method uses canvas current size, we pass
+        # as parameter the initial size of canvas (before rescaling it too)
+        self._draw_image(self._initial_canvas_size)
 
     def _clear_image(self):
         self._canvas.clear()
@@ -81,7 +98,7 @@ class Im2ImAnnotatorGUI(AppLayout):
 
         self._image = ImCanvas(width=im_width, height=im_height)
 
-        self._navi = Navi()
+        self._navi = Navi(disable_resize=False)
 
         self._save_btn = Button(description="Save",
                                 layout=Layout(width='auto'))
@@ -90,6 +107,8 @@ class Im2ImAnnotatorGUI(AppLayout):
         self._controls_box = HBox([self._navi, self._save_btn],
                                  layout=Layout(display='flex', justify_content='center', flex_flow='wrap', align_items='center'))
 
+        self._controls_box.add_class("im2im-annotator-class")
+        display(HTML("<style>.im2im-annotator-class {margin-top: 10px;}</style>"))
 
         self._grid_box = CaptureGrid(grid_item=ImageButton, image_width=label_width, image_height=label_height,  n_rows=n_rows, n_cols=n_cols)
 
@@ -98,6 +117,7 @@ class Im2ImAnnotatorGUI(AppLayout):
         self._labels_box = VBox(children = [self._grid_label, self._grid_box],
                                 layout=Layout(display='flex', justify_content='center', flex_wrap='wrap', align_items='center'))
 
+        self._navi._size_dropdown.observe(self.change_scale, names='value')
 
         super().__init__(header=None,
                  left_sidebar=VBox([self._image, self._controls_box], layout=Layout(display='flex', justify_content='center', flex_wrap='wrap', align_items='center')),
@@ -106,6 +126,12 @@ class Im2ImAnnotatorGUI(AppLayout):
                  footer=None,
                  pane_widths=(6, 4, 0),
                  pane_heights=(1, 1, 1))
+
+
+    def change_scale(self, change):
+        new_scale = int(change['new'])
+        if new_scale:
+            self._image._image_rescale = new_scale / 100
 
     def on_client_ready(self, callback):
         self._image.observe_client_ready(callback)

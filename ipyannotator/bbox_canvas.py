@@ -51,15 +51,20 @@ def get_image_size(path):
 
 # Internal Cell
 
-def draw_img(canvas, file, clear=False):
-    # draws resized image on canvas and returns scale used
+def draw_img(canvas, file, clear=False, canvas_size=None, rescale=1.0):
+    # draws an image on canvas, a specific size can be passed to scale image
     with hold_canvas(canvas):
         if clear:
             canvas.clear()
 
         sprite1 = Image.from_file(file)
 
-        width_canvas, height_canvas = canvas.width, canvas.height
+        if canvas_size:
+            width_canvas, height_canvas = canvas_size
+        # if no specific size is passed, use current canvas size
+        else:
+            width_canvas, height_canvas = canvas.width, canvas.height
+
         width_img, height_img = get_image_size(file)
 
         ratio_canvas = float(width_canvas) / height_canvas
@@ -73,8 +78,8 @@ def draw_img(canvas, file, clear=False):
             scale = height_canvas / height_img
 
         canvas.draw_image(sprite1, 0, 0,
-                          width=width_img * min(1, scale),
-                          height=height_img * min(1, scale))
+                          width=(width_img * min(1, scale)) * rescale,
+                          height=(height_img * min(1, scale)) * rescale)
         return scale
 
 # Internal Cell
@@ -201,7 +206,6 @@ class BBoxCanvas(HBox, traitlets.HasTraits):
 
     def _clear_bbox(self):
         self._multi_canvas[self._box_layer].clear()
-
 
     @traitlets.observe('image_path')
     def _draw_image(self, image):
