@@ -63,7 +63,11 @@ class ImageButton(VBox, HasTraits):
 
     @observe('image_path')
     def _read_image(self, change=None):
-        new_path = change['new']
+        if change:
+            new_path = change["new"]
+        else:
+            new_path = self.image_path
+
         if new_path:
             self.image.value = open(new_path, "rb").read()
             if not self.children:

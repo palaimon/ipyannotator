@@ -28,6 +28,7 @@ class CaptureGrid(GridBox, HasTraits):
     """
     debug_output = Output(layout={'border': '1px solid black'})
     current_state = Dict()
+    autogenerate_idx = Int()
 
     def __init__(self, grid_item=ImageButton, image_width=150, image_height=150,
                  n_rows=3, n_cols=3, display_label=False):
@@ -64,6 +65,10 @@ class CaptureGrid(GridBox, HasTraits):
 
         super().__init__(children=self._labels, layout=Layout(**centered_settings))
 
+    @observe('autogenerate_idx')
+    def _autogenerate_idx_changed(self, change):
+        for i in self._labels:
+            i._read_image()
 
     @debug_output.capture(clear_output=True)
     def on_state_change(self, change=None):
