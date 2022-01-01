@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-out=$(poetry -q run nbdev_diff_nbs)
+# This will build the lib from the notebooks
+poetry run nbdev_build_lib
 
-echo "DIFF LEN="${#out}
+out=$(git status -uno -s | grep '.*\.py')
 
-if [ ${#out} -gt 0 ]; then 
+# Check if the string is null/empty
+if [ -n "$out" ]; then 
     echo -e "!!! ::error:: Detected difference between the notebooks and the library";
     echo $out;
     false;

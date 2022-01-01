@@ -1,0 +1,27 @@
+{	
+	"Getting started": {
+		"Overview": "/"
+	},
+	"Tutorials": {
+		"Tutorial: Image classification": "tutorial_image_classification-dsl.html",
+		"Tutorial: Road damage": "tutorial_road_damage.html",
+		"Tutorial: BBox": "tutorial_bbox.html"
+	},
+	"Documentatinon": {
+		"Image classes": "base.html",
+		"Annotator": "annotator.html",
+		"Draw Box in Canvas": "bbox_canvas.html",
+		"Helpers": "helpers.html",
+		"Helpers for Dataset Generation": "datasets.html",
+		"Dowload datasets": "datasets_download.html",
+		"Dataset factory": "datasets_factory.html",
+		"Navi Widget": "navi_widget.html",
+		"Storage": "storage.html",
+		"Bounding Box Annotator": "bbox_annotator.html",
+		"Image button": "image_button.html",
+		"Capture annotator": "capture_annotator-dsl.html",
+		"Image to image annotator": "im2im_annotator-dsl.html",
+		"Voila example": "viola_example.html"
+	}
+}
+

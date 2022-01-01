@@ -2,51 +2,52 @@
 
 __all__ = ['ImCanvas', 'Im2ImAnnotator']
 
-# Cell
+# Internal Cell
 
-import json
-import textwrap
-import uuid
-import os
-import random
-import re
-
-from functools import partial
+import warnings
 from math import ceil
 from pathlib import Path
+from typing import Optional, Dict, List
 
-from ipycanvas import Canvas, hold_canvas
-from ipyevents import Event
-from ipywidgets import (AppLayout, VBox, HBox, Button, GridBox, Layout, Checkbox, HTML, IntText, Valid, Output, Image)
-from traitlets import Dict, Int, Float, HasTraits, observe, dlink, link, List, Unicode
+from ipycanvas import Canvas
+from ipywidgets import (AppLayout, VBox, HBox, Button, Layout, HTML, Output)
 
-from .navi_widget import Navi
-from .storage import setup_project_paths, get_image_list_from_folder, AnnotationStorage
+from .base import BaseState, AppWidgetState
+from .bbox_canvas import draw_img
 from .capture_annotator import CaptureGrid
 from .image_button import ImageButton
-from .bbox_canvas import draw_img
+from .navi_widget import Navi
+from .storage import JsonLabelStorage
 
+# Internal Cell
+
+class Im2ImState(BaseState):
+    annotations: Dict[str, Optional[List[str]]] = {}
+    disp_number: int = 9
+    question_value: str = ''
+    n_rows: Optional[int] = 3
+    n_cols: Optional[int] = 3
+    image_path: Optional[str]
+    im_width: int = 300
+    im_height: int = 300
+    label_width: int = 150
+    label_height: int = 150
 
 # Cell
 
-class ImCanvas(HBox, HasTraits):
-    image_path = Unicode()
-    _image_scale = Float()
-
-    def __init__(self, width=150, height=150):
-
+class ImCanvas(HBox):
+    def __init__(self, width=150, height=150, has_border=False):
+        self.has_border = has_border
         self._canvas = Canvas(width=width, height=height)
-
         super().__init__([self._canvas])
 
-    @observe('image_path')
-    def _draw_image(self, change):
-        self._image_scale = draw_img(self._canvas, self.image_path, clear=True)
-
-    # Add value as a read-only property
-    @property
-    def image_scale(self):
-        return self._image_scale
+    def _draw_image(self, image_path: str):
+        self._image_scale = draw_img(
+            self._canvas,
+            image_path,
+            clear=True,
+            has_border=self.has_border
+        )
 
     def _clear_image(self):
         self._canvas.clear()
@@ -59,45 +60,85 @@ class ImCanvas(HBox, HasTraits):
 # Internal Cell
 
 class Im2ImAnnotatorGUI(AppLayout):
-    def __init__(self, im_width=300, im_height=300,
-                       label_width=150, label_height=150,
-                       n_rows=None, n_cols=None, label_autosize=False):
+    def __init__(
+        self,
+        app_state: AppWidgetState,
+        im2im_state: Im2ImState,
+        label_autosize=False,
+        save_btn_clicked: callable = None,
+        grid_box_clicked: callable = None,
+        has_border: bool = False
+    ):
+        self._app_state = app_state
+        self._im2im_state = im2im_state
+        self.save_btn_clicked = save_btn_clicked
+        self.grid_box_clicked = grid_box_clicked
 
         if label_autosize:
-            if im_width <100 or im_height < 100:
-                label_width = 10
-                label_height = 10
-            elif im_width >1000 or im_height > 1000:
-                label_width = 50
-                label_height = 10
+            if self._im2im_state.im_width < 100 or self._im2im_state.im_height < 100:
+                self._im2im_state.set_quietly('label_width', 10)
+                self._im2im_state.set_quietly('label_height', 10)
+            elif self._im2im_state.im_width > 1000 or self._im2im_state.im_height > 1000:
+                self._im2im_state.set_quietly('label_width', 50)
+                self._im2im_state.set_quietly('label_height', 10)
             else:
-                label_width = min(im_width, im_height)/10
-                label_height = label_width
+                label_width = min(self._im2im_state.im_width, self._im2im_state.im_height) / 10
+                self._im2im_state.set_quietly('label_width', label_width)
+                self._im2im_state.set_quietly('label_height', label_width)
 
-        self.label_width = label_width
-        self.label_height = label_height
-        self.n_rows = n_rows
-        self.n_cols = n_cols
-
-        self._image = ImCanvas(width=im_width, height=im_height)
+        self._image = ImCanvas(
+            width=self._im2im_state.im_width,
+            height=self._im2im_state.im_height,
+            has_border=has_border
+        )
 
         self._navi = Navi()
 
         self._save_btn = Button(description="Save",
                                 layout=Layout(width='auto'))
 
+        self._controls_box = HBox(
+            [self._navi, self._save_btn],
+            layout=Layout(
+                display='flex',
+                justify_content='center',
+                flex_flow='wrap',
+                align_items='center'
+            )
+        )
 
-        self._controls_box = HBox([self._navi, self._save_btn],
-                                 layout=Layout(display='flex', justify_content='center', flex_flow='wrap', align_items='center'))
-
-
-        self._grid_box = CaptureGrid(grid_item=ImageButton, image_width=label_width, image_height=label_height,  n_rows=n_rows, n_cols=n_cols)
-
+        self._grid_box = CaptureGrid(
+            grid_item=ImageButton,
+            image_width=self._im2im_state.label_width,
+            image_height=self._im2im_state.label_height,
+            n_rows=self._im2im_state.n_rows,
+            n_cols=self._im2im_state.n_cols
+        )
 
         self._grid_label = HTML(value="<b>LABEL</b>",)
-        self._labels_box = VBox(children = [self._grid_label, self._grid_box],
-                                layout=Layout(display='flex', justify_content='center', flex_wrap='wrap', align_items='center'))
+        self._labels_box = VBox(
+            children = [self._grid_label, self._grid_box],
+            layout=Layout(
+                display='flex',
+                justify_content='center',
+                flex_wrap='wrap',
+                align_items='center')
+        )
 
+        if self._app_state.max_im_number:
+            self._set_navi_max_im_number(self._app_state.max_im_number)
+
+        if self._im2im_state.annotations:
+            self._grid_box.load_annotations_labels(self._im2im_state.annotations)
+
+        if self._im2im_state.question_value:
+            self._set_label(self._im2im_state.question_value)
+
+        self._im2im_state.subscribe(self._set_label, 'question_value')
+        self._im2im_state.subscribe(self._image._draw_image, 'image_path')
+        self._im2im_state.subscribe(self._grid_box.load_annotations_labels, 'annotations')
+        self._save_btn.on_click(self._btn_clicked)
+        self._grid_box.on_click(self._grid_clicked)
 
         super().__init__(header=None,
                  left_sidebar=VBox([self._image, self._controls_box], layout=Layout(display='flex', justify_content='center', flex_wrap='wrap', align_items='center')),
@@ -107,9 +148,26 @@ class Im2ImAnnotatorGUI(AppLayout):
                  pane_widths=(6, 4, 0),
                  pane_heights=(1, 1, 1))
 
+    def _set_navi_max_im_number(self, max_im_number: int):
+        self._navi.max_im_num = max_im_number
+
+    def _set_label(self, question_value: str):
+        self._grid_label.value = question_value
+
+    def _btn_clicked(self, *args):
+        if self.save_btn_clicked:
+            self.save_btn_clicked(*args)
+        else:
+            warnings.warn("Save button click didn't triggered any event.")
+
+    def _grid_clicked(self, event, name = None):
+        if self.grid_box_clicked:
+            self.grid_box_clicked(event, name)
+        else:
+            warnings.warn("Grid box click didn't triggered any event.")
+
     def on_client_ready(self, callback):
         self._image.observe_client_ready(callback)
-
 
 # Internal Cell
 def _label_state_to_storage_format(label_state):
@@ -121,274 +179,209 @@ def _storage_format_to_label_state(storage_format, label_names, label_dir):
 
 # Internal Cell
 
-from PIL import Image, ImageDraw, ImageFont
-
-
-def text_on_img(text="Hello", lbl_w=None, lbl_h=None, font_size=14, filepath=None):
-    font = ImageFont.truetype("lte50712.ttf", font_size)
-
-    if lbl_w is None:
-        lbl_w = 150
-    if lbl_h is None:
-        lbl_h = 150
-
-    assert(text)
-
-    text = text.upper()
-
-    ascent, descent = font.getmetrics()
-
-    text_width = font.getmask(text).getbbox()[2]
-    text_height = font.getmask(text).getbbox()[3] + descent
-
-    m_width, m_heigth = font.getsize("M")
-    char_num_per_line = lbl_w // m_width
-
-    image = Image.new(mode = "RGB", size = (lbl_w, lbl_h), color = "white")
-    draw = ImageDraw.Draw(image)
-
-    words = text.split()
-    if len(words) <= 2 and all(font.getsize(w)[0] < lbl_w for w in words):
-        t_wrapper = words
-    else:
-        t_wrapper = textwrap.wrap(text, char_num_per_line)
-
-
-    offset = (lbl_h - (m_heigth * len(t_wrapper))) // 2
-
-    for line in t_wrapper:
-        line_w, line_h = font.getsize(line)
-        draw.text(((lbl_w - line_w) // 2, offset), line, font=font, fill=(0,0,0))
-        offset += line_h
-
-    if filepath:
-        image.save(filepath)
-
-    return image
-
-
-
-
-text_on_img(text="new labe")
-
-# Internal Cell
-
-try:
-    from collections.abc import Iterable
-except ImportError:
-    from collections import Iterable
-
-def flatten(lis):
-    for item in lis:
-            if isinstance(item, Iterable) and not isinstance(item, str):
-                for x in flatten(item):
-                    yield x
-            else:
-                yield item
-
-# Internal Cell
-
-def reconstruct_class_images(label_dir, annotation_file, lbl_w=None, lbl_h=None):
-    with open(annotation_file) as json_file:
-        data = json.load(json_file)
-        unique_classes = set(flatten(data.values())) # ipyannotator format
-
-    for cl_name in unique_classes:
-        if cl_name is None:
-            cl_name = "None"
-
-        cl_im_name = f'{cl_name}.jpg' if not re.findall("([-\w]+\.(?:jpg|png|jpeg))", cl_name, re.IGNORECASE) else cl_name
-
-        text_on_img(text = os.path.splitext(cl_name)[0], filepath = label_dir/cl_im_name, lbl_w=lbl_w, lbl_h=lbl_h)
-
-# Internal Cell
-
-class Im2ImAnnotatorLogic(HasTraits):
+class Im2ImAnnotatorController:
     debug_output = Output(layout={'border': '1px solid black'})
-    index = Int(0) # state index
-    image_path = Unicode() # current image path
-    current_im_num = Int()
-    disp_number = Int() # number of labels on screen
-    label_state = Dict()
-    question_value = Unicode()
 
+    def __init__(
+        self,
+        app_state: AppWidgetState,
+        im2im_state: Im2ImState,
+        storage: JsonLabelStorage,
+        input_item=None,
+        output_item=None,
+        question=None,
+    ):
+        self._app_state = app_state
+        self._im2im_state = im2im_state
+        self._storage = storage
 
-    def __init__(self, project_path, file_name=None, question=None,
-                 image_dir='pics', step_down=False,
-                 label_dir=None, results_dir=None, lbl_w=None, lbl_h=None, n_cols=None, n_rows=None):
+        self.input_item = input_item
+        self.output_item = output_item
 
-        self.project_path = Path(project_path)
-        self.step_down = step_down
-        self.image_dir, self.annotation_file_path = setup_project_paths(self.project_path,
-                                                                        file_name=file_name,
-                                                                        image_dir=image_dir,
-                                                                        results_dir=results_dir)
+        self.images = self._storage.get_im_names(None)
+        self._app_state.max_im_number = len(self.images)
 
-        # artificialy generate labels if no class images given
-        if label_dir is None:
-            self.label_dir = Path(self.project_path, 'class_autogenerated_' + ''.join(random.sample(str(uuid.uuid4()), 5)))
-            self.label_dir.mkdir(parents=True, exist_ok=True)
+        self.labels = self._storage.get_labels()
+        self.labels_num = len(self.labels)
 
-            question = 'Autogenerated classes'
+        # Tracks the app_state.index history
+        self._last_index = 0
 
-            if self.annotation_file_path.exists():
-                reconstruct_class_images(self.label_dir, self.annotation_file_path, lbl_w=lbl_w, lbl_h=lbl_h)
-            else:
-                text_on_img(text = 'None', filepath = self.label_dir /'None.jpg', lbl_w=lbl_w, lbl_h=lbl_h)
-        else:
-            self.label_dir = Path(self.project_path, label_dir)
-
-
-        # select images and labels only given annotatin file
-        if self.annotation_file_path.is_file():
-            with self.annotation_file_path.open() as json_file:
-                data = json.load(json_file)
-                im_names = data.keys()
-                unique_labels = set(flatten(data.values()))
-            self.image_paths = sorted(im for im in get_image_list_from_folder(self.image_dir) if str(im) in im_names)
-            self.labels_files = sorted(im for im in get_image_list_from_folder(self.label_dir, strip_path=True) if str(im) in unique_labels)
-        else:
-            self.image_paths = sorted(get_image_list_from_folder(self.image_dir))
-            self.labels_files = sorted(get_image_list_from_folder(self.label_dir, strip_path=True))
-
-        if not self.image_paths:
-            raise Exception ("!! No Images to dipslay !!")
-        if not self.labels_files:
-            print("!! No labels to display !!")
-
-        self.current_im_num = len(self.image_paths)
-        labels_num = len(self.labels_files)
-
-        if n_cols is None:
-            if n_rows is None:  # automatic arrange
-                self.label_cols = 3
-                self.label_rows = ceil(labels_num / self.label_cols)
-            else:  # calc cols to show all labels
-                self.label_rows = n_rows
-                self.label_cols = ceil(labels_num / self.label_rows)
-
-        else:
-            if n_rows is None:  # calc rows to show all labels
-                self.label_cols = n_cols
-                self.label_rows = ceil(labels_num / self.label_cols)
-            else:  # user defined
-                self.label_cols = n_cols
-                self.label_rows = n_rows
-
-        if (self.label_cols * self.label_rows < labels_num):
-            print("!! Not all labels shown. Check n_cols, n_rows args !!")
-
-        self.annotations = AnnotationStorage(self.image_paths, dir_in_label=step_down)
-
-        if self.annotation_file_path.exists():
-            self.annotations.load(self.annotation_file_path)
-        else:
-            self.annotations.save(self.annotation_file_path)
+        self._im2im_state.n_rows, self._im2im_state.n_cols = self._calc_num_labels(
+            self.labels_num,
+            self._im2im_state.n_rows,
+            self._im2im_state.n_cols
+        )
 
         if question:
-            self.question_value = f'<center><p style="font-size:20px;">{question}</p></center>'
+            self._im2im_state.question_value = f'<center><p style="font-size:20px;">{question}</p></center>'
 
+    def _calc_num_labels(self, n_total: int, n_rows: int, n_cols: int) -> tuple:
+        if n_cols is None:
+            if n_rows is None:  # automatic arrange
+                label_cols = 3
+                label_rows = ceil(n_total / label_cols)
+            else:  # calc cols to show all labels
+                label_rows = n_rows
+                label_cols = ceil(n_total / label_rows)
+        else:
+            if n_rows is None:  # calc rows to show all labels
+                label_cols = n_cols
+                label_rows = ceil(n_total / label_cols)
+            else:  # user defined
+                label_cols = n_cols
+                label_rows = n_rows
+
+        if label_cols * label_rows < n_total:
+            warnings.warn("!! Not all labels shown. Check n_cols, n_rows args !!")
+
+        return label_rows, label_cols
 
     def _update_im(self):
-        self.image_path = str(self.image_paths[self.index])
-
+        # print('_update_im')
+        index = self._app_state.index
+        self._im2im_state.image_path = str(self.images[index])
 
     def _update_state(self, change=None): # from annotations
-        if not self.image_path:
+        # print('_update_state')
+        image_path = self._im2im_state.image_path
+
+        if not image_path:
             return
 
-        if self.image_path in self.annotations:
-            current_annotation = self.annotations[self.image_path]
-            self.label_state = _storage_format_to_label_state(storage_format=current_annotation or [],
-                                                              label_names=self.labels_files,
-                                                              label_dir=self.label_dir)
+        if image_path in self._storage:
+            current_annotation = self._storage.get(str(image_path)) or {}
+            self._im2im_state.annotations = _storage_format_to_label_state(
+                storage_format=current_annotation or [],
+                label_names=self.labels,
+                label_dir=self._storage.label_dir
+            )
 
+    def _update_annotations(self, index: int): # from screen
+        # print('_update_annotations')
+        image_path = self._im2im_state.image_path
+        if image_path:
+            self._storage[image_path] = _label_state_to_storage_format(
+                self._im2im_state.annotations
+            )
 
-    def _update_annotations(self, index): # from screen
-        if self.image_path:
-            self.annotations[self.image_path] = _label_state_to_storage_format(self.label_state)
-
-    def _save_annotations(self, *args, **kwargs): # to disk
-        index = kwargs.pop('old_index', self.index)
+    def save_annotations(self, index: int): # to disk
+        # print('_save_annotations')
         self._update_annotations(index)
-        self.annotations.save(self.annotation_file_path)
+        self._storage.save()
 
-
-    @observe('index')
-    def _idx_changed(self, change):
-        ''' On index change save old state
+    def idx_changed(self, index: int):
+        """ On index change save old state
             and update current state for visualisation
-        '''
-        self._save_annotations(old_index = change['old'])
+        """
+        # print('_idx_changed')
+        self._app_state.set_quietly('index', index)
+        self.save_annotations(self._last_index)
         # update new screen
         self._update_im()
         self._update_state()
-
+        self._last_index = index
 
     @debug_output.capture(clear_output=False)
-    def _handle_grid_click(self, event, name=None):
-        label_changed = Path(self.label_dir,  name)
+    def handle_grid_click(self, event, name):
+        # print('_handle_grid_click')
+        label_changed = self._storage.label_dir / name
 
         if label_changed.is_dir():
             # button without image - invalid
             return
 
         label_changed = str(label_changed)
-        current_label_state = self.label_state.copy()
+        current_label_state = self._im2im_state.annotations.copy()
 
         # inverse state
-        current_label_state[label_changed] = {'answer': not self.label_state[label_changed].get('answer', False)}
+        current_label_state[label_changed] = {
+            'answer': not self._im2im_state.annotations[label_changed].get('answer', False)
+        }
 
         # change traitlets.Dict entirely to have change events issued
-        self.label_state = current_label_state
+        self._im2im_state.annotations = current_label_state
 
-
-    def _handle_client_ready(self):
+    def handle_client_ready(self):
         self._update_im()
         self._update_state()
 
+    def to_dict(self, only_annotated: bool) -> dict:
+        return self._storage.to_dict(only_annotated)
+
 # Cell
 
-class Im2ImAnnotator(Im2ImAnnotatorGUI):
+class Im2ImAnnotator:
+    """
+    Represents image-to-image annotator.
 
-    def __init__(self, project_path, file_name=None, image_dir=None, step_down=False, label_dir=None, results_dir=None,
-                 im_width=100, im_height=100, label_width=150, label_height=150,
-                 n_rows=None, n_cols=None, label_autosize=False, question=None):
+    Gives an ability to itarate through image dataset,
+    map images with labels for classification,
+    export final annotations in json format
 
-        self._model = Im2ImAnnotatorLogic(project_path=project_path, file_name=file_name, question=question,
-                                           image_dir=image_dir, step_down=step_down,
-                                           label_dir=label_dir, results_dir=results_dir,
-                                           lbl_w=label_width, lbl_h=label_height,
-                                           n_rows=n_rows, n_cols=n_cols)
+    """
+    def __init__(self,
+        project_path: Path,
+        input_item,
+        output_item,
+        annotation_file_path,
+        n_rows=None,
+        n_cols=None,
+        label_autosize=False,
+        question=None,
+        has_border=False
+    ):
+        assert input_item, "WARNING: Provide valid Input"
+        assert output_item, "WARNING: Provide valid Output"
 
+        self.app_state = AppWidgetState(uuid=id(self))
 
-        super().__init__(im_width, im_height,
-                         label_width, label_height,
-                         n_rows = self._model.label_rows, n_cols = self._model.label_cols,
-                         label_autosize = label_autosize)
+        self.im2im_state = Im2ImState(
+            uuid=id(self),
+            **{
+                "im_height": input_item.height,
+                "im_width": input_item.width,
+                "label_width": output_item.width,
+                "label_height": output_item.height,
+                "n_rows": n_rows,
+                "n_cols": n_cols,
+            }
+        )
 
-        self._save_btn.on_click(self._model._save_annotations)
+        self.storage = JsonLabelStorage(
+            im_dir=project_path / input_item.dir,
+            label_dir=project_path / output_item.dir,
+            annotation_file_path=annotation_file_path
+        )
 
-        self._grid_box.on_click(self._model._handle_grid_click)
+        self.controller = Im2ImAnnotatorController(
+            app_state=self.app_state,
+            im2im_state=self.im2im_state,
+            storage=self.storage,
+            input_item=input_item,
+            output_item=output_item,
+            question=question,
+        )
 
-        # set correct slider max value based on image number
-        dlink((self._model, 'current_im_num'), (self._navi.model, 'max_im_number'))
+        self.view = Im2ImAnnotatorGUI(
+            app_state=self.app_state,
+            im2im_state=self.im2im_state,
+            label_autosize=label_autosize,
+            has_border=has_border
+        )
+
+        self.view.save_btn_clicked = self.controller.save_annotations
+        self.view.grid_box_clicked = self.controller.handle_grid_click
 
         # link current image index from controls to annotator model
-        link((self._navi.model, 'index'), (self._model, 'index'))
-
-        # link annotation question
-        link((self._model, 'question_value'), (self._grid_label, 'value'))
-
-        #link image vizualizer
-        dlink((self._model, 'image_path'), (self._image, 'image_path'))
+        self.view._navi.navi_callable = self.controller.idx_changed
 
         # draw current image and bbox only when client is ready
-        self.on_client_ready(self._model._handle_client_ready)
+        self.view.on_client_ready(self.controller.handle_client_ready)
 
-        # link state of model and grid box visualizer
-        link((self._model, 'label_state'), (self._grid_box, 'current_state'))
-
+    def __repr__(self):
+        display(self.view)
+        return ""
 
     def to_dict(self, only_annotated=True):
-        return self._model.annotations.to_dict(only_annotated)
+        return self.controller.to_dict(only_annotated)

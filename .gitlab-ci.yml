@@ -80,8 +80,7 @@ run_tests:
       $IMG_TAG
       /bin/bash -c "./scripts/test_nb.sh"
 
-
-build_whls:
+build_whls_release:
   tags:
     - docker
   stage: release
@@ -91,3 +90,18 @@ build_whls:
       docker run -i --rm
       $IMG_TAG
       /bin/bash -c "poetry build -f wheel && poetry publish -r palaimon -u $POETRY_HTTP_BASIC_PYPI_USERNAME -p $POETRY_HTTP_BASIC_PYPI_PASSWORD"
+
+
+build_whls_internal:
+  tags:
+    - docker
+  stage: release
+  when: manual
+  script:
+      - >
+        docker run -i $IMG_TAG
+        /bin/bash -c "
+        poetry config repositories.PYPIPALAIMON ${CI_API_V4_URL}/projects/299/packages/pypi &&
+        poetry build -f wheel &&
+        poetry publish --repository PYPIPALAIMON -u gitlab-ci-token -p ${CI_JOB_TOKEN}
+        "
