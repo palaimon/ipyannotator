@@ -53,6 +53,10 @@ def _extract_tar(tar_path, output_dir):
 
 # Cell
 def get_cifar10(output_dir):
+    """
+    Download the cifar10 dataset.
+    """
+
     output_dir = Path(output_dir)
     dataset_dir = output_dir / 'cifar10'
 
@@ -89,6 +93,9 @@ def get_cifar10(output_dir):
 
 # Cell
 def get_oxford_102_flowers(output_dir):
+    """
+    Download the oxford flowers dataset.
+    """
     output_dir = Path(output_dir)
     dataset_dir = output_dir / 'oxford-102-flowers'
 
@@ -123,6 +130,9 @@ def get_oxford_102_flowers(output_dir):
 
 # Cell
 def get_cub_200_2011(output_dir):
+    """
+    Download the CUB 200 2001 dataset.
+    """
     output_dir = Path(output_dir)
     dataset_dir = output_dir / 'CUB_200_2011'
 

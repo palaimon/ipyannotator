@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ipyannotator"
-version = "0.4.0"
+version = "0.5.0b3"
 description = "The infinitely hackable annotation framework"
 authors = ["palaimon.io <oss@mail.palaimon.io>"]
 license = "Apache License 2.0"
@@ -8,18 +8,26 @@ readme = "README.md"
 repository = "https://github.com/palaimon/ipyannotator"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 pandas = "^1.1.2"
 traitlets = '=5.0.0'
-ipycanvas = "^0.5.1"
+ipycanvas = "0.6.0"
 ipyevents = "^0.8.0"
 ipykernel = "^5.3.4"
 ipywidgets = "^7.5.1"
-jupyterlab = "^2.2.8"
-twine = "^3.2.0"
-wheel = "=0.36.2"
+scikit-image = "^0.18.3"
+matplotlib = "^3.4.3"
+pydantic = "^1.8.2"
+PyPubSub = "^4.0.3"
 
 [tool.poetry.dev-dependencies]
+jupyterlab = "^3.1.12"
+# pin jupyter-client version due failing nbdev tests
+# https://stackoverflow.com/questions/66988159/nbdev-and-coroutine-object-is-not-subscriptable
+jupyter-client = "=6.1.12"
+twine = "^3.2.0"
+wheel = "=0.36.2"
+cryptography = "=3.4.8"
 nbdev = "^1.1.0"
 nbstripout = "^0.3.9"
 RISE = "^5.6"

@@ -3,21 +3,31 @@
 __all__ = ['ImageButton']
 
 # Internal Cell
-from functools import partial
-
-import base64
 from pathlib import Path
 
 from ipyevents import Event
-from ipywidgets import Image, VBox, Layout, Output, HTML, Label
-from traitlets import Bool, Unicode, HasTraits, Bytes, link, dlink, observe
+from ipywidgets import Image, VBox, Layout, Output, HTML
+from traitlets import Bool, Unicode, HasTraits, observe
 
 # Cell
 
 class ImageButton(VBox, HasTraits):
     """
-    Represents simple image with lable and toggle button functionality.
+    Represents simple image with label and toggle button functionality.
 
+    # Class methods
+
+    - clear(): Clear image infos
+
+    - on_click(p_function): Handle click events
+
+    # Class methods
+
+    - clear(): Clear image infos
+
+    - on_click(p_function): Handle click events
+
+    - reset_callbacks(): Reset event callbacks
     """
     debug_output = Output(layout={'border': '1px solid black'})
     active = Bool()
