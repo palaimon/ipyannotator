@@ -30,6 +30,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip                                                  \
     build-essential                                              \
     libffi-dev                                                   \
+	liblzma-dev                                                  \
+	lzma                                                         \
     libssl-dev                                                   \
     libbz2-dev                                                   \
     libreadline-dev                                              \
@@ -59,7 +61,7 @@ RUN pip install --upgrade pip
 ENV POETRY_VERSION=1.1.0             \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     POETRY_NO_INTERACTION=1          \
-    POETRY_VIRTUALENVS_CREATE=false  \
+    POETRY_VIRTUALENVS_CREATE=true   \
     PYTHONUNBUFFERED=1               \
     POETRY_HOME=/poetry              \
     POETRY_REPOSITORIES_PALAIMON_URL=https://pypi.palaimon.io/

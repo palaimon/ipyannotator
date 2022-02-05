@@ -11,7 +11,8 @@ from pathlib import Path
 from typing import Dict, Optional, List
 
 from IPython.core.display import display
-from ipywidgets import (AppLayout, VBox, HBox, Button, GridBox, Layout, Checkbox, HTML, IntText, Output)
+from ipywidgets import (AppLayout, VBox, HBox, Button, GridBox,
+                        Layout, Checkbox, HTML, IntText, Output)
 
 from .base import BaseState, AppWidgetState
 from .image_button import ImageButton
@@ -40,7 +41,6 @@ class CaptureGrid(GridBox):
     def __init__(self, grid_item=ImageButton, image_width=150, image_height=150,
                  n_rows=3, n_cols=3, display_label=False):
 
-
         self.image_width = image_width
         self.image_height = image_height
         self.n_rows = n_rows
@@ -49,9 +49,9 @@ class CaptureGrid(GridBox):
                                          description='screen_image_number',
                                          disabled=False)
 
-        self._labels = [grid_item(display_label=display_label,
-                                  image_width='%dpx' % self.image_width,
-                                  image_height='%dpx' % self.image_height) for _ in range(self._screen_im_number.value)]
+        self._labels = [grid_item(
+            display_label=display_label, image_width='%dpx' % self.image_width,
+            image_height='%dpx' % self.image_height) for _ in range(self._screen_im_number.value)]
 
         self.callback = None
 
@@ -102,15 +102,17 @@ class CaptureAnnotatorGUI(AppLayout):
         activated when the user clicked on the save button
     grid_box_clicked: callable
         activated when the user clicked on the grid box
-    navi_callable: callable
+    on_navi_clicked: callable
         activated when the user navigates through the annotator
     """
-    def __init__(self,
+
+    def __init__(
+        self,
         app_state: AppWidgetState,
         capture_state: CaptureState,
         save_btn_clicked: callable = None,
         grid_box_clicked: callable = None,
-        navi_callable: callable = None,
+        on_navi_clicked: callable = None,
         select_none_changed: callable = None
     ):
         self._app_state = app_state
@@ -158,7 +160,7 @@ class CaptureAnnotatorGUI(AppLayout):
 
         self._grid_label = HTML()
         self._labels_box = VBox(
-            children = [
+            children=[
                 self._grid_label,
                 self._grid_box
             ],
@@ -170,7 +172,7 @@ class CaptureAnnotatorGUI(AppLayout):
             )
         )
 
-        self._navi.navi_callable = navi_callable
+        self._navi.on_navi_clicked = on_navi_clicked
         self._save_btn.on_click(self._btn_clicked)
         self._grid_box.on_click(self._grid_clicked)
         self._none_checkbox.observe(self._none_checkbox_changed, 'value')
@@ -189,13 +191,14 @@ class CaptureAnnotatorGUI(AppLayout):
         self._app_state.subscribe(self._set_navi_max_im_number, 'max_im_number')
         self._capture_state.subscribe(self._grid_box.load_annotations_labels, 'annotations')
 
-        super().__init__(header=None,
-                 left_sidebar=None,
-                 center=self._labels_box,
-                 right_sidebar=None,
-                 footer=self._controls_box,
-                 pane_widths=(2, 8, 0),
-                 pane_heights=(1, 4, 1))
+        super().__init__(
+            header=None,
+            left_sidebar=None,
+            center=self._labels_box,
+            right_sidebar=None,
+            footer=self._controls_box,
+            pane_widths=(2, 8, 0),
+            pane_heights=(1, 4, 1))
 
     def _set_none_checkbox(self, all_none: bool):
         self._none_checkbox.value = all_none
@@ -217,7 +220,7 @@ class CaptureAnnotatorGUI(AppLayout):
         if self._select_none_changed:
             self._select_none_changed(change)
 
-    def _grid_clicked(self, event, name = None):
+    def _grid_clicked(self, event, name=None):
         if self._grid_box_clicked:
             self._grid_box_clicked(event, name)
         else:
@@ -264,7 +267,8 @@ class CaptureAnnotationStorage:
 class CaptureAnnotatorController:
     debug_output = Output(layout={'border': '1px solid black'})
 
-    def __init__(self,
+    def __init__(
+        self,
         app_state: AppWidgetState,
         capture_state: CaptureState,
         storage: CaptureAnnotationStorage,
@@ -289,7 +293,8 @@ class CaptureAnnotatorController:
         self.current_im_number = len(self.images)
 
         if question:
-            self._capture_state.question_value = f'<center><p style="font-size:20px;">{question}</p></center>'
+            self._capture_state.question_value = ('<center><p style="font-size:20px;"'
+                                                  f'>{question}</p></center>')
 
         self.update_state(self._capture_state.disp_number)
         self._calc_screens_num(self._capture_state.disp_number)
@@ -310,7 +315,7 @@ class CaptureAnnotatorController:
             value == {'answer': False} for value in state_images.values()
         )
 
-    def save_annotations(self, index: int): # to disk
+    def save_annotations(self, index: int):  # to disk
         state_images = self._capture_state.annotations
 
         self._storage.update_annotations(state_images)
@@ -359,7 +364,8 @@ class CaptureAnnotatorController:
 
     def select_none(self, change: dict):
         if self._capture_state.all_none:
-            self._capture_state.annotations = {p: {'answer': False} for p in self._capture_state.annotations}
+            self._capture_state.annotations = {p: {
+                'answer': False} for p in self._capture_state.annotations}
 
 # Cell
 
@@ -374,7 +380,9 @@ class CaptureAnnotator:
 
     """
 #     @debug_output.capture(clear_output=True)
-    def __init__(self,
+
+    def __init__(
+        self,
         project_path: Path,
         input_item,
         output_item,
@@ -431,10 +439,10 @@ class CaptureAnnotator:
 
         self.view = CaptureAnnotatorGUI(
             capture_state=self.capture_state,
-            app_state = self.app_state,
+            app_state=self.app_state,
             save_btn_clicked=self.controller.save_annotations,
             grid_box_clicked=self.controller.handle_grid_click,
-            navi_callable=self.controller.idx_changed,
+            on_navi_clicked=self.controller.idx_changed,
             select_none_changed=self.controller.select_none
         )
 

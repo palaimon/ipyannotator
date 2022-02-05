@@ -1,0 +1,12 @@
+[MASTER]
+disable=
+    C0114, # missing-module-docstring
+    C0115, # missing-class-docstring
+    C0116, # missing-function-docstring
+    C0304, # final newline missing
+    C0103, # snake_case naming style
+    E1101, # ToDo: opencv quick fix, should be removed again
+
+ignore=
+    _nbdev.py
+

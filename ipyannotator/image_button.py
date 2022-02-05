@@ -84,7 +84,6 @@ class ImageButton(VBox, HasTraits):
             #do not display image widget
             self.children = []
 
-
     @observe('label_value')
     def _read_label(self, change=None):
         new_label = change['new']

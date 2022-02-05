@@ -4,18 +4,21 @@ __all__ = ['Tutorial']
 
 # Internal Cell
 
+import pandas as pd
+
 try:
     from collections.abc import Iterable
 except ImportError:
     from collections import Iterable
 
+
 def flatten(lis):
     for item in lis:
-            if isinstance(item, Iterable) and not isinstance(item, str):
-                for x in flatten(item):
-                    yield x
-            else:
-                yield item
+        if isinstance(item, Iterable) and not isinstance(item, str):
+            for x in flatten(item):
+                yield x
+        else:
+            yield item
 
 # Internal Cell
 import textwrap
@@ -39,15 +42,10 @@ def text_on_img(text="Hello", lbl_w=None, lbl_h=None, font_size=14, filepath=Non
 
     text = text.upper()
 
-    ascent, descent = font.getmetrics()
-
-    text_width = font.getmask(text).getbbox()[2]
-    text_height = font.getmask(text).getbbox()[3] + descent
-
     m_width, m_heigth = font.getsize("M")
     char_num_per_line = lbl_w // m_width
 
-    image = Image.new(mode = "RGB", size = (lbl_w, lbl_h), color = "white")
+    image = Image.new(mode="RGB", size=(lbl_w, lbl_h), color="white")
     draw = ImageDraw.Draw(image)
 
     words = text.split()
@@ -56,12 +54,11 @@ def text_on_img(text="Hello", lbl_w=None, lbl_h=None, font_size=14, filepath=Non
     else:
         t_wrapper = textwrap.wrap(text, char_num_per_line)
 
-
     offset = (lbl_h - (m_heigth * len(t_wrapper))) // 2
 
     for line in t_wrapper:
         line_w, line_h = font.getsize(line)
-        draw.text(((lbl_w - line_w) // 2, offset), line, font=font, fill=(0,0,0))
+        draw.text(((lbl_w - line_w) // 2, offset), line, font=font, fill=(0, 0, 0))
         offset += line_h
 
     if filepath:
@@ -74,35 +71,37 @@ import json
 import os
 import re
 
+
 def reconstruct_class_images(label_dir, annotation_file, lbl_w=None, lbl_h=None):
     with open(annotation_file) as json_file:
         data = json.load(json_file)
-        unique_classes = set(flatten(data.values())) # ipyannotator format
+        unique_classes = set(flatten(data.values()))  # ipyannotator format
 
     for cl_name in unique_classes:
         if cl_name is None:
             cl_name = "None"
 
-        cl_im_name = f'{cl_name}.jpg' if not re.findall("([-\w]+\.(?:jpg|png|jpeg))", cl_name, re.IGNORECASE) else cl_name
+        cl_im_name = f'{cl_name}.jpg' if not re.findall(r"([-\w]+\.(?:jpg|png|jpeg))",
+                                                        cl_name, re.IGNORECASE) else cl_name
 
-        text_on_img(text = os.path.splitext(cl_name)[0], filepath = label_dir/cl_im_name, lbl_w=lbl_w, lbl_h=lbl_h)
+        text_on_img(text=os.path.splitext(cl_name)[0], filepath=label_dir / cl_im_name,
+                    lbl_w=lbl_w, lbl_h=lbl_h)
 
 # Internal Cell
 import numpy as np
 
+
 def augment(sig):
     s = (sig[2] + sig[3]) // 2
-    return (sig + (np.random.rand(1, 4) * s - s/2)).astype(int).tolist()[0]
+    return (sig + (np.random.rand(1, 4) * s - s / 2)).astype(int).tolist()[0]
 
 # Cell
 
-import numpy as np
 from random import choice
+from .datasets.factory import DS as NDS
 from .datasets.factory_legacy import DS, _combine_train_test
-from .datasets.generators import sample_bbox, draw_bbox
 from pathlib import Path
 from tqdm import tqdm
-from skimage import io
 
 
 class Tutorial:
@@ -110,12 +109,14 @@ class Tutorial:
     Combines some algorithms to imitate human work with annotators
 
     """
-    def __init__(self, dataset:DS, project_path):
+
+    def __init__(self, dataset: DS, project_path):
         self.dataset = dataset
-        if self.dataset not in [DS.ARTIFICIAL_CLASSIFICATION, DS.ARTIFICIAL_DETECTION]:
+        self.project_path = project_path
+        if self.dataset not in [DS.ARTIFICIAL_CLASSIFICATION, DS.ARTIFICIAL_DETECTION,
+                                NDS.ARTIFICIAL_VIDEO]:
             _combine_train_test(project_path)
         self.all_annotations = Path(project_path) / "annotations.json"
-
 
     # Random annotator used in image_classification tutorial [create]
     def annotate_randomly(self, annotator):
@@ -129,13 +130,15 @@ class Tutorial:
         def get_random_class():
             return choice(annotator.storage.get_labels())
 
-        # assign random label for subset of all annotations to imitate human work with <label_noise> amount of errors
-        self.filterered = {x: [get_random_class()] if f_ < label_noise else y for (x, y), f_ in zip(anno_.items(), filt)}
+        # assign random label for subset of all annotations to imitate human work with
+        # <label_noise> amount of errors
+        self.filterered = {
+            x: [get_random_class()] if f_ < label_noise else y for (x, y),
+            f_ in zip(anno_.items(), filt)}
 
         # update ipyannotator's annotations bassed on previous step and save
         annotator.storage.update((k, self.filterered.get(k, [])) for k in annotator.storage.keys())
         annotator.view._save_btn.click()
-
 
     # Annotations fixer used in image_classification tutorial [improve]
     def fix_incorrect_annotations(self, annotator):
@@ -149,7 +152,6 @@ class Tutorial:
                 for k, v in i.capture_state.annotations.items():
                     i.capture_state.annotations[k] = {'answer': anno_[k] != self.filterered[k]}
                     i.view._save_btn.click()
-
 
     # Random annotator used in bbox tutorial [create]
     def add_random_bboxes(self, annotator):
@@ -168,8 +170,8 @@ class Tutorial:
 
             if f_ < bbox_noise:
                 values = []
-                assert isinstance(anno_[k], list)
-                for bbox in anno_[k]:
+                assert isinstance(anno_[k]['bbox'], list)
+                for bbox in anno_[k]['bbox']:
                     assert isinstance(bbox, dict)
                     values.append(
                         dict(
@@ -179,14 +181,13 @@ class Tutorial:
                             )
                         )
                     )
-                annotator.storage[k] = values
+                annotator.storage[k] = {'bbox': values, 'labels': [[]]}
             else:
                 annotator.storage[k] = anno_[k]
 
-        annotator.controller._update_coords(annotator.app_state.index) # update screen
+        annotator.controller._update_coords(annotator.app_state.index)  # update screen
 
-        annotator.view._save_btn.click() #save to file
-
+        annotator.view._save_btn.click()  # save to file
 
     # Annotations fixer used in bbox tutorial [improve]
     def fix_incorrect_bboxes(self, improver, creator):
@@ -206,3 +207,65 @@ class Tutorial:
                 v_cret = creator.storage.get(str(new_im_path), {})
                 improver.capture_state.annotations[k] = {'answer': v_expl != v_cret}
             improver.view._navi._next_btn.click()
+
+    def annotate_video_bboxes(self, annotator):
+        mot_gt = pd.read_csv(self.project_path / 'mot.csv')
+        mot_gt.columns = [
+            'frame',
+            'id',
+            'conf',
+            'label',
+            'vis',
+            'x',
+            'y',
+            'width',
+            'height',
+        ]
+        mot_gt.sort_values(by=['frame'])
+        mot_gt['frame'] = mot_gt['frame'].astype(str).str.zfill(4)
+        full_path = f'{self.project_path}/images'
+        mot_gt['frame'] = mot_gt['frame'].apply(lambda x: full_path + '/' + x + '.jpg')
+        mot_gt.index = mot_gt['frame']
+        mot_gt = mot_gt[mot_gt.columns.drop(['frame', 'conf', 'label', 'vis'])]
+        mot_gt = mot_gt.groupby('frame').apply(lambda x: x.to_json(orient='records'))
+        result = mot_gt.to_json(orient='index')
+        parsed = json.loads(result)
+
+        # Hacky way to occlude the video tutorial avoiding
+        # to render indexes on specific frames
+        i = 0
+        annotations = {}
+        for k, v in parsed.items():
+            bboxes = json.loads(v)
+            for bbox in bboxes:
+                tmp_bbox = bbox.copy()
+                del bbox['id']
+                bbox['id'] = self._mutate_id(tmp_bbox, i)
+
+            if i < 4 or i > 8:
+                annotations[k] = {
+                    'bbox': bboxes,
+                    'labels': [self._bbox_to_label(bbox) for bbox in bboxes]
+                }
+            else:
+                # add circle annotation to specific frames
+                bboxes = [bbox for bbox in bboxes if bbox['height'] == bbox['width']]
+                annotations[k] = {
+                    'bbox': bboxes,
+                    'labels': [['Circle'] for bbox in bboxes]
+                }
+            i += 1
+
+        with open(self.project_path / 'create_results/annotations.json', 'w+') as f:
+            json.dump(annotations, f)
+
+    def _mutate_id(self, bbox: dict, index: int) -> str:
+        id = '2'
+        if bbox['height'] == bbox['width']:
+            id = '1'
+        return id if index > 8 else str(bbox['id'])
+
+    def _bbox_to_label(self, bbox: dict):
+        if bbox['height'] == bbox['width']:
+            return ['Circle']
+        return ['Rectangle']

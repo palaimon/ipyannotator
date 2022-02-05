@@ -27,13 +27,16 @@ def construct_annotation_path(project_path=None, file_name=None, results_dir=Non
         results_dir = annotation_file_path.parent
         print(f"WARNING: `results_dir` is deduced from `file_name` path: {results_dir}")
     elif project_path is not None:
-        results_dir = Path(project_path, 'results') if results_dir is None else Path(project_path, results_dir)
+        results_dir = Path(
+            project_path, 'results') if results_dir is None else Path(project_path, results_dir)
+
         annotation_file_path = Path(results_dir, 'annotations.json')
         if annotation_file_path.is_file():
-            raise ValueError (f"Error: Annotations file already exists in {results_dir}!\n         If you want to create annotations from scratch - use empty dir!")
+            raise ValueError(f"Error: Annotations file already exists in {results_dir}!"
+                             "\n         If you want to create annotations from scratch"
+                             " - use empty dir!")
     else:
-        raise ValueError (f"You must deifne `project_path` or `file_name`!")
-
+        raise ValueError("You must define `project_path` or `file_name`!")
 
     results_dir.mkdir(parents=True, exist_ok=True)
     return annotation_file_path
@@ -41,7 +44,9 @@ def construct_annotation_path(project_path=None, file_name=None, results_dir=Non
 # Internal Cell
 from .base import validate_project_path
 
-def setup_project_paths(project_path, file_name=None, image_dir='pics', label_dir=None, results_dir=None):
+
+def setup_project_paths(project_path, file_name=None, image_dir='pics',
+                        label_dir=None, results_dir=None):
     project_path = validate_project_path(project_path)
 
     im_dir = project_path / image_dir
@@ -51,10 +56,14 @@ def setup_project_paths(project_path, file_name=None, image_dir='pics', label_di
         results_dir = annotation_file_path.parent
         print(f"WARNING: `results_dir` is deduced from `file_name` path: {results_dir}")
     else:
-        results_dir = Path(project_path, 'results') if results_dir is None else Path(project_path, results_dir)
+        results_dir = Path(
+            project_path, 'results') if results_dir is None else Path(project_path, results_dir)
+
         annotation_file_path = Path(results_dir, 'annotations.json')
         if annotation_file_path.is_file():
-            print(f"WARNING: Annotations file already exists in {results_dir}!\n         If you want to create annotations from scratch - use empty dir isntead.")
+            print(f"WARNING: Annotations file already exists in {results_dir}"
+                  "!\n         If you want to create annotations from scratch"
+                  " - use empty dir isntead.")
 
     results_dir.mkdir(parents=True, exist_ok=True)
 
@@ -68,6 +77,7 @@ def setup_project_paths(project_path, file_name=None, image_dir='pics', label_di
 # Internal Cell
 import glob
 
+
 def get_image_list_from_folder(image_dir, strip_path=False):
     ''' Scans <image_dir> to construct list of existing images as <Path> objects
     '''
@@ -76,7 +86,7 @@ def get_image_list_from_folder(image_dir, strip_path=False):
         path_list = [Path(p) for p in glob.glob(f'{image_dir}/*/*')]
     else:
         path_list = [Path(image_dir, f) for f in os.listdir(image_dir) if
-                 os.path.isfile(os.path.join(image_dir, f))]
+                     os.path.isfile(os.path.join(image_dir, f))]
 
     if strip_path:
         path_list = [p.name for p in path_list]
@@ -100,6 +110,7 @@ class MapeableStorage(MutableMapping):
 
     def __iter__(self):
         return iter(self.mapping)
+
     def __len__(self):
         return len(self.mapping)
 
@@ -120,6 +131,7 @@ class AnnotationStorage(MapeableStorage):
     im_paths - list of existing images as <Path> objects
 
     """
+
     def __init__(self, im_paths):
         super().__init__()
         self.update({str(p): None for p in im_paths})
@@ -129,7 +141,7 @@ class AnnotationStorage(MapeableStorage):
 
     def save(self, file_name):
         with open(file_name, 'w', encoding='utf-8') as f:
-            json.dump(self.mapping, f, ensure_ascii=False, sort_keys = True, indent=4)
+            json.dump(self.mapping, f, ensure_ascii=False, sort_keys=True, indent=4)
 
     def load(self, file_name):
         with open(file_name) as data_file:
@@ -137,14 +149,18 @@ class AnnotationStorage(MapeableStorage):
 
 # Internal Cell
 
-from .helpers import flatten, reconstruct_class_images, text_on_img
+from .helpers import flatten, reconstruct_class_images
+import warnings
+
 
 class JsonLabelStorage(AnnotationStorage):
-    def __init__(self, im_dir:Path, label_dir:Path, annotation_file_path):
+    def __init__(self, im_dir: Path, label_dir: Path, annotation_file_path):
         self.annotation_file_path = annotation_file_path
         self.label_dir = label_dir
 
-        self.has_annotation_file = True if annotation_file_path is not None and annotation_file_path.is_file() else False
+        self.has_annotation_file = True if (annotation_file_path is not None and
+                                            annotation_file_path.is_file()) else False
+
         print(f'has anno file: {self.has_annotation_file}')
         self.images = get_image_list_from_folder(im_dir)
 
@@ -156,7 +172,9 @@ class JsonLabelStorage(AnnotationStorage):
             if self.has_annotation_file:
                 print('reconstruct: FROM annotation file')
                 reconstruct_class_images(label_dir, annotation_file_path, lbl_w=50, lbl_h=50)
-
+            else:
+                warnings.warn("Annotation file should be provided"
+                              " to generate labels automatically!")
 
         self.labels = get_image_list_from_folder(label_dir, strip_path=True)
 
@@ -168,7 +186,6 @@ class JsonLabelStorage(AnnotationStorage):
             super().__init__(self.images)
             self.save()
 
-
     def get_im_names(self, filter_files=None):
         images = sorted(k for k in self.images if str(k) in self.keys())
 
@@ -179,16 +196,16 @@ class JsonLabelStorage(AnnotationStorage):
             images = [p for p in images if str(p) in filter_files]
 
         if not images:
-             raise UserWarning("!! No image files to display. Check filter !!")
+            raise UserWarning("!! No image files to display. Check filter !!")
         return images
 
     def get_labels(self):
         if not self.labels:
-            print("!! No labels to display !!")
+            warnings.warn("!! No labels to display !!")
             return []
         if self.has_annotation_file:
             return sorted(v for v in self.labels if str(v) in set(flatten(self.values())))
-        else: # create mod -> display all labels from folder, not json
+        else:  # create mod -> display all labels from folder, not json
             return sorted(self.labels)
 
     def save(self):
@@ -200,12 +217,13 @@ class JsonLabelStorage(AnnotationStorage):
 # Internal Cell
 
 class JsonCaptureStorage(AnnotationStorage):
-    def __init__(self, im_dir:Path, annotation_file_path):
+    def __init__(self, im_dir: Path, annotation_file_path):
         self.im_dir = im_dir
         self.annotation_file_path = annotation_file_path
 
-        self.has_annotation_file = True if annotation_file_path is not None and annotation_file_path.is_file() else False
-        self.images = get_image_list_from_folder(im_dir)
+        self.has_annotation_file = True if (annotation_file_path is not None and
+                                            annotation_file_path.is_file()) else False
+        self.images = sorted(get_image_list_from_folder(im_dir))
 
         if self.has_annotation_file:  # init from json
             self.load()
@@ -223,7 +241,7 @@ class JsonCaptureStorage(AnnotationStorage):
             images = [p for p in images if str(p) in filter_files]
 
         if not images:
-             raise UserWarning("!! No image files to display. Check filter !!")
+            raise UserWarning("!! No image files to display. Check filter !!")
         return images
 
     def save(self):
@@ -231,6 +249,10 @@ class JsonCaptureStorage(AnnotationStorage):
 
     def load(self):
         super().load(self.annotation_file_path)
+
+# Cell
+
+import sqlite3
 
 # Internal Cell
 def _list_tables(conn):
@@ -250,12 +272,12 @@ def _list_tables(conn):
 def _create_tables(conn):
     c = conn.cursor()
     query = """
-    CREATE TABLE IF NOT EXISTS data (objectID TEXT,
-                                     timestamp DATETIME DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
-                                     data JSON,
-                                     author TEXT,
-                                     PRIMARY KEY (objectId, timestamp)
-                                     );
+CREATE TABLE IF NOT EXISTS data (objectID TEXT,
+                                 timestamp DATETIME DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
+                                 data JSON,
+                                 author TEXT,
+                                 PRIMARY KEY (objectId, timestamp)
+                                );
     """
     c.execute(query)
     query = """
@@ -303,7 +325,7 @@ def _create_order_id(conn, object_id, table_name='objects'):
     INSERT INTO {}('objectID') VALUES('{}')
     """.format(table_name, object_id)
     c = conn.cursor()
-    res = c.execute(query)
+    c.execute(query)
     return _get_order_id(conn, object_id, table_name=table_name)
 
 # Cell
@@ -344,7 +366,7 @@ def _insert(conn, object_id, data: dict, table_name='data', author='author'):
         return
     c = conn.cursor()
     c.execute("insert into {}('objectID', 'author', 'data') values (?, ?, ?)".format(table_name),
-                              [object_id, author, json.dumps(data)])
+              [object_id, author, json.dumps(data)])
     conn.commit()
 
 # Cell
@@ -376,7 +398,7 @@ def _delete_last(conn, object_id, table_name='data'):
     LIMIT 1
     """.format(table_name, object_id)
     c = conn.cursor()
-    res = c.execute(query)
+    c.execute(query)
     conn.commit()
 
 # Cell
@@ -386,7 +408,7 @@ def _delete_all(conn, object_id, table_name='data'):
     WHERE objectId = '{}'
     """.format(table_name, object_id)
     c = conn.cursor()
-    res = c.execute(query)
+    c.execute(query)
     conn.commit()
 
 # Cell

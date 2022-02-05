@@ -18,10 +18,10 @@ class NaviGUI(HBox):
         )
 
         self._prev_btn = Button(description='< Previous',
-                               layout=Layout(width='auto'))
+                                layout=Layout(width='auto'))
 
         self._next_btn = Button(description='Next >',
-                               layout=Layout(width='auto'))
+                                layout=Layout(width='auto'))
 
         super().__init__(children=[self._prev_btn, self._im_number_slider, self._next_btn],
                          layout=Layout(display='flex', flex_flow='row wrap', align_items='center'))
@@ -32,6 +32,7 @@ class NaviLogic:
     """
     Acts like an intermediator between GUI and its interactions
     """
+
     def __init__(self, gui: NaviGUI):
         self._gui = gui
 
@@ -54,8 +55,7 @@ class NaviLogic:
     def check_im_num(self, max_im_number: int):
         if not hasattr(self._gui, '_im_number_slider'):
             return
-        self._gui._im_number_slider.max = max_im_number-1
-
+        self._gui._im_number_slider.max = max_im_number - 1
 
 # Cell
 
@@ -63,15 +63,16 @@ class Navi(NaviGUI):
     """
     Represents simple navigation module with slider.
 
-    navi_callable: callable
+    on_navi_clicked: callable
         A callback that runs after every navigation
         change. The callback should have, as a
         parameter the navi's index.
     """
-    def __init__(self, max_im_num: int = 1, navi_callable: callable = None):
+
+    def __init__(self, max_im_num: int = 1, on_navi_clicked: callable = None):
         super().__init__(max_im_num)
         self._max_im_num = max_im_num
-        self.navi_callable = navi_callable
+        self.on_navi_clicked = on_navi_clicked
         self._index = 0
 
         self.model = NaviLogic(gui=self)
@@ -96,7 +97,7 @@ class Navi(NaviGUI):
 
     @max_im_num.setter
     def max_im_num(self, value: int):
-        self.model.set_slider_max(value-1)
+        self.model.set_slider_max(value - 1)
         self._max_im_num = value
 
     def _next_clicked(self, *args):
@@ -121,10 +122,10 @@ class Navi(NaviGUI):
         self._prev_btn.on_click(self._prev_clicked)
 
     def _external_call(self):
-        if self.navi_callable:
-            self.navi_callable(self._index)
+        if self.on_navi_clicked:
+            self.on_navi_clicked(self._index)
         else:
             warnings.warn(
-                "Navi callable was not defined." +
+                "Navi callable was not defined."
                 "The navigation will not trigger any action!"
             )

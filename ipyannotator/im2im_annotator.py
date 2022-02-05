@@ -18,6 +18,7 @@ from .capture_annotator import CaptureGrid
 from .image_button import ImageButton
 from .navi_widget import Navi
 from .storage import JsonLabelStorage
+from IPython.display import display
 
 # Internal Cell
 
@@ -117,7 +118,7 @@ class Im2ImAnnotatorGUI(AppLayout):
 
         self._grid_label = HTML(value="<b>LABEL</b>",)
         self._labels_box = VBox(
-            children = [self._grid_label, self._grid_box],
+            children=[self._grid_label, self._grid_box],
             layout=Layout(
                 display='flex',
                 justify_content='center',
@@ -140,13 +141,16 @@ class Im2ImAnnotatorGUI(AppLayout):
         self._save_btn.on_click(self._btn_clicked)
         self._grid_box.on_click(self._grid_clicked)
 
-        super().__init__(header=None,
-                 left_sidebar=VBox([self._image, self._controls_box], layout=Layout(display='flex', justify_content='center', flex_wrap='wrap', align_items='center')),
-                 center=self._labels_box,
-                 right_sidebar=None,
-                 footer=None,
-                 pane_widths=(6, 4, 0),
-                 pane_heights=(1, 1, 1))
+        super().__init__(
+            header=None,
+            left_sidebar=VBox([self._image, self._controls_box],
+                              layout=Layout(display='flex', justify_content='center',
+                                            flex_wrap='wrap', align_items='center')),
+            center=self._labels_box,
+            right_sidebar=None,
+            footer=None,
+            pane_widths=(6, 4, 0),
+            pane_heights=(1, 1, 1))
 
     def _set_navi_max_im_number(self, max_im_number: int):
         self._navi.max_im_num = max_im_number
@@ -160,7 +164,7 @@ class Im2ImAnnotatorGUI(AppLayout):
         else:
             warnings.warn("Save button click didn't triggered any event.")
 
-    def _grid_clicked(self, event, name = None):
+    def _grid_clicked(self, event, name=None):
         if self.grid_box_clicked:
             self.grid_box_clicked(event, name)
         else:
@@ -175,7 +179,8 @@ def _label_state_to_storage_format(label_state):
 
 # Internal Cell
 def _storage_format_to_label_state(storage_format, label_names, label_dir):
-    return {str(Path(label_dir)/label): {'answer': label in storage_format} for label in label_names}
+    return {str(Path(label_dir) / label): {
+        'answer': label in storage_format} for label in label_names}
 
 # Internal Cell
 
@@ -214,7 +219,8 @@ class Im2ImAnnotatorController:
         )
 
         if question:
-            self._im2im_state.question_value = f'<center><p style="font-size:20px;">{question}</p></center>'
+            self._im2im_state.question_value = (f'<center><p style="font-size:20px;">'
+                                                f'{question}</p></center>')
 
     def _calc_num_labels(self, n_total: int, n_rows: int, n_cols: int) -> tuple:
         if n_cols is None:
@@ -242,7 +248,7 @@ class Im2ImAnnotatorController:
         index = self._app_state.index
         self._im2im_state.image_path = str(self.images[index])
 
-    def _update_state(self, change=None): # from annotations
+    def _update_state(self, change=None):  # from annotations
         # print('_update_state')
         image_path = self._im2im_state.image_path
 
@@ -257,7 +263,7 @@ class Im2ImAnnotatorController:
                 label_dir=self._storage.label_dir
             )
 
-    def _update_annotations(self, index: int): # from screen
+    def _update_annotations(self, index: int):  # from screen
         # print('_update_annotations')
         image_path = self._im2im_state.image_path
         if image_path:
@@ -265,7 +271,7 @@ class Im2ImAnnotatorController:
                 self._im2im_state.annotations
             )
 
-    def save_annotations(self, index: int): # to disk
+    def save_annotations(self, index: int):  # to disk
         # print('_save_annotations')
         self._update_annotations(index)
         self._storage.save()
@@ -320,7 +326,9 @@ class Im2ImAnnotator:
     export final annotations in json format
 
     """
-    def __init__(self,
+
+    def __init__(
+        self,
         project_path: Path,
         input_item,
         output_item,
@@ -374,7 +382,7 @@ class Im2ImAnnotator:
         self.view.grid_box_clicked = self.controller.handle_grid_click
 
         # link current image index from controls to annotator model
-        self.view._navi.navi_callable = self.controller.idx_changed
+        self.view._navi.on_navi_clicked = self.controller.idx_changed
 
         # draw current image and bbox only when client is ready
         self.view.on_client_ready(self.controller.handle_client_ready)

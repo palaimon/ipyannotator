@@ -4,8 +4,6 @@ __all__ = ['get_settings']
 
 # Internal Cell
 import json
-import pandas as pd
-import os
 from enum import Enum, auto
 from pathlib import Path
 
@@ -14,29 +12,34 @@ from ..base import Settings
 from .download import (get_cifar10,
                                             get_cub_200_2011,
                                             get_oxford_102_flowers)
-from .generators import create_color_classification, create_simple_object_detection_dataset
+from .generators import (
+    create_color_classification,
+    create_mot_ds
+)
 
 # Internal Cell
 class DS(Enum):
-    ARTIFICIAL = auto()
+    ARTIFICIAL_VIDEO = auto()
+    ARTIFICIAL_BBOX = auto()
     CIFAR10 = auto()
     CUB200 = auto()
     OXFORD102 = auto()
 
-
 # Cell
-def get_settings(dataset:DS):
+def get_settings(dataset: DS):
     """
     Handle the necessary to dowload and save the datasets.
     Capable of dowloading CIFAR_10, OXFORD_102_FLOWERS, CUB_200 or a artificial dataset.
     """
-    if dataset == DS.ARTIFICIAL:
+    if dataset == DS.ARTIFICIAL_BBOX:
         project_path = Path('data/artificial/')
         project_file = project_path / 'annotations.json'
         image_dir = 'images'
-        _, annotations = create_color_classification(path=project_path, n_samples=50, size=(500, 500))
+        _, annotations = create_color_classification(path=project_path, n_samples=50,
+                                                     size=(500, 500))
 
-        anno = {str(project_path / image_dir / k): [f'{v}.jpg'] for k,v in annotations.items()}
+        anno = {str(project_path / image_dir / k): [f'{v}.jpg'] for k, v in annotations.items()}
+
         with open(project_file, 'w') as f:
             json.dump(anno, f)
 
@@ -49,18 +52,31 @@ def get_settings(dataset:DS):
                         im_width=50, im_height=50,
                         label_width=30, label_height=30,
                         n_cols=3)
+    elif dataset == DS.ARTIFICIAL_VIDEO:
+        project_path = Path('data/artificial/')
+        project_file = project_path / 'annotations.json'
+        image_dir = 'images'
+        create_mot_ds(project_path, image_dir, 20, True)
+        return Settings(
+            project_path=project_path,
+            project_file=project_file,
+            image_dir=image_dir,
+            im_width=200,
+            im_height=200,
+            result_dir='create_results',
+        )
     elif dataset == DS.CIFAR10:
         cifar_train_p, cifar_test_p = get_cifar10('data')
 
-        return Settings(project_path = Path('data/cifar10/'),
-                         project_file = cifar_test_p,
-                         image_dir = 'test',
-                         label_dir = None,
-                         # used on create step - should be empty!
-                         result_dir = 'create_results',
-                         im_width=50, im_height=50,
-                         label_width=140, label_height=30,
-                         n_cols = 2)
+        return Settings(project_path=Path('data/cifar10/'),
+                        project_file=cifar_test_p,
+                        image_dir='test',
+                        label_dir=None,
+                        # used on create step - should be empty!
+                        result_dir='create_results',
+                        im_width=50, im_height=50,
+                        label_width=140, label_height=30,
+                        n_cols=2)
 
     elif dataset == DS.OXFORD102:
         flowers102_train_p, flowers102_test_p = get_oxford_102_flowers('data')

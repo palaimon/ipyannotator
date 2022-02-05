@@ -28,9 +28,8 @@ class DS(Enum):
     CUB200 = auto()
     OXFORD102 = auto()
 
-
 # Cell
-def get_settings(dataset:DS):
+def get_settings(dataset: DS):
     """
     Handle the necessary to dowload and save the datasets
     """
@@ -40,7 +39,7 @@ def get_settings(dataset:DS):
         image_dir = 'images'
         create_color_classification(path=project_path, n_samples=50, size=(500, 500))
         annotations = pd.read_json(project_file).T['labels'].to_dict()
-        anno = {str(project_path / image_dir / k): [f'{v}.jpg'] for k,v in annotations.items()}
+        anno = {str(project_path / image_dir / k): [f'{v}.jpg'] for k, v in annotations.items()}
 
         with open(project_file, 'w') as f:
             json.dump(anno, f)
@@ -60,23 +59,27 @@ def get_settings(dataset:DS):
         project_file = project_path / 'annotations.json'
         image_dir = 'images'
         label_dir = None
-        im_width=300
-        im_height=300
+        im_width = 50
+        im_height = im_width
 
         create_object_detection(path=project_path, n_samples=50, n_objects=1, size=(500, 500))
         annotations = pd.read_json(project_file).T
 
-        # Convert artifical dataset annotations to old bbox ipyannotator format
-        # {'imagename.jpg': {'x':0, 'y': 0, 'width': 100, 'heigth': 100}}
+        """Convert artifical dataset annotations to old bbox ipyannotator format
+        {'imagename.jpg': {
+            'bbox': [{'x':0, 'y': 0, 'width': 100, 'heigth': 100}],
+            'labels': [[]]
+        }}"""
         anno = annotations.T.to_dict('records')[0]
         annotation_on_explore = {}
+        bbox_keys = ['x', 'y', 'width', 'height']
 
         for k, v in anno.items():
             key = os.path.join(project_path, image_dir, k)
             value = dict(
-                zip(['x', 'y', 'width', 'height'], xyxy_to_xywh(v))
+                zip(bbox_keys, xyxy_to_xywh(v))
             )
-            annotation_on_explore[key] = [value]
+            annotation_on_explore[key] = {'bbox': [value], 'labels': [[]]}
 
         with open(project_file, 'w') as f:
             json.dump(annotation_on_explore, f)
@@ -86,21 +89,20 @@ def get_settings(dataset:DS):
                         image_dir=image_dir,
                         label_dir=label_dir,
                         result_dir='create_results',
-                        im_width=50, im_height=50)
-
+                        im_width=im_width, im_height=im_height)
 
     elif dataset == DS.CIFAR10:
         cifar_train_p, cifar_test_p = get_cifar10('data')
 
-        return Settings(project_path = Path('data/cifar10/'),
-                         project_file = cifar_test_p,
-                         image_dir = 'test',
-                         label_dir = None,
-                         # used on create step - should be empty!
-                         result_dir = 'create_results',
-                         im_width=50, im_height=50,
-                         label_width=140, label_height=30,
-                         n_cols = 2)
+        return Settings(project_path=Path('data/cifar10/'),
+                        project_file=cifar_test_p,
+                        image_dir='test',
+                        label_dir=None,
+                        # used on create step - should be empty!
+                        result_dir='create_results',
+                        im_width=50, im_height=50,
+                        label_width=140, label_height=30,
+                        n_cols=2)
 
     elif dataset == DS.OXFORD102:
         flowers102_train_p, flowers102_test_p = get_oxford_102_flowers('data')
