@@ -10,17 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.6.0] - 2022-01-31
 
 ### Added
-- New annotator to explore images in a directory (`ExploreAnnotator`).
-- New annotator for video format (`VideoAnnotator`).
-- New tutorial showing how to use the video annotator.
-- New artifical data generator for video.
-- New linter to ensure code standard.
+- New annotator to explore images in a directory (`ExploreAnnotator`) by [Alexander Pisarenko](https://github.com/AlexJoz).
+- New annotator for video format (`VideoAnnotator`) by [Ítalo Epifânio](https://github.com/itepifanio).
+- New tutorial showing how to use the video annotator by [Ítalo Epifânio](https://github.com/itepifanio).
+- New artifical data generator for video by [Carlos Cerqueira](https://github.com/Carloscerq).
+- New linter to ensure code standard by [Carlos Cerqueira](https://github.com/Carloscerq).
 
 ### Changed
-- Updated the CI/CD to add the linter verification.
-- Started to switch classes from Pydantic models to use Attrs.
-- Refactored callbacks to use the standard `on_<prefix>_<action>` ex. `on_navi_clicked`.
-- Updated dataset download to use `pooch`.
+- Updated the CI/CD to add the linter verification by [Carlos Cerqueira](https://github.com/Carloscerq).
+- Started to switch classes from Pydantic models to use Attrs by [Ítalo Epifânio](https://github.com/itepifanio).
+- Refactored callbacks to use the standard `on_<prefix>_<action>` ex. `on_navi_clicked` by [Ítalo Epifânio](https://github.com/itepifanio).
+- Updated dataset download to use `pooch` by [Carlos Cerqueira](https://github.com/Carloscerq).
 
 ## [0.5.2] - 2022-01-01
 
