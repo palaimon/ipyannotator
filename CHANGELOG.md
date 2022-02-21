@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow user to use labels without using directories.
 - Refactor Im2Im and Capture annotators to render any widget on grid menu.
 
-## [0.7.0] - 2022-02-19
+## [0.7.0] - 2022-02-21
 
 ### Changed
 - Updated dependencies to fix Voila's conflict by [Ítalo Epifânio](https://github.com/itepifanio).
