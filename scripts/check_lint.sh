@@ -21,7 +21,7 @@ echo "Runnig Flake8 on generated library"
 
 FLAKE=$(poetry run flake8 ipyannotator)
 
-if [ -n "$FLAKE" ]; then
+if [[ -n "$FLAKE" ]]; then
 	echo "Some error where found in flake8 running on generated library"
 	poetry run flake8 ipyannotator
 	false
@@ -30,26 +30,28 @@ fi
 
 echo "Running pylint"
 
-#PYLINT=$(poetry run pylint ipyannotator --rcfile=.pylintrc --errors-only)
-#
-#if [ -n "$PYLINT" ]; then
-#	echo "Pylint found some error!"
-#	poetry run pylint ipyannotator --rcfile=.pylintrc --errors-only
-#	false
-#	exit 1;
-#fi
+PYLINT=$(poetry run pylint ./ipyannotator --rcfile=.pylintrc)
 
-#echo "Running MYPY on notebooks"
+# pylint will return the grade of the code. To make sure the lines with the grade don't
+# make the test fail, we make the test pass if the output is equals to 3 lines.
+if [[ ! $(wc -l <<< "$PYLINT") = "3" ]]; then
+	echo "Pylint found some error!"
+	poetry run pylint ./ipyannotator --rcfile=.pylintrc
+	false
+	exit 1;
+fi
 
-#MYPY=$(poetry run nbqa mypy --config-file=pyproject.toml nbs --ignore-missing-imports)
+echo "Running MYPY on notebooks"
+
+MYPY=$(poetry run nbqa mypy --config-file=pyproject.toml nbs --ignore-missing-imports)
 
 
 # Will only works if the output is different then one line
 # This happens because mypy will always return one line if the tests sucess
 # Line example: Success: no issues found in 3 source files
-#if [ ! $(wc -l <<< "$MYPY") = "1" ]; then
-#	echo "Mypy found some error!"
-#	poetry run nbqa mypy --config-file=pyproject.toml nbs --ignore-missing-imports
-#	exit 1;
-#fi
+if [[ ! $(wc -l <<< "$MYPY") = "1" ]]; then
+	echo "Mypy found some error!"
+	poetry run nbqa mypy --config-file=pyproject.toml nbs --ignore-missing-imports
+	exit 1;
+fi
 

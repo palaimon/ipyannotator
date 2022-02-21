@@ -9,9 +9,9 @@ from pubsub import pub
 from attr import asdict
 from pathlib import Path
 from copy import deepcopy
-from typing import Optional, List
+from typing import Optional, List, Callable
 
-from IPython.core.display import display
+from IPython.display import display
 from ipywidgets import AppLayout, Button, HBox, VBox, Layout
 
 from .mltypes import BboxCoordinate
@@ -40,7 +40,7 @@ class BBoxCoordinates(VBox):
         app_state: AppWidgetState,
         bbox_canvas_state: BBoxCanvasState,
         bbox_state: BBoxState,
-        on_btn_select_clicked: callable = None
+        on_btn_select_clicked: Callable = None
     ):
         super().__init__()
 
@@ -48,18 +48,8 @@ class BBoxCoordinates(VBox):
         self._bbox_state = bbox_state
         self._bbox_canvas_state = bbox_canvas_state
 
-        """CoordinateInput maximum values that a user
-        can change. 'x' and 'y' can be improved to avoid
-        bbox outside of the canvas area."""
-        max_coord_input_values = BboxCoordinate(*[
-            self._app_state.size[0],
-            self._app_state.size[1],
-            self._app_state.size[0],
-            self._app_state.size[1]
-        ])
-
         self._bbox_list = BBoxList(
-            max_coord_input_values=max_coord_input_values,
+            max_coord_input_values=None,
             on_coords_changed=self.on_coords_change,
             on_label_changed=self.on_label_change,
             on_btn_delete_clicked=self.on_btn_delete_clicked,
@@ -75,6 +65,8 @@ class BBoxCoordinates(VBox):
 
         app_state.subscribe(self._refresh_children, 'index')
         bbox_canvas_state.subscribe(self._sync_labels, 'bbox_coords')
+        self._bbox_canvas_state.subscribe(self._update_max_coord_input, 'image_scale')
+        self._update_max_coord_input(self._bbox_canvas_state.image_scale)
         self.children = self._bbox_list.children
         self.layout = Layout(
             max_height=f'{self._app_state.size[1]}px',
@@ -127,6 +119,20 @@ class BBoxCoordinates(VBox):
         self.remove_label(index)
         self._bbox_canvas_state.bbox_coords = bbox_coords
 
+    def _update_max_coord_input(self, image_scale: float):
+        """CoordinateInput maximum values that a user
+        can change. 'x' and 'y' can be improved to avoid
+        bbox outside of the canvas area."""
+        im_width = self._bbox_canvas_state.image_width
+        im_height = self._bbox_canvas_state.image_height
+        if im_height is not None and im_width is not None:
+            size = [
+                im_width // image_scale,
+                im_height // image_scale
+            ]
+            coords = [int(size[i & 1]) for i in range(4)]
+            self._bbox_list.max_coord_input_values = BboxCoordinate(*coords)
+
 # Internal Cell
 
 class BBoxAnnotatorGUI(AppLayout):
@@ -134,12 +140,12 @@ class BBoxAnnotatorGUI(AppLayout):
         self,
         app_state: AppWidgetState,
         bbox_state: BBoxState,
-        on_save_btn_clicked: callable = None
+        on_save_btn_clicked: Callable = None
     ):
         self._app_state = app_state
         self._bbox_state = bbox_state
         self._on_save_btn_clicked = on_save_btn_clicked
-        self._label_history = []
+        self._label_history: List[List[str]] = []
 
         self._navi = Navi()
 
@@ -185,7 +191,7 @@ class BBoxAnnotatorGUI(AppLayout):
             self._set_max_im_number(self._app_state.max_im_number)
 
         if self._bbox_state.image:
-            self._set_image_path(self._bbox_state.image)
+            self._set_image_path(str(self._bbox_state.image))
 
         # set the GUI interactions as callables
         self._navi.on_navi_clicked = self._idx_changed
@@ -222,13 +228,15 @@ class BBoxAnnotatorGUI(AppLayout):
         self.right_menu.remove_label(-1)
         self.right_menu._refresh_children(-1)
 
-    def _set_image_path(self, image: str):
+    def _set_image_path(self, image: Optional[str]):
         self._image_box._state.image_path = image
 
-    def _set_coords(self, coords: list):
+    def _set_coords(self, coords: List[BboxCoordinate]):
         if coords:
             tmp_coords = deepcopy(self._image_box._state.bbox_coords)
-            tmp_coords.append(coords)
+            # error: Argument 1 to "append" of "list" has incompatible
+            # type "List[BboxCoordinate]"; expected "BboxCoordinate"
+            tmp_coords.append(coords)  # type: ignore
             self._image_box._state.bbox_coords = coords
 
     def _set_max_im_number(self, max_im_number: int):
@@ -288,7 +296,9 @@ class BBoxAnnotatorController:
     def _save_annotations(self, index: int, *args, **kwargs):  # to disk
         image_path = str(self._storage.images[index])
         self._storage[image_path] = {
-            'bbox': [asdict(bbox) for bbox in self._bbox_state.coords],
+            # error: Item "None" of "Optional[List[BboxCoordinate]]" has
+            # no attribute "__iter__"
+            'bbox': [asdict(bbox) for bbox in self._bbox_state.coords],  # type: ignore
             'labels': self._bbox_state.labels
         }
         self._storage.save()
@@ -303,6 +313,9 @@ class BBoxAnnotatorController:
         self._update_im(index)
         self._update_coords(index)
         self._last_index = index
+
+    def handle_client_ready(self):
+        self._idx_changed(self._last_index)
 
 # Cell
 
@@ -325,7 +338,7 @@ class BBoxAnnotator:
         *args, **kwargs
     ):
         self.app_state = AppWidgetState(
-            uuid=id(self),
+            uuid=str(id(self)),
             **{
                 'size': (input_item.width, input_item.height),
             }
@@ -335,7 +348,7 @@ class BBoxAnnotator:
         self._output_item = output_item
 
         self.bbox_state = BBoxState(
-            uuid=id(self),
+            uuid=str(id(self)),
             classes=output_item.classes
         )
 
@@ -356,6 +369,8 @@ class BBoxAnnotator:
             bbox_state=self.bbox_state,
             on_save_btn_clicked=self.controller.save_current_annotations
         )
+
+        self.view.on_client_ready(self.controller.handle_client_ready)
 
     def __repr__(self):
         display(self.view)

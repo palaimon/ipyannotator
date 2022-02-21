@@ -6,7 +6,7 @@ __all__ = ['Annotator']
 import json
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Type
 
 from skimage import io
 from tqdm import tqdm
@@ -25,7 +25,7 @@ from .storage import (construct_annotation_path, group_files_by_class)
 
 # Internal Cell
 class AnnotatorFactory(ABC):
-    io: Tuple[Input, Output]
+    io: Tuple[Type[Input], Type[Output]]
 
     @abstractmethod
     def get_annotator(self):

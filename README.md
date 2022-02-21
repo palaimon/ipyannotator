@@ -40,12 +40,6 @@ ipywidgets = "^7.5.1"
 
 ## Run ipyannotator as stand-alone web app using voila
 
-Dependency resolution fails if `nbdev` and `voila` libraries are both listed in the same `pyproject.toml`. This should be fixed in the next major release of `nbdev` lib. 
-
-The easiest workaround atm:
- - install `ipyannotator` without dev dependencies 
- - manually install `voila` into the same dev environment
-
 Using `poetry`:
 
 install:
@@ -70,7 +64,7 @@ Same with `pip`:
    
    voila nbs/09_viola_example.ipynb --enable_nbextensions=True
 ```
-   
+
 
 # Documentation
 

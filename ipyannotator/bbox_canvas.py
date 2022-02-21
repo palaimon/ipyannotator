@@ -9,8 +9,9 @@ from attr import asdict
 from pathlib import Path
 from copy import deepcopy
 from enum import IntEnum
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Any, Tuple
 
+from pydantic import root_validator
 from .base import BaseState
 from .mltypes import BboxCoordinate, BboxVideoCoordinate
 from ipycanvas import MultiCanvas, Canvas, hold_canvas
@@ -65,7 +66,7 @@ class BoundingBox:
         return {'x': [], 'y': [], 'width': [], 'height': []}
 
     def _stroke_rects(self, canvas: Canvas, bbox: Dict[str, List[int]],
-                      line_width: int, color: str):
+                      line_width: float, color: str):
         canvas.line_width = line_width
         canvas.stroke_style = color
         canvas.stroke_rects(bbox['x'], bbox['y'], bbox['width'], bbox['height'])
@@ -119,7 +120,7 @@ def get_image_size(path):
 
 # Cell
 
-def draw_img(canvas, file, clear=False, has_border=False):
+def draw_img(canvas, file, clear=False, has_border=False) -> Tuple[int, int, float]:
     """
     draws resized image on canvas and returns scale used
     """
@@ -158,7 +159,7 @@ def draw_img(canvas, file, clear=False, has_border=False):
                           image_y,
                           width=image_width,
                           height=image_height)
-        return scale
+        return (image_width, image_height, scale)
 
 # Cell
 
@@ -195,9 +196,21 @@ class BBoxCanvasState(BaseState):
     image_path: Optional[str]
     bbox_coords: List[BboxCoordinate] = []
     image_scale: float = 1
+    image_height: Optional[int] = None
+    image_width: Optional[int] = None
     bbox_selected: Optional[int]
-    height: Optional[float]
-    width: Optional[float]
+    height: Optional[int]
+    width: Optional[int]
+
+    @root_validator
+    def set_height(cls, values):
+        if not values.get('image_height'):
+            values['image_height'] = values.get('height')
+
+        if not values.get('image_width'):
+            values['image_width'] = values.get('width')
+
+        return values
 
 # Internal Cell
 
@@ -211,7 +224,7 @@ class BBoxCanvasGUI(HBox):
         self._start_point = ()
         self.is_drawing = False
         self.has_border = has_border
-        self.canvas_bbox_coords = {}
+        self.canvas_bbox_coords: Dict[str, Any] = {}
 
         # do not stick bbox to borders
         self.padding = 2
@@ -240,7 +253,7 @@ class BBoxCanvasGUI(HBox):
         self.multi_canvas[BBoxLayer.drawing].on_mouse_up(self._stop_drawing)
 
     @property
-    def highlight(self) -> Optional[dict]:
+    def highlight(self) -> BboxCoordinate:
         return self._state.bbox_coords[self.bbox_selected]
 
     @highlight.setter
@@ -251,9 +264,10 @@ class BBoxCanvasGUI(HBox):
         if self._state.bbox_coords and self._state.bbox_selected == index:
             self._state.set_quietly('bbox_selected', None)
             return
-        bbox_coords = list(asdict(self._state.bbox_coords[index]).values())
-        bbox_coords = coords_scaled(bbox_coords, self._state.image_scale)
-        bbox_coords = BboxCoordinate(*bbox_coords)
+        _bbox_coords = list(asdict(self._state.bbox_coords[index]).values())
+        _bbox_coords_scaled = coords_scaled(_bbox_coords,
+                                            self._state.image_scale)
+        bbox_coords = BboxCoordinate(*_bbox_coords_scaled)
 
         draw_bounding_box(
             self.multi_canvas[BBoxLayer.highlight],
@@ -337,6 +351,11 @@ class BBoxCanvasGUI(HBox):
         self.is_drawing = True
         # print(f"<- BBoxCanvasGUI::_start_drawing({x}, {y})")
 
+    # needed to support voila
+    # https://ipycanvas.readthedocs.io/en/latest/advanced.html#ipycanvas-in-voila
+    def observe_client_ready(self, cb=None):
+        self.multi_canvas.on_client_ready(cb)
+
 # Internal Cell
 
 class BBoxVideoCanvasGUI(BBoxCanvasGUI):
@@ -346,7 +365,7 @@ class BBoxVideoCanvasGUI(BBoxCanvasGUI):
         super().__init__(state, has_border)
 
     @property
-    def highlight(self) -> Optional[dict]:
+    def highlight(self) -> BboxCoordinate:
         return self._state.bbox_coords[self.bbox_selected]
 
     @highlight.setter
@@ -358,9 +377,10 @@ class BBoxVideoCanvasGUI(BBoxCanvasGUI):
             self._state.set_quietly('bbox_selected', None)
             return
 
-        bbox_coords = list(asdict(self._state.bbox_coords[index]).values())
-        bbox_coords = coords_scaled(bbox_coords[:4], self._state.image_scale)
-        bbox_coords = BboxCoordinate(*bbox_coords)
+        _bbox_coords = list(asdict(self._state.bbox_coords[index]).values())
+        _bbox_coords_scaled = coords_scaled(
+            _bbox_coords[:4], self._state.image_scale)
+        bbox_coords = BboxCoordinate(*_bbox_coords_scaled)
 
         draw_bounding_box(
             self.multi_canvas[BBoxLayer.highlight],
@@ -401,7 +421,7 @@ class BBoxVideoCanvasGUI(BBoxCanvasGUI):
         # print('-> Observe canvas_coords: ', canvas_bbox_coords)
         if not canvas_bbox_coords:
             self.clear_layer(BBoxLayer.box)
-            self._state.bbox_coords = []
+            self._state.set_quietly('bbox_coords', [])
             return
 
         coords = BboxCoordinate(*list(canvas_bbox_coords.values())[:4])
@@ -455,18 +475,21 @@ class BBoxCanvasController:
         self._gui.clear_layer(BBoxLayer.box)
         self._gui.clear_layer(BBoxLayer.highlight)
         self._gui.clear_layer(BBoxLayer.drawing)
-        self._state.bbox_coords = []
+        self._state.set_quietly('bbox_coords', [])
 
     @debug_output.capture(clear_output=True)
     def _draw_image(self, image_path: str):
         # print(f"-> _draw_image {image_path}")
         self.clear_all_bbox()
-        self._state.image_scale = draw_img(
+        image_width, image_height, scale = draw_img(
             self._gui.multi_canvas[BBoxLayer.image],
             image_path,
             clear=True,
             has_border=self._gui.has_border
         )
+        self._state.set_quietly('image_width', image_width)
+        self._state.set_quietly('image_height', image_height)
+        self._state.image_scale = scale
         self._gui.im_name_box.value = Path(image_path).name
         # print(f"<- _draw_image {image_path}")
 
@@ -507,12 +530,12 @@ class BBoxCanvas(BBoxCanvasGUI):
 
     def __init__(self, width, height, has_border: bool = False):
         self.state = BBoxCanvasState(
-            uuid=id(self),
+            uuid=str(id(self)),
             **{'width': width, 'height': height}
         )
         super().__init__(state=self.state, has_border=has_border)
         self._controller = BBoxCanvasController(gui=self, state=self.state)
-        self._bbox_history = []
+        self._bbox_history: List[Any] = []
 
     def undo_bbox(self):
         if self.state.bbox_coords:
@@ -538,7 +561,7 @@ class BBoxCanvas(BBoxCanvasGUI):
 class BBoxVideoCanvas(BBoxVideoCanvasGUI):
     def __init__(self, width, height, has_border: bool = False, drawing_enabled: bool = True):
         self.state = BBoxCanvasState(
-            uuid=id(self),
+            uuid=str(id(self)),
             **{'width': width, 'height': height}
         )
         self.drawing_enabled = drawing_enabled

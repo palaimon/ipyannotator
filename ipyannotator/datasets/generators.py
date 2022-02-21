@@ -425,7 +425,7 @@ def create_object_detection(path, n_samples=10, n_objects=1, size=(150, 150), mu
 from PIL import Image
 from functools import partial
 from pydantic import BaseModel
-from typing import List, Optional, Tuple, Any
+from typing import List, Optional, Tuple, Any, Iterator
 
 # Internal Cell
 from skimage.draw import disk
@@ -454,12 +454,12 @@ class Frame(BaseModel):
     img: Optional[Any]
 
 # Internal Cell
-def gen_frame(n_frames=5, res=(200, 200)) -> Frame:
+def gen_frame(n_frames=5, res=(200, 200)) -> Iterator[Frame]:
     for f in range(n_frames):
         yield Frame(pos=f, res=res)
 
 # Internal Cell
-def gen_bg_img(stream, bg='rand', channel=3) -> Frame:
+def gen_bg_img(stream, bg='rand', channel=3) -> Iterator[Frame]:
     for gt in stream:
         # print(g)
         width, height = gt.res
@@ -486,7 +486,7 @@ def default_path(current_frame, start=(10, 10), speed=(5, 5), radius=10, type='r
 
 # Internal Cell
 def gen_moving_object(stream, object_id, size=(20, 20), path_f=default_path,
-                      type='rectangle', color=(1.0, 1.0, 1.0)) -> Frame:
+                      type='rectangle', color=(1.0, 1.0, 1.0)) -> Iterator[Frame]:
 
     frame_nr = 0
     for gt in stream:
@@ -497,7 +497,9 @@ def gen_moving_object(stream, object_id, size=(20, 20), path_f=default_path,
                                         radius=radius, color=color)
         else:
             center = path_f(frame_nr)
-            o_track = TrackObjectRectangle(id=object_id, center=center,
+            # error: Incompatible types in assignment (expression has type
+            # "TrackObjectRectangle", variable has type "TrackObjectCircle")
+            o_track = TrackObjectRectangle(id=object_id, center=center,  # type: ignore
                                            size=size, color=color)
 
         gt.objects.append(o_track)
@@ -532,7 +534,8 @@ def gt_to_mot(gt: Frame):
     """mot format <frame>, <id>, <bb_left>,
         <bb_top>, <bb_width>, <bb_height>, <conf>, <label>, <vis>
     """
-    for o in gt.objects:
+    # gt possible None
+    for o in gt.objects:  # type: ignore
         cx = o.center[0]
         cy = o.center[1]
         mot = {
@@ -542,16 +545,16 @@ def gt_to_mot(gt: Frame):
             'label': -1,
             'vis': -1
         }
-        if o.type == 'circle':
-            mot['bb_left'] = cx - o.radius
-            mot['bb_top'] = cy - o.radius
-            mot['bb_width'] = o.radius * 2
-            mot['bb_height'] = o.radius * 2
+        if o.type == 'circle':  # type: ignore
+            mot['bb_left'] = cx - o.radius  # type: ignore
+            mot['bb_top'] = cy - o.radius  # type: ignore
+            mot['bb_width'] = o.radius * 2  # type: ignore
+            mot['bb_height'] = o.radius * 2  # type: ignore
         else:
             mot['bb_left'] = cy
             mot['bb_top'] = cx
-            mot['bb_width'] = o.size[1]
-            mot['bb_height'] = o.size[0]
+            mot['bb_width'] = o.size[1]  # type: ignore
+            mot['bb_height'] = o.size[0]  # type: ignore
 
         yield mot
 
@@ -570,13 +573,13 @@ def create_mot_ds(path: Path, img_path: str = 'img', n_frames: int = 20, occlude
         track_img = occlude_lower_left_img(track_img)
 
     # save to files
-    img_path = Path(path) / img_path
-    img_path.mkdir(parents=True, exist_ok=True)
+    _img_path = Path(path) / img_path
+    _img_path.mkdir(parents=True, exist_ok=True)
     records = []
 
     for gt in track_img:
         frame_pos = str(gt.pos).zfill(4)
-        file_path = img_path / f"{frame_pos}.jpg"
+        file_path = _img_path / f"{frame_pos}.jpg"
         im = Image.fromarray((gt.img * 175.5).astype(np.uint8))  # Trasnform img to RGB
 
         im.save(file_path)

@@ -7,7 +7,7 @@ __all__ = ['ImCanvas', 'Im2ImAnnotator']
 import warnings
 from math import ceil
 from pathlib import Path
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Callable
 
 from ipycanvas import Canvas
 from ipywidgets import (AppLayout, VBox, HBox, Button, Layout, HTML, Output)
@@ -66,8 +66,8 @@ class Im2ImAnnotatorGUI(AppLayout):
         app_state: AppWidgetState,
         im2im_state: Im2ImState,
         label_autosize=False,
-        save_btn_clicked: callable = None,
-        grid_box_clicked: callable = None,
+        save_btn_clicked: Callable = None,
+        grid_box_clicked: Callable = None,
         has_border: bool = False
     ):
         self._app_state = app_state
@@ -214,8 +214,10 @@ class Im2ImAnnotatorController:
 
         self._im2im_state.n_rows, self._im2im_state.n_cols = self._calc_num_labels(
             self.labels_num,
-            self._im2im_state.n_rows,
-            self._im2im_state.n_cols
+            # Argument 2 to "_calc_num_labels" of "Im2ImAnnotatorController"
+            # has incompatible type "Optional[int]"; expected "int"
+            self._im2im_state.n_rows,  # type: ignore
+            self._im2im_state.n_cols  # type: ignore
         )
 
         if question:
@@ -342,10 +344,10 @@ class Im2ImAnnotator:
         assert input_item, "WARNING: Provide valid Input"
         assert output_item, "WARNING: Provide valid Output"
 
-        self.app_state = AppWidgetState(uuid=id(self))
+        self.app_state = AppWidgetState(uuid=str(id(self)))
 
         self.im2im_state = Im2ImState(
-            uuid=id(self),
+            uuid=str(id(self)),
             **{
                 "im_height": input_item.height,
                 "im_width": input_item.width,

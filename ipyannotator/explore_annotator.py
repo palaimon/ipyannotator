@@ -16,6 +16,7 @@ from abc import ABC, abstractmethod
 from IPython.display import display
 from pathlib import Path
 from ipywidgets import AppLayout, HBox, Layout
+from typing import Any, List
 
 # Cell
 
@@ -79,7 +80,7 @@ class ExploreAnnotatorGUI(AppLayout):
 # Internal Cell
 class Storage(ABC):
     @abstractmethod
-    def bulk_annotation(self, index: int, annotation: list):
+    def bulk_annotation(self, index: int, annotation: List):
         pass
 
     @abstractmethod
@@ -130,11 +131,12 @@ class ExploreAnnotatorController:
 
     def _update_current_frame(self, index: int = 0):
         self._save_annotation(self._last_index)
-        self._state.image_path = self._storage.get_image(index)
+        # "Storage" has no attribute "get_image"
+        self._state.image_path = self._storage.get_image(index)  # type: ignore
         self._last_index = index
 
     def _save_annotation(self, index: int):
-        annotations = []
+        annotations: List[Any] = []
         self._storage.bulk_annotation(index, annotations)
 
 # Cell
@@ -148,11 +150,13 @@ class ExploreAnnotator:
         *args, **kwargs
     ):
         self._app_state = AppWidgetState(uuid=str(id(self)), **{
-            'size': (input_item.width, input_item.height)
+            # "Input" has no attribute "width", "height"
+            'size': (input_item.width, input_item.height)  # type: ignore
         })
         self._state = ExploreAnnotatorState(uuid=str(id(self)))
 
-        self._storage = InMemoryStorage(project_path / input_item.dir)
+        # "Input" has no attribute "dir"
+        self._storage = InMemoryStorage(project_path / input_item.dir)  # type: ignore
 
         self._controller = ExploreAnnotatorController(
             self._app_state,

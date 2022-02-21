@@ -5,6 +5,7 @@ __all__ = ['Navi']
 # Internal Cell
 from ipywidgets import Button, IntSlider, HBox, Layout
 import warnings
+from typing import Callable
 
 # Internal Cell
 
@@ -69,7 +70,7 @@ class Navi(NaviGUI):
         parameter the navi's index.
     """
 
-    def __init__(self, max_im_num: int = 1, on_navi_clicked: callable = None):
+    def __init__(self, max_im_num: int = 1, on_navi_clicked: Callable = None):
         super().__init__(max_im_num)
         self._max_im_num = max_im_num
         self.on_navi_clicked = on_navi_clicked

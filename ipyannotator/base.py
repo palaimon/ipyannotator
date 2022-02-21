@@ -8,7 +8,7 @@ import json
 import random
 from pubsub import pub
 from pathlib import Path
-from typing import NamedTuple, Optional, Tuple
+from typing import NamedTuple, Optional, Tuple, Any, Callable
 from pydantic import BaseModel, BaseSettings
 
 # Internal Cell
@@ -24,7 +24,7 @@ def validate_project_path(project_path):
 # Internal Cell
 
 class Settings(NamedTuple):
-    project_path: Path = 'user_project'
+    project_path: Path = Path('user_project')
     project_file: Optional[Path] = None
     image_dir: str = 'images'
     label_dir: Optional[str] = None
@@ -79,7 +79,7 @@ class BaseState(StateSettings, BaseModel):
         super().__init__(*args, **kwargs)
         self.set_quietly('_uuid', uuid)
 
-    def set_quietly(self, key: str, value: any):
+    def set_quietly(self, key: str, value: Any):
         """
         Assigns a value to a state's attribute.
 
@@ -95,15 +95,15 @@ class BaseState(StateSettings, BaseModel):
 
     @property
     def root_topic(self) -> str:
-        if hasattr(self, '_uuid') and self._uuid:
-            return f'{self._uuid}.{type(self).__name__}'
+        if hasattr(self, '_uuid') and self._uuid:  # type: ignore
+            return f'{self._uuid}.{type(self).__name__}'  # type: ignore
 
         return type(self).__name__
 
-    def subscribe(self, change: callable, attribute: str):
+    def subscribe(self, change: Callable, attribute: str):
         pub.subscribe(change, f'{self.root_topic}.{attribute}')
 
-    def __setattr__(self, key: str, value: any):
+    def __setattr__(self, key: str, value: Any):
         self.set_quietly(key, value)
 
         if key != '__class__':

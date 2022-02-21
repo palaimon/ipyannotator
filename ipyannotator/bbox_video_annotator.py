@@ -8,21 +8,20 @@ import warnings
 from pubsub import pub
 from attr import asdict
 from copy import deepcopy
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Callable, Iterable
 from itertools import groupby
 from ipywidgets import HBox, VBox, Layout, Button, Checkbox, ToggleButton
 from .bbox_canvas import BBoxVideoCanvas
 from .base import AppWidgetState
 from .right_menu_widget import BBoxVideoList, BBoxVideoItem
-from .mltypes import BboxCoordinate, BboxVideoCoordinate
+from .mltypes import BboxCoordinate, BboxVideoCoordinate, Coordinate
 from .bbox_annotator import (
     BBoxAnnotator, BBoxState, BBoxAnnotatorController,
     BBoxAnnotatorGUI, BBoxCoordinates, BBoxCanvasState
 )
-from .services.bbox_trajectory import BBoxTrajectory
+from .services.bbox_trajectory import BBoxTrajectory, TrajectoryStore
 
 # Internal Cell
-
 @attr.define
 class BboxVideoCoordSelected:
     index: int
@@ -30,17 +29,16 @@ class BboxVideoCoordSelected:
     bbox_video_coordinate: BboxVideoCoordinate
 
 # Internal Cell
-
 @attr.define
 class BboxVideoHistory:
-    label: List[str] = []
-    trajectory: Dict[str, List[BboxCoordinate]] = {}
+    labels: List[str] = []
+    trajectories: TrajectoryStore = TrajectoryStore()
     bbox_coord: Optional[BboxVideoCoordinate] = None
 
 # Internal Cell
 
 class BBoxVideoState(BBoxState):
-    trajectory: Dict[str, List[BboxCoordinate]] = {}
+    trajectories: TrajectoryStore = TrajectoryStore()
     drawing_trajectory_enabled: bool = True
     right_menu_enabled: bool = True
     bbox_coords_selected: List[BboxVideoCoordSelected] = []
@@ -57,9 +55,10 @@ class BBoxVideoCoordinates(BBoxCoordinates):
         bbox_canvas_state: BBoxCanvasState,
         bbox_state: BBoxVideoState,
         drawing_enabled: bool,
-        on_btn_select_clicked: callable = None,
-        on_label_changed: callable = None,
-        on_trajectory_enabled_clicked=None,
+        on_btn_select_clicked: Callable,
+        on_label_changed: Callable,
+        on_trajectory_enabled_clicked: Callable,
+        on_btn_delete_clicked: Callable[[BboxVideoCoordinate], None]
     ):
         super().__init__(
             app_state,
@@ -68,10 +67,15 @@ class BBoxVideoCoordinates(BBoxCoordinates):
             on_btn_select_clicked
         )
 
+        setattr(self, 'on_btn_delete_clicked', on_btn_delete_clicked)
+        self._bbox_canvas_state = bbox_canvas_state
+        self._bbox_state = bbox_state
+
         self.trajectory_enabled_checkbox = Checkbox(
             description='Enable object tracking',
             value=self._bbox_state.drawing_trajectory_enabled
         )
+
         if on_trajectory_enabled_clicked:
             self.trajectory_enabled_checkbox.observe(on_trajectory_enabled_clicked, names='value')
 
@@ -81,7 +85,7 @@ class BBoxVideoCoordinates(BBoxCoordinates):
         self._bbox_list = BBoxVideoList(
             btn_delete_enabled=drawing_enabled,
             on_label_changed=on_label_changed,
-            on_btn_delete_clicked=self.on_btn_delete_clicked,
+            on_btn_delete_clicked=self._on_btn_delete_clicked,
             on_btn_select_clicked=on_btn_select_clicked,
             classes=bbox_state.classes,
             on_checkbox_object_clicked=self._on_checkbox_object_clicked
@@ -91,81 +95,100 @@ class BBoxVideoCoordinates(BBoxCoordinates):
 
         self.children = self._bbox_list.children
 
+    def _refresh_children(self, index: int):
+        self._render(
+            self._bbox_canvas_state.bbox_coords,
+            self._bbox_state.labels
+        )
+
     def __getitem__(self, index: int) -> BBoxVideoItem:
         return self.children[1][index]
 
-    def _render(self, bbox_coords: List[BboxVideoCoordinate], labels: List[List[str]]):
-        if self._bbox_state.right_menu_enabled:
+    def _render(self, bbox_coords: Iterable[Coordinate], labels: List[List[str]]):
+        # "BBoxState" has no attribute "right_menu_enabled"
+        if self._bbox_state.right_menu_enabled:  # type: ignore
             selected = []
-            all_frame_object_ids = [bbox_coord.id for bbox_coord in self._bbox_state.coords]
+            # Item "BboxCoordinate" of "Union[BboxCoordinate, Any]" has no attribute "id"
+            all_frame_object_ids = [
+                bbox_coord.id for bbox_coord in self._bbox_state.coords]  # type: ignore
 
-            for coord in self._bbox_state.bbox_coords_selected:
+            # "BBoxState" has no attribute "bbox_coords_selected"
+            for coord in self._bbox_state.bbox_coords_selected:  # type: ignore
                 if coord.bbox_video_coordinate.id in all_frame_object_ids:
                     selected.append(coord.index)
 
-            self._bbox_list.render_btn_list(
-                bbox_coords=bbox_coords,
+            # Unexpected keyword argument "labels" for "render_btn_list" of "BBoxList"
+            self._bbox_list.render_btn_list(  # type: ignore
+                bbox_video_coords=bbox_coords,
                 classes=labels,
                 labels=self._bbox_state.labels,
                 selected=selected
             )
+
             self.children = VBox([
                 self.trajectory_enabled_checkbox,
                 self._bbox_list,
             ]).children
 
-    def on_btn_delete_clicked(self, index: int):
-        super().on_btn_delete_clicked(index)
+    def _on_btn_delete_clicked(self, index: int):
+        bbox_coords = self._bbox_canvas_state.bbox_coords.copy()
+        deleted = bbox_coords[index]
+        del bbox_coords[index]
+        self.remove_label(index)
+        self._bbox_canvas_state.bbox_coords = bbox_coords
         self._remove_object_selected(index)
+        self.on_btn_delete_clicked(deleted)  # type: ignore
 
     def _remove_object_selected(self, index: int):
         try:
             self._bbox_state.set_quietly(
                 'bbox_coords_selected',
-                list(filter(lambda x: x.index != index, self._bbox_state.bbox_coords_selected))
+                # "BBoxState" has no attribute "bbox_coords_selected"
+                list(filter(lambda x: x.index != index,
+                            self._bbox_state.bbox_coords_selected))  # type: ignore
             )
         except Exception:
             warnings.warn("Couldn't unselect object")
 
-    def _update_max_coord_input(self, image_scale: float):
-        """CoordinateInput maximum values that a user
-        can change. 'x' and 'y' can be improved to avoid
-        bbox outside of the canvas area."""
-
-        self._bbox_list.max_coord_input_values = {
-            'x': self._app_state.size[0] / image_scale,
-            'y': self._app_state.size[1] / image_scale,
-            'width': self._app_state.size[0] / image_scale,
-            'height': self._app_state.size[1] / image_scale
-        }
-
     def _on_checkbox_object_clicked(self, change: dict, index: int,
-                                    bbox_coord: BboxVideoCoordinate):
+                                    bbox_video_coord: BboxVideoCoordinate):
         if change['new']:
-            self._bbox_state.bbox_coords_selected.append(
+            # "BBoxState" has no attribute "bbox_coords_selected"
+            self._bbox_state.bbox_coords_selected.append(  # type: ignore
                 BboxVideoCoordSelected(
                     frame=self._app_state.index,
                     index=index,
-                    bbox_video_coordinate=bbox_coord
+                    bbox_video_coordinate=bbox_video_coord
                 )
             )
         else:
             self._remove_object_selected(index)
+
+    def clear(self):
+        self._bbox_list.clear()
+        self.children = []
 
 # Internal Cell
 
 class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
     def __init__(
         self,
-        on_label_changed: callable,
-        on_join_btn_clicked: callable,
-        on_bbox_drawn: callable,
-        *args,
+        app_state: AppWidgetState,
+        bbox_state: BBoxVideoState,
+        on_label_changed: Callable,
+        on_join_btn_clicked: Callable,
+        on_bbox_drawn: Callable,
         drawing_enabled: bool = True,
-        **kwargs
+        on_save_btn_clicked: Callable = None
     ):
-        super().__init__(*args, **kwargs)
+        super().__init__(
+            app_state=app_state,
+            bbox_state=bbox_state,
+            on_save_btn_clicked=on_save_btn_clicked
+        )
 
+        self._app_state = app_state
+        self._bbox_state = bbox_state
         self.on_bbox_drawn = on_bbox_drawn
         self.bbox_trajectory = BBoxTrajectory()
         self.history = BboxVideoHistory()
@@ -177,11 +200,14 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
             drawing_enabled=drawing_enabled
         )
 
-        self.right_menu = BBoxVideoCoordinates(
+        self.right_menu = BBoxVideoCoordinates(  # type: ignore
             app_state=self._app_state,
-            bbox_canvas_state=self._image_box.state,
-            bbox_state=self._bbox_state,
+            # Argument "bbox_state" to "BBoxVideoCoordinates" has incompatible
+            # type "BBoxState"; expected "BBoxVideoState"
+            bbox_canvas_state=self._image_box.state,  # type: ignore
+            bbox_state=self._bbox_state,  # type: ignore
             on_btn_select_clicked=self._highlight_bbox,
+            on_btn_delete_clicked=self._remove_trajectory_history,
             on_label_changed=on_label_changed,
             drawing_enabled=drawing_enabled,
             on_trajectory_enabled_clicked=self.on_trajectory_enabled_clicked
@@ -208,7 +234,9 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
             tooltip="Disable right menu for a better navigation experience.",
             icon="eye-slash",
             disabled=False,
-            value=not self._bbox_state.right_menu_enabled,
+            # Argument 1 to "render_right_menu" of "BBoxAnnotatorVideoGUI" has incompatible
+            # type "List[BboxCoordinate]"; expected "List[BboxVideoCoordinate]"
+            value=not self._bbox_state.right_menu_enabled,  # type: ignore
             layout=Layout(width="70px")
         )
 
@@ -237,15 +265,25 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
 
         self._image_box.state.subscribe(self.render_right_menu, 'bbox_coords')
         if self._image_box.state.bbox_coords:
-            self.render_right_menu(self._image_box.state.bbox_coords)
+            # Argument 1 to "render_right_menu" of "BBoxAnnotatorVideoGUI" has incompatible type
+            # "List[BboxCoordinate]"; expected "List[BboxVideoCoordinate]"
+            self.render_right_menu(self._image_box.state.bbox_coords)  # type: ignore
+
+    def _remove_trajectory_history(self, bbox_video_coord: BboxVideoCoordinate):
+        trajectories = deepcopy(self.history.trajectories)
+        del trajectories[bbox_video_coord.id]
+        self._bbox_state.trajectories = trajectories
 
     def on_trajectory_enabled_clicked(self, change: dict):
-        self._bbox_state.drawing_trajectory_enabled = not self._bbox_state.drawing_trajectory_enabled  # noqa: E501
-        self._bbox_state.trajectory = {}
+        # "BBoxState" has no attribute "drawing_trajectory_enabled"
+        aux = not self._bbox_state.drawing_trajectory_enabled  # type: ignore
+        self._bbox_state.drawing_trajectory_enabled = aux
+        self._bbox_state.trajectories.clear()  # type: ignore
         self.refresh_gui()
 
     def on_right_menu_enabled_clicked(self, change: dict):
-        menu_enabled = self._bbox_state.right_menu_enabled
+        # "BBoxState" has no attribute "right_menu_enabled"
+        menu_enabled = self._bbox_state.right_menu_enabled  # type: ignore
         self._bbox_state.right_menu_enabled = not menu_enabled
         self.refresh_gui()
 
@@ -260,21 +298,19 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
         if self.on_bbox_drawn:
             self.on_bbox_drawn(bbox_coords)
             self.right_menu._render(bbox_coords, self._bbox_state.labels)
-        if self._bbox_state.drawing_trajectory_enabled:
+        # "BBoxState" has no attribute "drawing_trajectory_enabled"
+        if self._bbox_state.drawing_trajectory_enabled:  # type: ignore
             self.draw_trajectory(bbox_coords)
 
-    def clear_right_menu(self):
-        self.right_menu._bbox_list.clear()
-        self.right_menu.children = []
-
     def _redo_clicked(self, event: dict):
-        if self.history.label is not None:
-            self._bbox_state.labels.append(self.history.label)
-            self.history.label = []
-        if self.history.trajectory:
-            for k, v in self.history.trajectory.items():
-                self._bbox_state.trajectory[k] = v
-            self.history.trajectory = {}
+        if self.history.labels is not None:
+            self._bbox_state.labels.append(self.history.labels)
+            self.history.labels = []
+        if self.history.trajectories:
+            for k, v in self.history.trajectories.items():
+                # "BBoxState" has no attribute "trajectory"
+                self._bbox_state.trajectories[k] = v  # type: ignore
+            self.history.trajectories.clear()
         if self.history.bbox_coord:
             tmp_bbox_coords = deepcopy(self._image_box.state.bbox_coords)
             tmp_bbox_coords.append(self.history.bbox_coord)
@@ -284,22 +320,25 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
     def _undo_clicked(self, event: dict):
         if self._bbox_state.labels:
             tmp_labels = deepcopy(self._bbox_state.labels)
-            self.history.label = tmp_labels.pop()
+            self.history.labels = tmp_labels.pop()
             self._bbox_state.labels = tmp_labels
 
         tmp_bbox_coords = None
         if self._image_box.state.bbox_coords:
             tmp_bbox_coords = deepcopy(self._image_box.state.bbox_coords)
-            self.history.bbox_coord = tmp_bbox_coords.pop()
+            # expression has type "BboxCoordinate", variable has type
+            # "Optional[BboxVideoCoordinate]"
+            self.history.bbox_coord = tmp_bbox_coords.pop()  # type: ignore
             self._image_box.state.bbox_coords = tmp_bbox_coords
 
-        if self.history.bbox_coord and self.history.bbox_coord.id in self._bbox_state.trajectory:
-            tmp_trajectory = deepcopy(self._bbox_state.trajectory)
-            self.history.trajectory = {
+        if (self.history.bbox_coord and
+                self.history.bbox_coord.id in self._bbox_state.trajectories):  # type: ignore
+            tmp_trajectory = deepcopy(self._bbox_state.trajectories)  # type: ignore
+            self.history.trajectories.update({
                 self.history.bbox_coord.id: tmp_trajectory[self.history.bbox_coord.id]
-            }
+            })
             del tmp_trajectory[self.history.bbox_coord.id]
-            self._bbox_state.trajectory = tmp_trajectory
+            self._bbox_state.trajectories = tmp_trajectory
         self.refresh_gui()
 
     def view_idx_changed(self, index: int):
@@ -308,13 +347,15 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
             'coords',
             self._image_box._state.bbox_coords
         )
-        self.clear_right_menu()
         self._app_state.index = index
+
+    def clear_right_menu(self):
+        self.right_menu.clear()
 
     def draw_trajectory(self, bbox_coords: List[BboxVideoCoordinate]):
         """Draw trajectory checking if object lives on bbox canvas"""
         coords = self._bbox_video_to_trajectory(bbox_coords)
-        coord_ids = [i.id for i in self._image_box.state.bbox_coords]
+        coord_ids = [i.id for i in self._image_box.state.bbox_coords]  # type: ignore
         for obj_id, value in coords.items():
             if len(value) > 1 and obj_id in coord_ids:
                 self.bbox_trajectory.draw_trajectory(
@@ -329,18 +370,21 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
         def sort(k):
             return k['id']
 
-        coords = [asdict(c) for c in coords]
+        coords = [asdict(c) for c in coords]  # type: ignore
         for k, v in groupby(sorted(coords, key=sort), sort):
             value = list(v)
             for i in value:
-                bbox_coord = BboxCoordinate(*list(i.values())[:4])
+                bbox_coord = BboxCoordinate(*list(i.values())[:4])  # type: ignore
                 try:
-                    if bbox_coord not in self._bbox_state.trajectory[k]:
-                        self._bbox_state.trajectory[k].append(bbox_coord)
+                    if bbox_coord not in self._bbox_state.trajectories[k]:  # type: ignore
+                        self._bbox_state.trajectories[k].append(bbox_coord)  # type: ignore
                 except Exception:
-                    self._bbox_state.trajectory[k] = [bbox_coord]
+                    self._bbox_state.trajectories[k] = [bbox_coord]  # type: ignore
 
-        return self._bbox_state.trajectory
+        return self._bbox_state.trajectories  # type: ignore
+
+    def on_client_ready(self, callback):
+        self._image_box.observe_client_ready(callback)
 
 # Internal Cell
 
@@ -357,7 +401,8 @@ class BBoxVideoAnnotatorController(BBoxAnnotatorController):
     def _save_annotations(self, index: int, *args, **kwargs):
         image_path = str(self._storage.images[index])
         self._storage[image_path] = {
-            'bbox': [asdict(bbox) for bbox in self._bbox_state.coords],
+            # Item "None" of "Optional[List[BboxCoordinate]]" has no attribute "__iter__"
+            'bbox': [asdict(bbox) for bbox in self._bbox_state.coords],  # type: ignore
             'labels': self._bbox_state.labels,
         }
         self._storage.save()
@@ -366,7 +411,8 @@ class BBoxVideoAnnotatorController(BBoxAnnotatorController):
         """Receive an object label update and updates all
         object's labels that share the same id"""
         self._bbox_state.labels[index] = [change['new']]
-        bbox_coord_id = self._bbox_state.coords[index].id
+        # Value of type "Optional[List[BboxCoordinate]]" is not indexable
+        bbox_coord_id = self._bbox_state.coords[index].id  # type: ignore
         for image_path, bbox_or_labels in self._storage.items():
             if not bbox_or_labels or 'bbox' not in bbox_or_labels:
                 break
@@ -408,10 +454,14 @@ class BBoxVideoAnnotatorController(BBoxAnnotatorController):
                 image_path = self._storage.images[self._app_state.index - 1]
                 coords = self._storage.get(str(image_path)) or {}
                 self._bbox_state.labels.append(
-                    coords.get('labels')[i]
+                    # Value of type "Optional[Any]" is not indexable
+                    coords.get('labels')[i]  # type: ignore
                 )
             except Exception:
                 self._bbox_state.labels.append([])
+
+    def handle_client_ready(self):
+        self._idx_changed(self._last_index)
 
 # Cell
 
@@ -443,13 +493,16 @@ class BBoxVideoAnnotator(BBoxAnnotator):
             on_bbox_drawn=self.controller.sync_labels
         )
 
+        self.view.on_client_ready(self.controller.handle_client_ready)
+
     def update_labels(self, change: dict, index: int):
         """Saves bbox_canvas_state coordinates data
         on bbox_state and save all on storage."""
         self.bbox_state.set_quietly('coords', self.view._image_box._state.bbox_coords)
-        self.controller.update_storage_labels(change, index)
+        # "BBoxAnnotatorController" has no attribute "update_storage_labels"
+        self.controller.update_storage_labels(change, index)  # type: ignore
 
-    def on_save_btn_clicked(self, bbox_coords: List[dict]):
+    def on_save_btn_clicked(self, bbox_coords: Dict):
         self.controller.save_current_annotations(bbox_coords)
 
     def _update_state_id(self, merged_ids: List[str], bbox_coords: List[BboxVideoCoordinate]):
@@ -459,34 +512,39 @@ class BBoxVideoAnnotator(BBoxAnnotator):
             if merged_id and bbox_coords[i].id in merged_ids:
                 bbox_coords[i].id = merged_id
 
-    def merge_tracks_selected(self, change: dict):
-        selecteds = self.bbox_state.bbox_coords_selected
+    def merge_tracks_selected(self, change: Dict):
+        # "BBoxState" has no attribute "bbox_coords_selected"
+        selecteds = self.bbox_state.bbox_coords_selected  # type: ignore
 
         if selecteds:
             merged_ids = [selected.bbox_video_coordinate.id for selected in selecteds]
 
             self._update_state_id(
-                merged_ids=merged_ids,
-                bbox_coords=self.view._image_box.state.bbox_coords
+                # Argument "bbox_coords" to "_update_state_id" of "BBoxVideoAnnotator" has
+                #incompatible type "List[BboxCoordinate]"; expected "List[BboxVideoCoordinate]"
+                merged_ids=merged_ids,  # type: ignore
+                bbox_coords=self.view._image_box.state.bbox_coords  # type: ignore
             )
 
-            self.controller.update_storage_id(
+            # "BBoxAnnotatorController" has no attribute "update_storage_id"
+            self.controller.update_storage_id(  # type: ignore
                 merged_ids=merged_ids
             )
 
             # merge trajectories
             key = "-".join(merged_ids)
-            tmp_trajectory = self.bbox_state.trajectory.copy()
-            for id, bbx in tmp_trajectory.items():
+            # "BBoxState" has no attribute "trajectory"
+            tmp_trajectories = deepcopy(self.bbox_state.trajectories)  # type: ignore
+            for id, bbx in tmp_trajectories.items():
                 if id in merged_ids:
                     try:
-                        self.bbox_state.trajectory[key] += bbx
+                        self.bbox_state.trajectories[key] += bbx  # type: ignore
                     except Exception:
-                        self.bbox_state.trajectory[key] = bbx
+                        self.bbox_state.trajectories[key] = bbx  # type: ignore
 
-                    if id in self.bbox_state.trajectory:
+                    if id in self.bbox_state.trajectories:  # type: ignore
                         # delete old trajectory id
-                        del self.bbox_state.trajectory[id]
+                        del self.bbox_state.trajectories[id]  # type: ignore
 
             # finished merge cleans selected bbox coords
             self.bbox_state.bbox_coords_selected = []

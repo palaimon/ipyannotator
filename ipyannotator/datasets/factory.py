@@ -66,7 +66,7 @@ def get_settings(dataset: DS):
             result_dir='create_results',
         )
     elif dataset == DS.CIFAR10:
-        cifar_train_p, cifar_test_p = get_cifar10('data')
+        cifar_train_p, cifar_test_p = get_cifar10(Path('data'))
 
         return Settings(project_path=Path('data/cifar10/'),
                         project_file=cifar_test_p,
@@ -79,7 +79,7 @@ def get_settings(dataset: DS):
                         n_cols=2)
 
     elif dataset == DS.OXFORD102:
-        flowers102_train_p, flowers102_test_p = get_oxford_102_flowers('data')
+        flowers102_train_p, flowers102_test_p = get_oxford_102_flowers(Path('data'))
 
         return Settings(project_path=Path('data/oxford-102-flowers'),
                         project_file=flowers102_test_p,
@@ -92,7 +92,7 @@ def get_settings(dataset: DS):
                         n_cols=7)
 
     elif dataset == DS.CUB200:
-        cub200_train_p, cub200_test_p = get_cub_200_2011('data')
+        cub200_train_p, cub200_test_p = get_cub_200_2011(Path('data'))
 
         return Settings(project_path=Path('data/CUB_200_2011'),
                         project_file=cub200_test_p,

@@ -11,6 +11,7 @@ from pathlib import Path
 import os
 import tarfile
 import zlib
+from typing import Dict, List, Any
 
 # Internal Cell
 
@@ -22,7 +23,7 @@ def _download_url(url: str, root: Path, filename: str, file_hash: str = None):
         filename (str, optional): Name to save the file under. If None, use the basename of the URL
         file_hash (str, optional): Hash of the required file. If None, will always download the file
     """
-    root = os.path.expanduser(root)
+    root = Path(os.path.expanduser(root))
     if not filename:
         filename = os.path.basename(url)
     os.makedirs(root, exist_ok=True)
@@ -109,14 +110,21 @@ def get_oxford_102_flowers(output_dir: Path):
 
     print('Generating train/test data..')
     with open(dataset_dir / 'train.txt', 'r') as f:
-        annotations_train = dict(tuple(line.split()) for line in f)
+        # https://github.com/python/mypy/issues/7558
+        _annotations_train: Dict[str, Any] = dict(tuple(
+            line.split()) for line in f)  # type: ignore
 
-    annotations_train = {str(dataset_dir / k): [v + '.jpg'] for k, v in annotations_train.items()}
+    annotations_train: Dict[str, List[str]] = {
+        str(dataset_dir / k): [v + '.jpg'] for k, v in _annotations_train.items()
+    }
 
     with open(dataset_dir / 'test.txt', 'r') as f:
-        annotations_test = dict(tuple(line.split()) for line in f)
+        _annotations_test: Dict[str, Any] = dict(tuple(
+            line.split()) for line in f)  # type: ignore
 
-    annotations_test = {str(dataset_dir / k): [v + '.jpg'] for k, v in annotations_test.items()}
+    annotations_test: Dict[str, List[str]] = {
+        str(dataset_dir / k): [v + '.jpg'] for k, v in _annotations_test.items()
+    }
 
     train_path = dataset_dir / 'annotations_train.json'
     test_path = dataset_dir / 'annotations_test.json'
@@ -149,20 +157,24 @@ def get_cub_200_2011(output_dir: Path):
 
     print('Generating train/test data..')
     with open(dataset_dir / 'images.txt', 'r') as f:
-        image_id_map = dict(tuple(line.split()) for line in f)
+        image_id_map: Dict[str, Any] = dict(tuple(
+            line.split()) for line in f)  # type: ignore
 
     with open(dataset_dir / 'classes.txt', 'r') as f:
-        class_id_map = dict(tuple(line.split()) for line in f)
+        class_id_map: Dict[str, Any] = dict(tuple(
+            line.split()) for line in f)  # type: ignore
 
     with open(dataset_dir / 'train_test_split.txt', 'r') as f:
-        splitter = dict(tuple(line.split()) for line in f)
+        splitter: Dict[str, Any] = dict(tuple(
+            line.split()) for line in f)  # type: ignore
 
     # image ids for test/train
     train_k = [k for k, v in splitter.items() if v == '0']
     test_k = [k for k, v in splitter.items() if v == '1']
 
     with open(dataset_dir / 'image_class_labels.txt', 'r') as f:
-        anno_ = dict(tuple(line.split()) for line in f)
+        anno_: Dict[str, Any] = dict(tuple(
+            line.split()) for line in f)  # type: ignore
 
     annotations_train = {
         str(dataset_dir / 'images' / image_id_map[k]):

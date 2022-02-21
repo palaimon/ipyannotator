@@ -7,6 +7,7 @@ import warnings
 from attr import asdict
 from ..mltypes import BboxCoordinate
 from ipywidgets import HBox, BoundedIntText, Layout
+from typing import Callable, Optional
 
 # Internal Cell
 
@@ -16,7 +17,7 @@ class CoordinateInput(HBox):
         uuid: int = None,
         bbox_coord: BboxCoordinate = None,
         input_max: BboxCoordinate = None,
-        coord_changed: callable = None
+        coord_changed: Optional[Callable] = None
     ):
         super().__init__()
         self.uuid = uuid
@@ -27,7 +28,7 @@ class CoordinateInput(HBox):
         self.layout = Layout(width="auto", overflow="initial")
 
         if bbox_coord:
-            self.bbox_coord = bbox_coord
+            self.bbox_coord = bbox_coord  # type: ignore
 
     def __getitem__(self, key: str) -> int:
         return self.children[self.coord_labels.index(key)].value
@@ -51,14 +52,25 @@ class CoordinateInput(HBox):
         return widget_inputs
 
     @property
-    def bbox_coord(self) -> dict:
+    def bbox_coord(self) -> BboxCoordinate:
         values = [c.value for c in self.children]
-        return dict(zip(self.coord_labels, values))
+        return BboxCoordinate(
+            **dict(zip(self.coord_labels, values))
+        )
 
     @bbox_coord.setter
     def bbox_coord(self, bbox_coord: BboxCoordinate):
         for i, v in enumerate(asdict(bbox_coord).values()):
             self.children[i].value = v
+
+    @property
+    def input_max(self) -> Optional[BboxCoordinate]:
+        return self._input_max
+
+    @input_max.setter
+    def input_max(self, input_max: dict):
+        for i, label in enumerate(self.coord_labels):
+            self.children[i].max = input_max[label]
 
     def _on_coord_change(self, change: dict):
         if self.coord_changed:

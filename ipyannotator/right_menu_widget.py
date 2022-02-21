@@ -5,7 +5,7 @@ __all__ = []
 # Internal Cell
 from ipywidgets import HBox, Dropdown, Layout, VBox, Checkbox
 from functools import partial
-from typing import List
+from typing import List, Optional, Callable
 from .custom_input.coordinates import CoordinateInput
 from .mltypes import BboxCoordinate, BboxVideoCoordinate
 from .custom_input.buttons import ActionButton
@@ -18,7 +18,7 @@ class BBoxItem(VBox):
     def __init__(
         self,
         bbox_coord: BboxCoordinate,
-        max_coord_input_values: BboxCoordinate,
+        max_coord_input_values: Optional[BboxCoordinate],
         index: int,
         options: List[str] = None
     ):
@@ -50,7 +50,7 @@ class BBoxItem(VBox):
             value=index
         )
 
-    def _dropdown_classes(self, options: list, value: str = None) -> Dropdown:
+    def _dropdown_classes(self, options: Optional[List[str]], value: str = None) -> Dropdown:
         return Dropdown(
             layout=Layout(width='auto'),
             options=options,
@@ -59,7 +59,7 @@ class BBoxItem(VBox):
 
     def _btn_select(self, index: int) -> ActionButton:
         return ActionButton(
-            icon="mouse-pointer",
+            icon="lightbulb-o",
             layout=Layout(width='auto'),
             value=index
         )
@@ -75,17 +75,17 @@ class BBoxItem(VBox):
 class BBoxVideoItem(BBoxItem):
     def __init__(
         self,
-        bbox_coord: BboxVideoCoordinate,
+        bbox_video_coord: BboxVideoCoordinate,
         index: int,
         label: List[str],
         options: List[str],
         selected: bool = False,
         btn_delete_enabled: bool = True
     ):
-        super(VBox, self).__init__()
+        super(VBox, self).__init__()  # type: ignore
 
         self.selected = selected
-        self.bbox_coord = bbox_coord
+        self.bbox_video_coord = bbox_video_coord
         self.object_checkbox = self._object_checkbox()
         self.btn_select = self._btn_select(index)
         self.btn_delete = self._btn_delete(index)
@@ -111,7 +111,7 @@ class BBoxVideoItem(BBoxItem):
         return Checkbox(
             value=self.selected,
             indent=False,
-            description=str(self.bbox_coord.id),
+            description=str(self.bbox_video_coord.id),
             layout=Layout(width='auto')
         )
 
@@ -123,11 +123,11 @@ class BBoxList(VBox):
     def __init__(
         self,
         classes: list,
-        max_coord_input_values: BboxCoordinate,
-        on_coords_changed: callable,
-        on_label_changed: callable,
-        on_btn_delete_clicked: callable,
-        on_btn_select_clicked: callable
+        max_coord_input_values: Optional[BboxCoordinate],
+        on_coords_changed: Optional[Callable],
+        on_label_changed: Callable,
+        on_btn_delete_clicked: Callable,
+        on_btn_select_clicked: Optional[Callable]
     ):
         super().__init__()
         self._classes = classes
@@ -137,9 +137,19 @@ class BBoxList(VBox):
         self._on_label_changed = on_label_changed
         self._on_btn_select_clicked = on_btn_select_clicked
 
+    @property
+    def max_coord_input_values(self) -> Optional[BboxCoordinate]:
+        return self._max_coord_input_values
+
+    @max_coord_input_values.setter
+    def max_coord_input_values(self, value: BboxCoordinate):
+        for children in self.children:  # type: ignore
+            children.input_max = value
+        self._max_coord_input_values = value
+
     def render_btn_list(self, bbox_coords: List[BboxCoordinate], classes: List[List[str]]):
-        elements = []
-        num_children = len(self.children)
+        elements: List[BBoxItem] = []
+        num_children = len(self.children)  # type: ignore
 
         for index, coord in enumerate(bbox_coords[num_children:], num_children):
             bbox_item = BBoxItem(
@@ -162,7 +172,7 @@ class BBoxList(VBox):
 
             elements.append(bbox_item)
 
-        self.children = [*list(self.children), *elements]
+        self.children = [*list(self.children), *elements]  # type: ignore
 
     def clear(self):
         self.children = []
@@ -170,9 +180,9 @@ class BBoxList(VBox):
     def _update_bbox_list_index(self, elements: list, index: int):
         for index, element in enumerate(elements[index:], index):
             # updates select btn
-            element.children[0].value = index
+            element.btn_select.value = index
             # update label dropdown
-            dropdown = element.children[0].children[1]
+            dropdown = element.dropdown_classes
             dropdown.unobserve_all()
             dropdown.observe(
                 partial(self._on_label_changed, index=index),
@@ -181,7 +191,7 @@ class BBoxList(VBox):
             # update inputs
             element.children[0].children[2].uuid = index
             # updates delete btn
-            element.children[0].children[-1].value = index
+            element.btn_delete.value = index
 
     def del_element(self, btn: ActionButton):
         index = btn.value
@@ -189,7 +199,7 @@ class BBoxList(VBox):
         del elements[index]
         self._update_bbox_list_index(elements, index)
         self.children = elements
-        self._on_btn_delete_clicked(index)
+        self._on_btn_delete_clicked(index)  # type: ignore
 
 # Internal Cell
 
@@ -197,10 +207,10 @@ class BBoxVideoList(BBoxList):
     def __init__(
         self,
         classes: list,
-        on_label_changed: callable,
-        on_btn_delete_clicked: callable,
-        on_btn_select_clicked: callable,
-        on_checkbox_object_clicked: callable,
+        on_label_changed: Callable,
+        on_btn_delete_clicked: Callable,
+        on_btn_select_clicked: Callable,
+        on_checkbox_object_clicked: Callable,
         btn_delete_enabled: bool = True
     ):
         super().__init__(
@@ -211,81 +221,97 @@ class BBoxVideoList(BBoxList):
             on_btn_delete_clicked=on_btn_delete_clicked,
             on_btn_select_clicked=on_btn_select_clicked
         )
-        self.bbox_coords_selected = []
+        self.elements: List[BBoxVideoItem] = []
         self._btn_delete_enabled = btn_delete_enabled
         self._on_checkbox_object_clicked = on_checkbox_object_clicked
 
     def __getitem__(self, index: int):
         return self.children[index]
 
-    def render_btn_list(
+    # error: Signature of "render_btn_list" incompatible with supertype "BBoxList"
+    def render_btn_list(  # type: ignore
         self,
-        bbox_coords: List[BboxVideoCoordinate],
+        bbox_video_coords: List[BboxVideoCoordinate],
         classes: list,
         labels: List[List[str]],
         selected: List[int] = []
     ):
-        elements = []
-        num_children = len(self.children)
+        if not bbox_video_coords:
+            self.elements.clear()
 
-        for index, bbox_coord in enumerate(bbox_coords[num_children:], num_children):
-            bbox_item = BBoxVideoItem(
-                index=index,
-                options=self._classes,
-                bbox_coord=bbox_coord,
-                label=labels[index],
-                selected=index in selected,
-                btn_delete_enabled=self._btn_delete_enabled
-            )
+        for index, bbox_video_coord in enumerate(bbox_video_coords):
+            try:
+                if self.elements[index]:
+                    if self.elements[index].bbox_video_coord.id == bbox_video_coord.id:
+                        self.elements[index].bbox_video_coord = bbox_video_coord
+                    else:
+                        del self.elements[index]
+                        for i, _ in enumerate(bbox_video_coords[index:], index):
+                            self.elements[i].index = i
+            except Exception:
+                bbox_item = BBoxVideoItem(
+                    index=index,
+                    options=self._classes,
+                    bbox_video_coord=bbox_video_coord,
+                    label=labels[index],
+                    selected=index in selected,
+                    btn_delete_enabled=self._btn_delete_enabled
+                )
 
-            bbox_item.btn_delete.on_click(self.del_element)
-            bbox_item.btn_select.on_click(self._on_btn_select_clicked)
+                bbox_item.btn_delete.on_click(self.del_element)
+                bbox_item.btn_select.on_click(self._on_btn_select_clicked)
 
-            if classes and classes[index]:
-                bbox_item.dropdown_classes.value = classes[index][0] or None
+                if classes and classes[index]:
+                    bbox_item.dropdown_classes.value = classes[index][0] or None
 
-            bbox_item.dropdown_classes.observe(
-                partial(self._on_label_changed, index=index),
-                names="value",
-            )
+                bbox_item.dropdown_classes.observe(
+                    partial(self._on_label_changed, index=index),
+                    names="value",
+                )
 
-            bbox_item.object_checkbox.observe(
-                partial(self._on_checkbox_object_clicked, index=index, bbox_coord=bbox_coord),
-                names="value",
-            )
+                bbox_item.object_checkbox.observe(
+                    partial(
+                        self._on_checkbox_object_clicked,
+                        index=index,
+                        bbox_video_coord=bbox_video_coord
+                    ),
+                    names="value",
+                )
 
-            elements.append(bbox_item)
+                self.elements.append(bbox_item)
 
-        self.children = [*list(self.children), *elements]
+        self.children = self.elements
 
     def clear(self):
+        self.elements = []
         self.children = []
 
     def _update_bbox_list_index(self, elements: list, index: int):
         for index, element in enumerate(elements[index:], index):
             #updates checkbox
-            checkbox = element.children[0].children[0]
+            checkbox = element.object_checkbox
             checkbox.unobserve_all()
             checkbox.observe(
                 partial(self._on_checkbox_object_clicked, index=index),
                 names="value",
             )
             # updates select btn
-            element.children[1].children[0].value = index
+            element.btn_select.value = index
             # update label dropdown
-            dropdown = element.children[1].children[1]
+            dropdown = element.dropdown_classes
             dropdown.unobserve_all()
             dropdown.observe(
                 partial(self._on_label_changed, index=index),
                 names="value"
             )
             # updates delete btn
-            element.children[1].children[-1].value = index
+            element.btn_delete.value = index
 
     def del_element(self, btn: ActionButton):
         index = btn.value
-        elements = list(self.children)
+        elements = self.elements
         del elements[index]
         self._update_bbox_list_index(elements, index)
         self.children = elements
+        self.elements = elements
         self._on_btn_delete_clicked(index)

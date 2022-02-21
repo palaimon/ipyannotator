@@ -8,7 +8,7 @@ import math
 import warnings
 from functools import partial
 from pathlib import Path
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Iterable, Callable
 
 from IPython.core.display import display
 from ipywidgets import (AppLayout, VBox, HBox, Button, GridBox,
@@ -69,22 +69,24 @@ class CaptureGrid(GridBox):
         super().__init__(children=self._labels, layout=Layout(**centered_settings))
 
     @debug_output.capture(clear_output=True)
-    def load_annotations_labels(self, annotations: dict = None):
-        iter_state = iter(annotations)
+    def load_annotations_labels(self, annotations: Optional[Iterable[Dict]] = None):
+        # error: Argument 1 to "iter" has incompatible type
+        # "Optional[Iterable[Dict[Any, Any]]]"; expected "Iterable[Dict[Any, Any]]"
+        iter_state = iter(annotations)  # type: ignore
 
         for label in self._labels:
             p = next(iter_state, None)
             if p:
-                label.image_path = str(p)
-                label.label_value = Path(p).stem
-                label.active = annotations[p].get('answer', False)
+                label.image_path = str(p)  # type: ignore
+                label.label_value = Path(p).stem  # type: ignore
+                label.active = annotations[p].get('answer', False)  # type: ignore
             else:
                 label.clear()
 
         if self.callback:
             self.register_on_click()
 
-    def on_click(self, cb: callable):
+    def on_click(self, cb: Callable):
         self.callback = cb
         self.register_on_click()
 
@@ -110,10 +112,10 @@ class CaptureAnnotatorGUI(AppLayout):
         self,
         app_state: AppWidgetState,
         capture_state: CaptureState,
-        save_btn_clicked: callable = None,
-        grid_box_clicked: callable = None,
-        on_navi_clicked: callable = None,
-        select_none_changed: callable = None
+        save_btn_clicked: Callable = None,
+        grid_box_clicked: Callable = None,
+        on_navi_clicked: Callable = None,
+        select_none_changed: Callable = None
     ):
         self._app_state = app_state
         self._capture_state = capture_state
@@ -251,7 +253,7 @@ class CaptureAnnotationStorage:
     def get_im_names(self, filter_files) -> List[str]:
         return self.annotations.get_im_names(filter_files)
 
-    def get(self, path: str) -> dict:
+    def get(self, path: str) -> Optional[Dict]:
         return self.annotations.get(path)
 
     def update_annotations(self, annotations: dict):
@@ -308,7 +310,10 @@ class CaptureAnnotatorController:
 
         self._update_all_none_state(current_state)
 
-        self._capture_state.annotations = current_state
+        # error: Incompatible types in assignment (expression has type
+        # "Dict[str, Dict[Any, Any]]", variable has type
+        # "Dict[str, Optional[Dict[str, bool]]]")
+        self._capture_state.annotations = current_state  # type: ignore
 
     def _update_all_none_state(self, state_images: dict):
         self._capture_state.all_none = all(
@@ -346,7 +351,10 @@ class CaptureAnnotatorController:
         current_state = self._capture_state.annotations.copy()
 
         if not p.is_dir():
-            state_answer = self._capture_state.annotations[str(p)].get('answer', False)
+            # error: Item "None" of "Optional[Dict[str, bool]]"
+            # has no attribute "get"
+            state_answer = self._capture_state.annotations[
+                str(p)].get('answer', False)  # type: ignore
             current_state[str(p)] = {'answer': not state_answer}
 
             for k, v in current_state.items():
@@ -408,11 +416,11 @@ class CaptureAnnotator:
         self._filter_files = filter_files
 
         self.app_state = AppWidgetState(
-            uuid=id(self),
+            uuid=str(id(self)),
             **{'size': (input_item.width, input_item.height)}
         )
         self.capture_state = CaptureState(
-            uuid=id(self),
+            uuid=str(id(self)),
             **{
                 'n_cols': n_cols,
                 'n_rows': n_rows,
