@@ -33,14 +33,8 @@ nbdev_install_git_hooks
 
 ### Building docs
 
-* With `nbdev` we can build docs from notebooks. For this, just run `nbdev_build_docs` and `nbdev` will build the documentation inside the `docs/` and update the `README.md`.
-
-* To complete reinstall `jekyll` config, run `nbdev_build_lib` and then `nbdev_build_docs`.
-
-* To run docs locally with `jekyll` you can run the command `make docs_serve` from the root of your repo to serve the documentation locally after calling `nbdev_build_docs` to generate the docs.
-
-*Note :* GitHub provides great documentation on the matter, please read [their documentation](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/about-github-pages-and-jekyll) for more details on GitHub pages with `jekyll`.
+* Ipyannotator uses sphinx and nbdev to build its documentation. To run locally you can run the command `make docs` from the from the root of your repository, this command will create the html files at the `_build` folder.
 
 ### Writing docs
 
-As stated, `ipyannotator`uses `nbdev` and therefore, the notebooks pages will be converted into docs. For this reason, images should be inside the `docs/images` folders, so it can be assible to the documentation. After that, just load the image name when needed.
+As stated, `ipyannotator` uses `nbdev` and therefore, the notebooks pages will be converted into docs. For this reason, images should be inside the `docs/images` folders, so it can be assible to the documentation. After that, just load the image name when needed.

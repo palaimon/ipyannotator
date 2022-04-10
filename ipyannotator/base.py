@@ -3,23 +3,89 @@
 __all__ = []
 
 # Internal Cell
-
 import json
 import random
 from pubsub import pub
 from pathlib import Path
+from enum import Enum, auto
 from typing import NamedTuple, Optional, Tuple, Any, Callable
+from abc import ABC
 from pydantic import BaseModel, BaseSettings
 
 # Internal Cell
 
-def validate_project_path(project_path):
-    project_path = Path(project_path)
-    assert project_path.exists(), "WARNING: Project path should point to " \
-                                  "existing directory"
-    assert project_path.is_dir(), "WARNING: Project path should point to " \
-                                  "existing directory"
-    return project_path
+class StateSettings(BaseSettings):
+    class Config:
+        validate_assignment = True
+
+
+class BaseState(StateSettings, BaseModel):
+    def __init__(self, uuid: str = None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.set_quietly('_uuid', uuid)
+        self.set_quietly('event_map', {})
+
+    def set_quietly(self, key: str, value: Any):
+        """
+        Assigns a value to a state's attribute.
+
+        This function can be used to avoid that
+        the state dispatches a PyPubSub event.
+        It's very usefull to avoid event recursion,
+        ex: a component is listening for an event A
+        but it also changes the state that dispatch
+        the event A. Using set_quietly to set the
+        value at the component will avoid the recursion.
+        """
+        object.__setattr__(self, key, value)
+
+    @property
+    def root_topic(self) -> str:
+        if hasattr(self, '_uuid') and self._uuid:  # type: ignore
+            return f'{self._uuid}.{type(self).__name__}'  # type: ignore
+
+        return type(self).__name__
+
+    def subscribe(self, change: Callable, attribute: str):
+        key = f'{self.root_topic}.{attribute}'
+        self.event_map[key] = change  # type: ignore
+        pub.subscribe(change, key)
+
+    def unsubscribe(self, attribute: str):
+        key = self.topic_attribute(attribute)
+        pub.unsubscribe(self.event_map[key], key)  # type: ignore
+        del self.event_map[key]  # type: ignore
+
+    def topic_attribute(self, attribute: str):
+        return f'{self.root_topic}.{attribute}'
+
+    def is_subscribed(self, attribute: str) -> bool:
+        return attribute in self.event_map  # type: ignore
+
+    def __setattr__(self, key: str, value: Any):
+        self.set_quietly(key, value)
+
+        if key != '__class__':
+            pub.sendMessage(f'{self.root_topic}.{key}', **{key: value})
+
+# Internal Cell
+class AnnotatorStep(Enum):
+    EXPLORE = auto()
+    CREATE = auto()
+    IMPROVE = auto()
+
+# Internal Cell
+
+class AppWidgetState(BaseState):
+    annotation_step: AnnotatorStep = AnnotatorStep.CREATE
+    size: Tuple[int, int] = (640, 400)
+    max_im_number: int = 1
+    index: int = 0
+
+# Internal Cell
+class Annotator(ABC):
+    def __init__(self, app_state: AppWidgetState):
+        self.app_state = app_state
 
 # Internal Cell
 
@@ -68,50 +134,10 @@ def generate_subset_anno_json(project_path: Path, project_file,
     return subset_file
 
 # Internal Cell
-
-class StateSettings(BaseSettings):
-    class Config:
-        validate_assignment = True
-
-
-class BaseState(StateSettings, BaseModel):
-    def __init__(self, uuid: str = None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.set_quietly('_uuid', uuid)
-
-    def set_quietly(self, key: str, value: Any):
-        """
-        Assigns a value to a state's attribute.
-
-        This function can be used to avoid that
-        the state dispatches a PyPubSub event.
-        It's very usefull to avoid event recursion,
-        ex: a component is listening for an event A
-        but it also changes the state that dispatch
-        the event A. Using set_quietly to set the
-        value at the component will avoid the recursion.
-        """
-        object.__setattr__(self, key, value)
-
-    @property
-    def root_topic(self) -> str:
-        if hasattr(self, '_uuid') and self._uuid:  # type: ignore
-            return f'{self._uuid}.{type(self).__name__}'  # type: ignore
-
-        return type(self).__name__
-
-    def subscribe(self, change: Callable, attribute: str):
-        pub.subscribe(change, f'{self.root_topic}.{attribute}')
-
-    def __setattr__(self, key: str, value: Any):
-        self.set_quietly(key, value)
-
-        if key != '__class__':
-            pub.sendMessage(f'{self.root_topic}.{key}', **{key: value})
-
-# Internal Cell
-
-class AppWidgetState(BaseState):
-    size: Tuple[int, int] = (640, 400)
-    max_im_number: int = 1
-    index: int = 0
+def validate_project_path(project_path):
+    project_path = Path(project_path)
+    assert project_path.exists(), "WARNING: Project path should point to " \
+                                  "existing directory"
+    assert project_path.is_dir(), "WARNING: Project path should point to " \
+                                  "existing directory"
+    return project_path

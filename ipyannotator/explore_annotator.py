@@ -3,20 +3,16 @@
 __all__ = ['ExploreAnnotatorState', 'ExploreAnnotator']
 
 # Internal Cell
-from typing import Optional
-
 from .im2im_annotator import ImCanvas
-
-# Internal Cell
-from .base import BaseState, AppWidgetState
+from .base import BaseState, AppWidgetState, Annotator
 from .navi_widget import Navi
 from .storage import MapeableStorage, get_image_list_from_folder
-from .mltypes import Input, Output
+from .mltypes import InputImage, Output
 from abc import ABC, abstractmethod
 from IPython.display import display
 from pathlib import Path
 from ipywidgets import AppLayout, HBox, Layout
-from typing import Any, List
+from typing import Any, List, Optional
 
 # Cell
 
@@ -27,7 +23,13 @@ class ExploreAnnotatorState(BaseState):
 
 class ExploreAnnotatorGUI(AppLayout):
 
-    def __init__(self, app_state: AppWidgetState, explorer_state: ExploreAnnotatorState):
+    def __init__(
+        self,
+        app_state: AppWidgetState,
+        explorer_state: ExploreAnnotatorState,
+        fit_canvas: bool = False,
+        has_border: bool = False
+    ):
         self._app_state = app_state
         self._state = explorer_state
 
@@ -44,7 +46,9 @@ class ExploreAnnotatorGUI(AppLayout):
 
         self._image = ImCanvas(
             width=self._app_state.size[0],
-            height=self._app_state.size[1]
+            height=self._app_state.size[1],
+            fit_canvas=fit_canvas,
+            has_border=has_border
         )
 
         # set the values already instantiated on state
@@ -141,32 +145,38 @@ class ExploreAnnotatorController:
 
 # Cell
 
-class ExploreAnnotator:
+class ExploreAnnotator(Annotator):
     def __init__(
         self,
         project_path: Path,
-        input_item: Input,
+        input_item: InputImage,
         output_item: Output,
+        has_border: bool = False,
         *args, **kwargs
     ):
-        self._app_state = AppWidgetState(uuid=str(id(self)), **{
+        app_state = AppWidgetState(uuid=str(id(self)), **{
             # "Input" has no attribute "width", "height"
             'size': (input_item.width, input_item.height)  # type: ignore
         })
+
+        super().__init__(app_state)
+
         self._state = ExploreAnnotatorState(uuid=str(id(self)))
 
         # "Input" has no attribute "dir"
         self._storage = InMemoryStorage(project_path / input_item.dir)  # type: ignore
 
         self._controller = ExploreAnnotatorController(
-            self._app_state,
+            self.app_state,
             self._state,
             self._storage
         )
 
         self._view = ExploreAnnotatorGUI(
-            self._app_state,
-            self._state
+            self.app_state,
+            self._state,
+            fit_canvas=input_item.fit_canvas,
+            has_border=has_border
         )
 
     def __repr__(self):

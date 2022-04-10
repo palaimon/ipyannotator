@@ -20,27 +20,31 @@ class BBoxItem(VBox):
         bbox_coord: BboxCoordinate,
         max_coord_input_values: Optional[BboxCoordinate],
         index: int,
-        options: List[str] = None
+        options: List[str] = None,
+        readonly: bool = False
     ):
         super().__init__()
 
+        self.readonly = readonly
         self.bbox_coord = bbox_coord
         self.index = index
         self._max_coord_input_values = max_coord_input_values
         self.layout = Layout(display='flex', overflow='hidden')
-        self.btn_delete = self._btn_delete(index)
         self.dropdown_classes = self._dropdown_classes(options)
         self.btn_select = self._btn_select(index)
         self.input_coordinates = self._coordinate_inputs(bbox_coord)
 
-        self.children = [
-            HBox([
-                self.btn_select,
-                self.dropdown_classes,
-                self.input_coordinates,
-                self.btn_delete
-            ])
+        elements = [
+            self.btn_select,
+            self.dropdown_classes,
+            self.input_coordinates,
         ]
+
+        if not self.readonly:
+            self.btn_delete = self._btn_delete(index)
+            elements.append(self.btn_delete)
+
+        self.children = [HBox(elements)]
 
     def _btn_delete(self, index: int) -> ActionButton:
         return ActionButton(
@@ -54,7 +58,8 @@ class BBoxItem(VBox):
         return Dropdown(
             layout=Layout(width='auto'),
             options=options,
-            value=value
+            value=value,
+            disabled=self.readonly
         )
 
     def _btn_select(self, index: int) -> ActionButton:
@@ -67,7 +72,8 @@ class BBoxItem(VBox):
     def _coordinate_inputs(self, bbox_coord: BboxCoordinate):
         return CoordinateInput(
             bbox_coord=bbox_coord,
-            input_max=self._max_coord_input_values
+            input_max=self._max_coord_input_values,
+            disabled=self.readonly
         )
 
 # Internal Cell
@@ -80,10 +86,11 @@ class BBoxVideoItem(BBoxItem):
         label: List[str],
         options: List[str],
         selected: bool = False,
-        btn_delete_enabled: bool = True
+        btn_delete_enabled: bool = True,
+        readonly: bool = False
     ):
         super(VBox, self).__init__()  # type: ignore
-
+        self.readonly = readonly
         self.selected = selected
         self.bbox_video_coord = bbox_video_coord
         self.object_checkbox = self._object_checkbox()
@@ -127,7 +134,8 @@ class BBoxList(VBox):
         on_coords_changed: Optional[Callable],
         on_label_changed: Callable,
         on_btn_delete_clicked: Callable,
-        on_btn_select_clicked: Optional[Callable]
+        on_btn_select_clicked: Optional[Callable],
+        readonly: bool = False
     ):
         super().__init__()
         self._classes = classes
@@ -136,6 +144,7 @@ class BBoxList(VBox):
         self._on_btn_delete_clicked = on_btn_delete_clicked
         self._on_label_changed = on_label_changed
         self._on_btn_select_clicked = on_btn_select_clicked
+        self.readonly = readonly
 
     @property
     def max_coord_input_values(self) -> Optional[BboxCoordinate]:
@@ -157,9 +166,11 @@ class BBoxList(VBox):
                 options=self._classes,
                 bbox_coord=coord,
                 max_coord_input_values=self._max_coord_input_values,
+                readonly=self.readonly
             )
 
-            bbox_item.btn_delete.on_click(self.del_element)
+            if not self.readonly:
+                bbox_item.btn_delete.on_click(self.del_element)
             bbox_item.input_coordinates.uuid = index
             bbox_item.input_coordinates.coord_changed = self._on_coords_changed
             bbox_item.btn_select.on_click(self._on_btn_select_clicked)
@@ -173,6 +184,9 @@ class BBoxList(VBox):
             elements.append(bbox_item)
 
         self.children = [*list(self.children), *elements]  # type: ignore
+
+    def __getitem__(self, index: int):
+        return self.children[index]
 
     def clear(self):
         self.children = []
@@ -209,7 +223,7 @@ class BBoxVideoList(BBoxList):
         classes: list,
         on_label_changed: Callable,
         on_btn_delete_clicked: Callable,
-        on_btn_select_clicked: Callable,
+        on_btn_select_clicked: Optional[Callable],
         on_checkbox_object_clicked: Callable,
         btn_delete_enabled: bool = True
     ):
@@ -224,9 +238,6 @@ class BBoxVideoList(BBoxList):
         self.elements: List[BBoxVideoItem] = []
         self._btn_delete_enabled = btn_delete_enabled
         self._on_checkbox_object_clicked = on_checkbox_object_clicked
-
-    def __getitem__(self, index: int):
-        return self.children[index]
 
     # error: Signature of "render_btn_list" incompatible with supertype "BBoxList"
     def render_btn_list(  # type: ignore

@@ -1,5 +1,4 @@
-## env setup
-
+# Env setup
 
 To install lib and deps use:
 
@@ -39,7 +38,7 @@ To do so, add the option:
 
 to the notebook metadata (`Edit > Edit Notebook Metadata`) 
 
-### How To build lib:
+## How To build lib:
 
 ```
 nbdev_build_lib

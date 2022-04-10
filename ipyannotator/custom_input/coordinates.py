@@ -17,9 +17,11 @@ class CoordinateInput(HBox):
         uuid: int = None,
         bbox_coord: BboxCoordinate = None,
         input_max: BboxCoordinate = None,
-        coord_changed: Optional[Callable] = None
+        coord_changed: Optional[Callable] = None,
+        disabled: bool = False
     ):
         super().__init__()
+        self.disabled = disabled
         self.uuid = uuid
         self._input_max = input_max
         self.coord_changed = coord_changed
@@ -44,7 +46,8 @@ class CoordinateInput(HBox):
                 min=0,
                 max=None if self._input_max is None else getattr(self._input_max, in_p),
                 layout=Layout(width="55px"),
-                continuous_update=False
+                continuous_update=False,
+                disabled=self.disabled
             )
             widget_inputs.append(widget_input)
             widget_input.observe(self._on_coord_change, names="value")

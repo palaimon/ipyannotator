@@ -59,7 +59,7 @@ def get_settings(dataset: DS):
         project_file = project_path / 'annotations.json'
         image_dir = 'images'
         label_dir = None
-        im_width = 50
+        im_width = 200
         im_height = im_width
 
         create_object_detection(path=project_path, n_samples=50, n_objects=1, size=(500, 500))

@@ -60,6 +60,7 @@ class BBoxVideoCoordinates(BBoxCoordinates):
         on_trajectory_enabled_clicked: Callable,
         on_btn_delete_clicked: Callable[[BboxVideoCoordinate], None]
     ):
+        self.on_label_changed = on_label_changed
         super().__init__(
             app_state,
             bbox_canvas_state,
@@ -79,21 +80,25 @@ class BBoxVideoCoordinates(BBoxCoordinates):
         if on_trajectory_enabled_clicked:
             self.trajectory_enabled_checkbox.observe(on_trajectory_enabled_clicked, names='value')
 
+        self._bbox_state.unsubscribe('drawing_enabled')
         pub.unsubscribe(super()._sync_labels, f'{bbox_canvas_state.root_topic}.bbox_coords')
         pub.unsubscribe(super()._refresh_children, f'{app_state.root_topic}.index')
 
-        self._bbox_list = BBoxVideoList(
-            btn_delete_enabled=drawing_enabled,
-            on_label_changed=on_label_changed,
-            on_btn_delete_clicked=self._on_btn_delete_clicked,
-            on_btn_select_clicked=on_btn_select_clicked,
-            classes=bbox_state.classes,
-            on_checkbox_object_clicked=self._on_checkbox_object_clicked
-        )
+        self._init_bbox_list(self._bbox_state.drawing_enabled)
 
         bbox_canvas_state.subscribe(self._update_max_coord_input, 'image_scale')
 
         self.children = self._bbox_list.children
+
+    def _init_bbox_list(self, drawing_enabled: bool):
+        self._bbox_list = BBoxVideoList(
+            btn_delete_enabled=drawing_enabled,
+            on_label_changed=self.on_label_changed,
+            on_btn_delete_clicked=self._on_btn_delete_clicked,
+            on_btn_select_clicked=self.on_btn_select_clicked,
+            classes=self._bbox_state.classes,
+            on_checkbox_object_clicked=self._on_checkbox_object_clicked
+        )
 
     def _refresh_children(self, index: int):
         self._render(
@@ -184,7 +189,8 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
         super().__init__(
             app_state=app_state,
             bbox_state=bbox_state,
-            on_save_btn_clicked=on_save_btn_clicked
+            on_save_btn_clicked=on_save_btn_clicked,
+            fit_canvas=False
         )
 
         self._app_state = app_state
@@ -192,6 +198,7 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
         self.on_bbox_drawn = on_bbox_drawn
         self.bbox_trajectory = BBoxTrajectory()
         self.history = BboxVideoHistory()
+        self.on_label_changed = on_label_changed
 
         pub.unsubAll(f'{self._image_box.state.root_topic}.bbox_coords')
 
@@ -208,7 +215,7 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
             bbox_state=self._bbox_state,  # type: ignore
             on_btn_select_clicked=self._highlight_bbox,
             on_btn_delete_clicked=self._remove_trajectory_history,
-            on_label_changed=on_label_changed,
+            on_label_changed=self.on_label_changed,
             drawing_enabled=drawing_enabled,
             on_trajectory_enabled_clicked=self.on_trajectory_enabled_clicked
         )
@@ -231,7 +238,7 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
 
         self.btn_right_menu_enabled = ToggleButton(
             description="Menu",
-            tooltip="Disable right menu for a better navigation experience.",
+            tooltip="Disable right menu for a faster navigation experience.",
             icon="eye-slash",
             disabled=False,
             # Argument 1 to "render_right_menu" of "BBoxAnnotatorVideoGUI" has incompatible
@@ -471,7 +478,8 @@ class BBoxVideoAnnotator(BBoxAnnotator):
         pub.unsubscribe(self.controller._idx_changed, f'{self.app_state.root_topic}.index')
         pub.unsubAll(f'{self.app_state.root_topic}.index')
         state_params = {**self.bbox_state.dict()}
-        state_params.pop('_uuid')
+        state_params.pop('_uuid', [])
+        state_params.pop('event_map', [])
         self.bbox_state = BBoxVideoState(
             uuid=self.bbox_state._uuid,
             **state_params
@@ -502,8 +510,8 @@ class BBoxVideoAnnotator(BBoxAnnotator):
         # "BBoxAnnotatorController" has no attribute "update_storage_labels"
         self.controller.update_storage_labels(change, index)  # type: ignore
 
-    def on_save_btn_clicked(self, bbox_coords: Dict):
-        self.controller.save_current_annotations(bbox_coords)
+    def on_save_btn_clicked(self, bbox_coords: List[BboxVideoCoordinate]):
+        self.controller.save_current_annotations(bbox_coords)  # type: ignore
 
     def _update_state_id(self, merged_ids: List[str], bbox_coords: List[BboxVideoCoordinate]):
         merged_id = "-".join(merged_ids)

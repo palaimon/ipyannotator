@@ -93,7 +93,8 @@ disable=raw-checker-failed,
 		no-name-in-module,
 		line-too-long,
 		missing-class-docstring,
-		wrong-import-position
+		wrong-import-position,
+        consider-using-f-string
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

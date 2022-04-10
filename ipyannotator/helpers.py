@@ -5,6 +5,7 @@ __all__ = ['Tutorial']
 # Internal Cell
 
 import pandas as pd
+from typing import Union
 
 try:
     from collections.abc import Iterable
@@ -101,7 +102,7 @@ from random import choice
 from .datasets.factory import DS as NDS
 from .datasets.factory_legacy import DS, _combine_train_test
 from pathlib import Path
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 
 
 class Tutorial:
@@ -110,7 +111,7 @@ class Tutorial:
 
     """
 
-    def __init__(self, dataset: DS, project_path):
+    def __init__(self, dataset: Union[DS, NDS], project_path):
         self.dataset = dataset
         self.project_path = project_path
         if self.dataset not in [DS.ARTIFICIAL_CLASSIFICATION, DS.ARTIFICIAL_DETECTION,
@@ -208,7 +209,7 @@ class Tutorial:
                 improver.capture_state.annotations[k] = {'answer': v_expl != v_cret}
             improver.view._navi._next_btn.click()
 
-    def annotate_video_bboxes(self, annotator):
+    def annotate_video_bboxes(self, annotator) -> dict:
         mot_gt = pd.read_csv(self.project_path / 'mot.csv')
         mot_gt.columns = [
             'frame',
@@ -226,7 +227,8 @@ class Tutorial:
         full_path = f'{self.project_path}/images'
         mot_gt['frame'] = mot_gt['frame'].apply(lambda x: full_path + '/' + x + '.jpg')
         mot_gt.index = mot_gt['frame']
-        mot_gt = mot_gt[mot_gt.columns.drop(['frame', 'conf', 'label', 'vis'])]
+        mot_gt = mot_gt.drop(columns=['frame', 'conf', 'label', 'vis'])
+#         mot_gt = mot_gt[mot_gt.columns.drop(['frame', 'conf', 'label', 'vis'])]
         mot_gt = mot_gt.groupby('frame').apply(lambda x: x.to_json(orient='records'))
         result = mot_gt.to_json(orient='index')
         parsed = json.loads(result)
@@ -258,6 +260,8 @@ class Tutorial:
 
         with open(self.project_path / 'create_results/annotations.json', 'w+') as f:
             json.dump(annotations, f)
+
+        return annotations
 
     def _mutate_id(self, bbox: dict, index: int) -> str:
         id = '2'

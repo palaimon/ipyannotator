@@ -5,33 +5,24 @@ __all__ = []
 # Internal Cell
 from ipycanvas import Canvas
 from typing import List
-from collections.abc import MutableMapping
+from ..ipytyping.annotations import AnnotationStore
 from ..mltypes import BboxCoordinate
 
 # Internal Cell
-class TrajectoryStore(MutableMapping):
-    def __init__(self):
-        self.track = {}
-
+class TrajectoryStore(AnnotationStore):
     def __getitem__(self, key: str):
         assert isinstance(key, str)
-        return self.track[key]
+        return self._annotations[key]
 
     def __delitem__(self, key: str):
         assert isinstance(key, str)
         if key in self:
-            del self.track[key]
+            del self._annotations[key]
 
     def __setitem__(self, key: str, value: List[BboxCoordinate]):
         assert isinstance(key, str)
         assert isinstance(value, list)
-        self.track[key] = value
-
-    def __iter__(self):
-        return iter(self.track)
-
-    def __len__(self):
-        return len(self.track)
+        self._annotations[key] = value
 
 # Internal Cell
 class BBoxTrajectory:

@@ -41,4 +41,4 @@ EXPOSE 8080
 
 ENTRYPOINT ["poetry", "run", "voila", "--enable_nbextensions=True", "--no-browser", "--port=8080"]
 
-CMD ["nbs/09_viola_example.ipynb"]
+CMD ["nbs/09_voila_example.ipynb"]

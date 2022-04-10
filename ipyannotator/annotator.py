@@ -6,14 +6,14 @@ __all__ = ['Annotator']
 import json
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Tuple, Type
+from typing import Tuple, Type, List
 
 from skimage import io
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 
-from .base import generate_subset_anno_json, Settings
+from .base import generate_subset_anno_json, Settings, AnnotatorStep
 from .mltypes import (Input, Output, OutputVideoBbox,
-                                  InputImage, OutputImageLabel,
+                                  InputImage, OutputImageLabel, OutputLabel,
                                   OutputImageBbox, OutputGridBox, NoOutput)
 from .bbox_annotator import BBoxAnnotator
 from .bbox_video_annotator import BBoxVideoAnnotator
@@ -25,14 +25,19 @@ from .storage import (construct_annotation_path, group_files_by_class)
 
 # Internal Cell
 class AnnotatorFactory(ABC):
-    io: Tuple[Type[Input], Type[Output]]
+    io: Tuple[Type[Input], List[Type[Output]]]
 
     @abstractmethod
     def get_annotator(self):
         pass
 
     def __new__(cls, input_item, output_item):
-        subclass_map = {subclass.io: subclass for subclass in cls.__subclasses__()}
+        subclass_map = {}
+
+        for subclass in cls.__subclasses__():
+            for subclass_output in subclass.io[1]:
+                subclass_map[(subclass.io[0], subclass_output)] = subclass
+
         try:
             subclass = subclass_map[(type(input_item), type(output_item))]
             instance = super(AnnotatorFactory, subclass).__new__(subclass)
@@ -40,41 +45,37 @@ class AnnotatorFactory(ABC):
         except KeyError:
             print(f"Pair {(input_item, output_item)} is not supported!")
 
-#
-# Define all supported annotators with correct Input/Output pairs for internal use below:
-#
-
 
 class Bboxer(AnnotatorFactory):
-    io = (InputImage, OutputImageBbox)
+    io = (InputImage, [OutputImageBbox])
 
     def get_annotator(self):
         return BBoxAnnotator
 
 
 class Im2Imer(AnnotatorFactory):
-    io = (InputImage, OutputImageLabel)
+    io = (InputImage, [OutputImageLabel, OutputLabel])
 
     def get_annotator(self):
         return Im2ImAnnotator
 
 
 class Capturer(AnnotatorFactory):
-    io = (InputImage, OutputGridBox)
+    io = (InputImage, [OutputGridBox])
 
     def get_annotator(self):
         return CaptureAnnotator
 
 
 class ImExplorer(AnnotatorFactory):
-    io = (InputImage, NoOutput)
+    io = (InputImage, [NoOutput])
 
     def get_annotator(self):
         return ExploreAnnotator
 
 
 class VideoBboxer(AnnotatorFactory):
-    io = (InputImage, OutputVideoBbox)
+    io = (InputImage, [OutputVideoBbox])
 
     def get_annotator(self):
         return BBoxVideoAnnotator
@@ -105,13 +106,18 @@ class Annotator:
 
         annotator = AnnotatorFactory(self.input_item, self.output_item).get_annotator()
 
-        return annotator(project_path=self.settings.project_path,
-                         input_item=self.input_item,
-                         output_item=self.output_item,
-                         annotation_file_path=anno_,
-                         n_cols=self.settings.n_cols,
-                         question="Classification <explore>",
-                         has_border=True)
+        self.output_item.drawing_enabled = False
+        annotator = annotator(project_path=self.settings.project_path,
+                              input_item=self.input_item,
+                              output_item=self.output_item,
+                              annotation_file_path=anno_,
+                              n_cols=self.settings.n_cols,
+                              question="Classification <explore>",
+                              has_border=True)
+
+        annotator.app_state.annotation_step = AnnotatorStep.EXPLORE
+
+        return annotator
 
     def create(self):
         anno_ = construct_annotation_path(project_path=self.settings.project_path,
@@ -120,13 +126,18 @@ class Annotator:
 
         annotator = AnnotatorFactory(self.input_item, self.output_item).get_annotator()
 
-        return annotator(project_path=self.settings.project_path,
-                         input_item=self.input_item,
-                         output_item=self.output_item,
-                         annotation_file_path=anno_,
-                         n_cols=self.settings.n_cols,
-                         question="Classification <create>",
-                         has_border=True)
+        self.output_item.drawing_enabled = True
+        annotator = annotator(project_path=self.settings.project_path,
+                              input_item=self.input_item,
+                              output_item=self.output_item,
+                              annotation_file_path=anno_,
+                              n_cols=self.settings.n_cols,
+                              question="Classification <create>",
+                              has_border=True)
+
+        annotator.app_state.annotation_step = AnnotatorStep.CREATE
+
+        return annotator
 
     def improve(self):
         # open labels from create step
@@ -140,7 +151,6 @@ class Annotator:
         if type(self.output_item) == OutputImageLabel:
 
             #Construct multiple Capturers for each class
-            #
             out = []
             for class_name, class_anno in tqdm(
                     group_files_by_class(loaded_image_annotations).items()):
@@ -181,7 +191,6 @@ class Annotator:
             captured_path = Path(self.settings.project_path) / "captured"
 
             # Save annotated images on disk
-            #
             for im, bbx in tqdm(di.items()):
                 # use captured_path instead image_dir, keeping the folder structure
                 old_im_path = Path(im)
@@ -212,5 +221,12 @@ class Annotator:
 
         else:
             raise Exception(f"Improve is not supported for {self.output_item}")
+        if isinstance(out, list):
+            def update_step(anno):
+                anno.app_state.annotation_step = AnnotatorStep.IMPROVE
+                return anno
+            out = [update_step(anno) for anno in out]
+        else:
+            out.app_state.annotation_step = AnnotatorStep.IMPROVE
 
         return out

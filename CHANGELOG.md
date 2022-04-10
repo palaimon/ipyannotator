@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow user to use labels without using directories.
 - Refactor Im2Im and Capture annotators to render any widget on grid menu.
 
-## [0.7.0] - 2022-02-21
+## [0.7.0] - 2022-02-19
 
 ### Changed
 - Updated dependencies to fix Voila's conflict by [Ítalo Epifânio](https://github.com/itepifanio).
@@ -20,8 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - BBoxAnnotator coordinate's input now changes according to the image size [Ítalo Epifânio](https://github.com/itepifanio).
-- Right menu been rendered faster, improving VideoAnnotator navigation speed by [Ítalo Epifânio](https://github.com/itepifanio).
-- Trajectory been drawn after delete object at VideoAnnotator by [Ítalo Epifânio](https://github.com/itepifanio).
+- Faster right menu rendering, improving overall VideoAnnotator navigation speed by [Ítalo Epifânio](https://github.com/itepifanio).
+- Don't draw trajectory for deleted objects in VideoAnnotator by [Ítalo Epifânio](https://github.com/itepifanio).
 
 ## [0.6.0] - 2022-01-31
 

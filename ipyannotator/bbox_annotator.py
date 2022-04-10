@@ -15,7 +15,8 @@ from IPython.display import display
 from ipywidgets import AppLayout, Button, HBox, VBox, Layout
 
 from .mltypes import BboxCoordinate
-from .base import BaseState, AppWidgetState
+from .base import BaseState, AppWidgetState, Annotator
+from .mltypes import InputImage, OutputImageBbox
 from .bbox_canvas import BBoxCanvas, BBoxCanvasState
 from .navi_widget import Navi
 from .right_menu_widget import BBoxList, BBoxVideoItem
@@ -29,6 +30,7 @@ class BBoxState(BaseState):
     image: Optional[Path]
     classes: List[str]
     labels: List[List[str]] = []
+    drawing_enabled: bool = True
 
 # Internal Cell
 
@@ -47,15 +49,9 @@ class BBoxCoordinates(VBox):
         self._app_state = app_state
         self._bbox_state = bbox_state
         self._bbox_canvas_state = bbox_canvas_state
+        self.on_btn_select_clicked = on_btn_select_clicked
 
-        self._bbox_list = BBoxList(
-            max_coord_input_values=None,
-            on_coords_changed=self.on_coords_change,
-            on_label_changed=self.on_label_change,
-            on_btn_delete_clicked=self.on_btn_delete_clicked,
-            on_btn_select_clicked=on_btn_select_clicked,
-            classes=bbox_state.classes
-        )
+        self._init_bbox_list(self._bbox_state.drawing_enabled)
 
         if self._bbox_canvas_state.bbox_coords:
             self._bbox_list.render_btn_list(
@@ -64,6 +60,7 @@ class BBoxCoordinates(VBox):
             )
 
         app_state.subscribe(self._refresh_children, 'index')
+        bbox_state.subscribe(self._init_bbox_list, 'drawing_enabled')
         bbox_canvas_state.subscribe(self._sync_labels, 'bbox_coords')
         self._bbox_canvas_state.subscribe(self._update_max_coord_input, 'image_scale')
         self._update_max_coord_input(self._bbox_canvas_state.image_scale)
@@ -72,6 +69,19 @@ class BBoxCoordinates(VBox):
             max_height=f'{self._app_state.size[1]}px',
             display='block'
         )
+
+    def _init_bbox_list(self, drawing_enabled: bool):
+        self._bbox_list = BBoxList(
+            max_coord_input_values=None,
+            on_coords_changed=self.on_coords_change,
+            on_label_changed=self.on_label_change,
+            on_btn_delete_clicked=self.on_btn_delete_clicked,
+            on_btn_select_clicked=self.on_btn_select_clicked,
+            classes=self._bbox_state.classes,
+            readonly=not drawing_enabled
+        )
+
+        self._refresh_children(0)
 
     def __getitem__(self, index: int) -> BBoxVideoItem:
         return self.children[index]
@@ -134,18 +144,21 @@ class BBoxCoordinates(VBox):
             self._bbox_list.max_coord_input_values = BboxCoordinate(*coords)
 
 # Internal Cell
-
 class BBoxAnnotatorGUI(AppLayout):
     def __init__(
         self,
         app_state: AppWidgetState,
         bbox_state: BBoxState,
-        on_save_btn_clicked: Callable = None
+        fit_canvas: bool,
+        on_save_btn_clicked: Callable = None,
+        has_border: bool = False
     ):
         self._app_state = app_state
         self._bbox_state = bbox_state
         self._on_save_btn_clicked = on_save_btn_clicked
         self._label_history: List[List[str]] = []
+        self.fit_canvas = fit_canvas
+        self.has_border = has_border
 
         self._navi = Navi()
 
@@ -169,7 +182,7 @@ class BBoxAnnotatorGUI(AppLayout):
             )
         )
 
-        self._image_box = BBoxCanvas(*self._app_state.size)
+        self._init_canvas(self._bbox_state.drawing_enabled)
 
         self.right_menu = BBoxCoordinates(
             app_state=self._app_state,
@@ -200,6 +213,7 @@ class BBoxAnnotatorGUI(AppLayout):
         self._redo_btn.on_click(self._redo_clicked)
 
         bbox_state.subscribe(self._set_image_path, 'image')
+        bbox_state.subscribe(self._init_canvas, 'drawing_enabled')
         bbox_state.subscribe(self._set_coords, 'coords')
         app_state.subscribe(self._set_max_im_number, 'max_im_number')
 
@@ -211,6 +225,14 @@ class BBoxAnnotatorGUI(AppLayout):
             footer=self._controls_box,
             pane_widths=(2, 8, 0),
             pane_heights=(1, 4, 1))
+
+    def _init_canvas(self, drawing_enabled: bool):
+        self._image_box = BBoxCanvas(
+            *self._app_state.size,
+            drawing_enabled=drawing_enabled,
+            fit_canvas=self.fit_canvas,
+            has_border=self.has_border
+        )
 
     def _highlight_bbox(self, btn: ActionButton):
         self._image_box.highlight = btn.value
@@ -258,7 +280,6 @@ class BBoxAnnotatorGUI(AppLayout):
         self._image_box.observe_client_ready(callback)
 
 # Internal Cell
-
 class BBoxAnnotatorController:
     def __init__(
         self,
@@ -280,7 +301,7 @@ class BBoxAnnotatorController:
         if render_previous_coords:
             self._update_coords(self._last_index)
 
-    def save_current_annotations(self, coords: dict):
+    def save_current_annotations(self, coords: List[BboxCoordinate]):
         self._bbox_state.set_quietly('coords', coords)
         self._save_annotations(self._app_state.index)
 
@@ -319,7 +340,7 @@ class BBoxAnnotatorController:
 
 # Cell
 
-class BBoxAnnotator:
+class BBoxAnnotator(Annotator):
     """
     Represents bounding box annotator.
 
@@ -332,24 +353,28 @@ class BBoxAnnotator:
     def __init__(
         self,
         project_path: Path,
-        input_item,
-        output_item,
+        input_item: InputImage,
+        output_item: OutputImageBbox,
         annotation_file_path: Path,
+        has_border: bool = False,
         *args, **kwargs
     ):
-        self.app_state = AppWidgetState(
+        app_state = AppWidgetState(
             uuid=str(id(self)),
             **{
                 'size': (input_item.width, input_item.height),
             }
         )
 
+        super().__init__(app_state)
+
         self._input_item = input_item
         self._output_item = output_item
 
         self.bbox_state = BBoxState(
             uuid=str(id(self)),
-            classes=output_item.classes
+            classes=output_item.classes,
+            drawing_enabled=self._output_item.drawing_enabled
         )
 
         self.storage = JsonCaptureStorage(
@@ -367,7 +392,9 @@ class BBoxAnnotator:
         self.view = BBoxAnnotatorGUI(
             app_state=self.app_state,
             bbox_state=self.bbox_state,
-            on_save_btn_clicked=self.controller.save_current_annotations
+            fit_canvas=self._input_item.fit_canvas,
+            on_save_btn_clicked=self.controller.save_current_annotations,
+            has_border=has_border
         )
 
         self.view.on_client_ready(self.controller.handle_client_ready)

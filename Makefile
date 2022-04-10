@@ -11,12 +11,14 @@ ipyannotator: $(SRC)
 sync:
 	nbdev_update_lib
 
-docs_serve: docs
-	cd docs && bundle exec jekyll serve
+meta:
+	python ipyannotator/doc_utils.py
 
-docs: $(SRC)
-	nbdev_build_docs
-	touch docs
+docs: meta
+	sphinx-build . ./_build/html -a
+
+quick-docs:
+	sphinx-build . ./_build/html -a
 
 test:
 	nbdev_test_nbs

@@ -98,3 +98,20 @@ build_whls_internal:
         poetry build -f wheel &&
         poetry publish --repository PYPIPALAIMON -u gitlab-ci-token -p ${CI_JOB_TOKEN}
         "
+
+pages:
+  tags:
+    - docker
+  stage: release
+#  only:
+#  - master
+  script:
+    - >
+      docker run -i --rm
+      -v $(pwd)/public:/app/_build/html
+      $IMG_TAG
+      /bin/bash -c "poetry run make docs"
+    - rm -rf $(pwd)/public/.doctrees
+  artifacts:
+    paths:
+    - public
