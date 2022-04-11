@@ -6,6 +6,10 @@ Ipyannotator uses tutorials to demonstrate how the library can be used.
 All tutorials are statically generated from jupyter notebooks. 
 All notebooks can be found on our `Github's repository <https://github.com/palaimon/ipyannotator/tree/main/nbs>`_
 
+The notebooks contains the development dependencies: 
+[pytest](https://docs.pytest.org/en/7.1.x/) and [ipytest](https://github.com/chmp/ipytest), 
+if you want to run the notebooks remove the tests or install the libraries mentioned.
+
 .. toctree::
    :maxdepth: 1
 

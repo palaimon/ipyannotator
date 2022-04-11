@@ -7,9 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.8.1] - 2022-04-09
+
 ### Changed
-- Allow user to use labels without using directories.
-- Refactor Im2Im and Capture annotators to render any widget on grid menu.
+- Refactored notebooks to use python to handle folder structure instead of linux commands by [Ítalo Epifânio](https://github.com/itepifanio).
+
+### Added
+- [tqdm](itlab.palaimon.io/products/ipyannotator/ipyannotator/-/merge_requests) dependency [Ítalo Epifânio](https://github.com/itepifanio).
+- Doc section explaining Ipyannotator dev dependencies [Ítalo Epifânio](https://github.com/itepifanio).
+
+## [0.8.0] - 2022-04-09
+
+### Changed
+- Make the creation of new label classes more flexible and decouple it from the folder structure by [Ítalo Epifânio](https://github.com/itepifanio).
+- Refactored Im2Im and Capture annotators to render any widget on grid menu by [Ítalo Epifânio](https://github.com/itepifanio).
+- Replaced exception with warning when using the same file storage on multiple annotators by [Ítalo Epifânio](https://github.com/itepifanio).
+
+### Added
+- New `fit_canvas` option to adjust images to the size of the canvas by [Ítalo Epifânio](https://github.com/itepifanio).
+- Annotator step (explore, create, improve) can be recovered when using Ipyannotator API by [Ítalo Epifânio](https://github.com/itepifanio).
+- New documentation theme and structure by [Carlos Cerqueira](https://github.com/Carloscerq) and [Ítalo Epifânio](https://github.com/itepifanio).
 
 ## [0.7.0] - 2022-02-19
 

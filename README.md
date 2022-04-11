@@ -58,13 +58,14 @@ This library has been written in the [literate programming style](https://en.wik
 jupyter notebooks by [nbdev](https://www.fast.ai/2019/12/02/nbdev/). Please explore the jupyter notebooks in `nbs/` to learn more about
 the inner working of ipyannotator.
 
+The notebooks contains the development dependencies: 
+[pytest](https://docs.pytest.org/en/7.1.x/) and [ipytest](https://github.com/chmp/ipytest), 
+if you want to run the notebooks remove the tests or install the libraries mentioned.
 
 Also check out the following notebook for a more high level overview.
 
-- Tutorial demonstrating how ipyannotator can be seamlessly integrated in your
-    data science workflow. `nbs/08_tutorial_road_damage.ipynb`
-- [Recoding of jupytercon 2020](https://www.youtube.com/watch?v=jFAp1s1O8Hg) talk explaining the high level concepts / vision
-    of ipyannotator.
+- Tutorial demonstrating how ipyannotator can be seamlessly integrated in your data science workflow. `nbs/08_tutorial_road_damage.ipynb`
+- [Recoding of jupytercon 2020](https://www.youtube.com/watch?v=jFAp1s1O8Hg) talk explaining the high level concepts / vision of ipyannotator.
 
 ## Jupyter lab trouble shooting
 
