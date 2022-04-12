@@ -1,5 +1,4 @@
-## env setup
-
+# Env setup
 
 To install lib and deps use:
 
@@ -39,7 +38,7 @@ To do so, add the option:
 
 to the notebook metadata (`Edit > Edit Notebook Metadata`) 
 
-### How To build lib:
+## How To build lib:
 
 ```
 nbdev_build_lib
@@ -167,3 +166,13 @@ voila = { git = "https://github.com/voila-dashboards/voila.git", rev = "e23fcca9
 ```
 
 Manual workaround with viola app described in `README.md`.
+
+## Linter
+
+Ipyannotator uses `flake8`, `mypy` and `pylint` to ensure code quality.
+
+One can use `autopep8` with `nbqa` to make the code `pep8` compliant.
+
+```bash
+nbqa autopep8 nbs --in-place 
+```

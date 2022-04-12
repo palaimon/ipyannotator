@@ -31,3 +31,10 @@ nbdev_install_git_hooks
 
 * Docs are automatically created from the notebooks in the nbs folder.
 
+### Building docs
+
+* Ipyannotator uses sphinx and nbdev to build its documentation. To run locally you can run the command `make docs` from the from the root of your repository, this command will create the html files at the `_build` folder.
+
+### Writing docs
+
+As stated, `ipyannotator` uses `nbdev` and therefore, the notebooks pages will be converted into docs. For this reason, images should be inside the `docs/images` folders, so it can be assible to the documentation. After that, just load the image name when needed.

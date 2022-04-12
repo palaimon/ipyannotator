@@ -1,0 +1,15 @@
+[flake8]
+max-line-length = 100
+ignore = E265, W292, E501, W504, E302, E305, E127, E402
+# E265 -> block comment should start with '# '
+# Cause: The nbdev "comments"
+# W292 -> no newline at end of file
+# Cause: nbdev generated source files end without newline
+# E501 -> line too long
+# Cause: nbdev generated source files might have too long lines
+# W503 -> line break after binary operator
+
+# file specific ignores
+per-file-ignores =
+    ipyannotator/_nbdev.py:E704
+

@@ -4,115 +4,343 @@ __all__ = ['BBoxAnnotator']
 
 # Internal Cell
 
-import os
-import json
-
-from ipyevents import Event
-from ipywidgets import (AppLayout, Button, IntSlider, IntProgress,
-                        HBox, VBox, Output,
-                        Layout, Label)
+import warnings
+from pubsub import pub
+from attr import asdict
 from pathlib import Path
-from traitlets import Int, observe, link, dlink, HasTraits, Bytes, Unicode, Dict
+from copy import deepcopy
+from typing import Optional, List, Callable
 
-from .bbox_canvas import BBoxCanvas
+from IPython.display import display
+from ipywidgets import AppLayout, Button, HBox, VBox, Layout
+
+from .mltypes import BboxCoordinate
+from .base import BaseState, AppWidgetState, Annotator
+from .mltypes import InputImage, OutputImageBbox
+from .bbox_canvas import BBoxCanvas, BBoxCanvasState
 from .navi_widget import Navi
-from .storage import setup_project_paths, get_image_list_from_folder, AnnotationStorage
+from .right_menu_widget import BBoxList, BBoxVideoItem
+from .storage import JsonCaptureStorage
+from .custom_input.buttons import ActionButton
 
 # Internal Cell
 
-class BBoxAnnotatorGUI(AppLayout):
+class BBoxState(BaseState):
+    coords: Optional[List[BboxCoordinate]]
+    image: Optional[Path]
+    classes: List[str]
+    labels: List[List[str]] = []
+    drawing_enabled: bool = True
 
-    def __init__(self, canvas_size=(505, 50)):
+# Internal Cell
+
+class BBoxCoordinates(VBox):
+    """Connects the BBoxList and the states"""
+
+    def __init__(
+        self,
+        app_state: AppWidgetState,
+        bbox_canvas_state: BBoxCanvasState,
+        bbox_state: BBoxState,
+        on_btn_select_clicked: Callable = None
+    ):
+        super().__init__()
+
+        self._app_state = app_state
+        self._bbox_state = bbox_state
+        self._bbox_canvas_state = bbox_canvas_state
+        self.on_btn_select_clicked = on_btn_select_clicked
+
+        self._init_bbox_list(self._bbox_state.drawing_enabled)
+
+        if self._bbox_canvas_state.bbox_coords:
+            self._bbox_list.render_btn_list(
+                self._bbox_canvas_state.bbox_coords,
+                self._bbox_state.labels
+            )
+
+        app_state.subscribe(self._refresh_children, 'index')
+        bbox_state.subscribe(self._init_bbox_list, 'drawing_enabled')
+        bbox_canvas_state.subscribe(self._sync_labels, 'bbox_coords')
+        self._bbox_canvas_state.subscribe(self._update_max_coord_input, 'image_scale')
+        self._update_max_coord_input(self._bbox_canvas_state.image_scale)
+        self.children = self._bbox_list.children
+        self.layout = Layout(
+            max_height=f'{self._app_state.size[1]}px',
+            display='block'
+        )
+
+    def _init_bbox_list(self, drawing_enabled: bool):
+        self._bbox_list = BBoxList(
+            max_coord_input_values=None,
+            on_coords_changed=self.on_coords_change,
+            on_label_changed=self.on_label_change,
+            on_btn_delete_clicked=self.on_btn_delete_clicked,
+            on_btn_select_clicked=self.on_btn_select_clicked,
+            classes=self._bbox_state.classes,
+            readonly=not drawing_enabled
+        )
+
+        self._refresh_children(0)
+
+    def __getitem__(self, index: int) -> BBoxVideoItem:
+        return self.children[index]
+
+    def _refresh_children(self, index: int):
+        self._bbox_list.clear()
+        self._render(
+            self._bbox_canvas_state.bbox_coords,
+            self._bbox_state.labels
+        )
+
+    def _sync_labels(self, bbox_coords: List[BboxCoordinate]):
+        """Every time a new coord is added to the annotator
+        it's added an empty label to the state"""
+        num_classes = len(self._bbox_state.labels)
+
+        for i in bbox_coords[num_classes:]:
+            self._bbox_state.labels.append([])
+
+        self._render(bbox_coords, self._bbox_state.labels)
+
+    def on_coords_change(self, index: int, key: str, value: int):
+        setattr(self._bbox_canvas_state.bbox_coords[index], key, value)
+
+        pub.sendMessage(
+            f'{self._bbox_canvas_state.root_topic}.coord_changed',
+            bbox_coords=self._bbox_canvas_state.bbox_coords
+        )
+
+    def _render(self, bbox_coords: list, labels: list):
+        self._bbox_list.render_btn_list(bbox_coords, labels)
+        self.children = self._bbox_list.children
+
+    def on_label_change(self, change: dict, index: int):
+        self._bbox_state.labels[index] = [change['new']]
+
+    def remove_label(self, index: int):
+        tmp_labels = deepcopy(self._bbox_state.labels)
+        del tmp_labels[index]
+        self._bbox_state.set_quietly('labels', tmp_labels)
+
+    def on_btn_delete_clicked(self, index: int):
+        bbox_coords = self._bbox_canvas_state.bbox_coords.copy()
+        del bbox_coords[index]
+        self.remove_label(index)
+        self._bbox_canvas_state.bbox_coords = bbox_coords
+
+    def _update_max_coord_input(self, image_scale: float):
+        """CoordinateInput maximum values that a user
+        can change. 'x' and 'y' can be improved to avoid
+        bbox outside of the canvas area."""
+        im_width = self._bbox_canvas_state.image_width
+        im_height = self._bbox_canvas_state.image_height
+        if im_height is not None and im_width is not None:
+            size = [
+                im_width // image_scale,
+                im_height // image_scale
+            ]
+            coords = [int(size[i & 1]) for i in range(4)]
+            self._bbox_list.max_coord_input_values = BboxCoordinate(*coords)
+
+# Internal Cell
+class BBoxAnnotatorGUI(AppLayout):
+    def __init__(
+        self,
+        app_state: AppWidgetState,
+        bbox_state: BBoxState,
+        fit_canvas: bool,
+        on_save_btn_clicked: Callable = None,
+        has_border: bool = False
+    ):
+        self._app_state = app_state
+        self._bbox_state = bbox_state
+        self._on_save_btn_clicked = on_save_btn_clicked
+        self._label_history: List[List[str]] = []
+        self.fit_canvas = fit_canvas
+        self.has_border = has_border
+
         self._navi = Navi()
 
         self._save_btn = Button(description="Save",
                                 layout=Layout(width='auto'))
 
-        self._controls_box = HBox([self._navi, self._save_btn],
-                                 layout=Layout(display='flex', flex_flow='row wrap', align_items='center'))
+        self._undo_btn = Button(description="Undo",
+                                icon="undo",
+                                layout=Layout(width='auto'))
 
-        self._image_box = BBoxCanvas(*canvas_size)
+        self._redo_btn = Button(description="Redo",
+                                icon="rotate-right",
+                                layout=Layout(width='auto'))
 
-        super().__init__(header=None,
-                 left_sidebar=None,
-                 center=self._image_box,
-                 right_sidebar=None,
-                 footer=self._controls_box,
-                 pane_widths=(2, 8, 0),
-                 pane_heights=(1, 4, 1))
+        self._controls_box = HBox(
+            [self._navi, self._save_btn, self._undo_btn, self._redo_btn],
+            layout=Layout(
+                display='flex',
+                flex_flow='row wrap',
+                align_items='center'
+            )
+        )
 
+        self._init_canvas(self._bbox_state.drawing_enabled)
+
+        self.right_menu = BBoxCoordinates(
+            app_state=self._app_state,
+            bbox_canvas_state=self._image_box.state,
+            bbox_state=self._bbox_state,
+            on_btn_select_clicked=self._highlight_bbox
+        )
+
+        self._annotator_box = HBox(
+            [self._image_box, self.right_menu],
+            layout=Layout(
+                display='flex',
+                flex_flow='row'
+            )
+        )
+
+        # set the values already instantiated on state
+        if self._app_state.max_im_number:
+            self._set_max_im_number(self._app_state.max_im_number)
+
+        if self._bbox_state.image:
+            self._set_image_path(str(self._bbox_state.image))
+
+        # set the GUI interactions as callables
+        self._navi.on_navi_clicked = self._idx_changed
+        self._save_btn.on_click(self._save_clicked)
+        self._undo_btn.on_click(self._undo_clicked)
+        self._redo_btn.on_click(self._redo_clicked)
+
+        bbox_state.subscribe(self._set_image_path, 'image')
+        bbox_state.subscribe(self._init_canvas, 'drawing_enabled')
+        bbox_state.subscribe(self._set_coords, 'coords')
+        app_state.subscribe(self._set_max_im_number, 'max_im_number')
+
+        super().__init__(
+            header=None,
+            left_sidebar=None,
+            center=self._annotator_box,
+            right_sidebar=None,
+            footer=self._controls_box,
+            pane_widths=(2, 8, 0),
+            pane_heights=(1, 4, 1))
+
+    def _init_canvas(self, drawing_enabled: bool):
+        self._image_box = BBoxCanvas(
+            *self._app_state.size,
+            drawing_enabled=drawing_enabled,
+            fit_canvas=self.fit_canvas,
+            has_border=self.has_border
+        )
+
+    def _highlight_bbox(self, btn: ActionButton):
+        self._image_box.highlight = btn.value
+
+    def _redo_clicked(self, event: dict):
+        self._image_box.redo_bbox()
+        if self._label_history:
+            self._bbox_state.labels[-1] = self._label_history.pop()
+        self.right_menu._refresh_children(-1)
+
+    def _undo_clicked(self, event: dict):
+        if len(self._bbox_state.labels) > 0:
+            self._label_history = [self._bbox_state.labels[-1]]
+        self._image_box.undo_bbox()
+        self.right_menu.remove_label(-1)
+        self.right_menu._refresh_children(-1)
+
+    def _set_image_path(self, image: Optional[str]):
+        self._image_box._state.image_path = image
+
+    def _set_coords(self, coords: List[BboxCoordinate]):
+        if coords:
+            tmp_coords = deepcopy(self._image_box._state.bbox_coords)
+            # error: Argument 1 to "append" of "list" has incompatible
+            # type "List[BboxCoordinate]"; expected "BboxCoordinate"
+            tmp_coords.append(coords)  # type: ignore
+            self._image_box._state.bbox_coords = coords
+
+    def _set_max_im_number(self, max_im_number: int):
+        # sync the navi GUI with AppWidgetState
+        self._navi.max_im_num = max_im_number
+
+    def _idx_changed(self, index: int):
+        # store the last bbox drawn before index update
+        self._bbox_state.set_quietly('coords', self._image_box._state.bbox_coords)
+        self._app_state.index = index
+
+    def _save_clicked(self, *args):
+        if self._on_save_btn_clicked:
+            self._on_save_btn_clicked(self._image_box._state.bbox_coords)
+        else:
+            warnings.warn("Save button click didn't triggered any event.")
 
     def on_client_ready(self, callback):
         self._image_box.observe_client_ready(callback)
 
 # Internal Cell
+class BBoxAnnotatorController:
+    def __init__(
+        self,
+        app_state: AppWidgetState,
+        bbox_state: BBoxState,
+        storage: JsonCaptureStorage,
+        render_previous_coords: bool = True,
+        **kwargs
+    ):
+        self._app_state = app_state
+        self._bbox_state = bbox_state
+        self._storage = storage
+        self._last_index = 0
 
-class BBoxAnnotatorLogic(HasTraits):
-    index = Int(0)
-    image_path = Unicode()
-    bbox_coords = Dict()
-    current_im_num = Int()
+        app_state.subscribe(self._idx_changed, 'index')
 
-    def __init__(self, project_path, file_name=None, image_dir='pics', results_dir=None):
-        self.project_path = Path(project_path)
-        self.image_dir, self.annotation_file_path = setup_project_paths(self.project_path,
-                                                                        file_name=file_name,
-                                                                        image_dir=image_dir,
-                                                                        results_dir=results_dir)
+        self._update_im(self._last_index)
+        self._app_state.max_im_number = len(self._storage)
+        if render_previous_coords:
+            self._update_coords(self._last_index)
 
-        # select images and bboxes only from given annotatin file
-        if self.annotation_file_path.is_file():
-            with self.annotation_file_path.open() as json_file:
-                data = json.load(json_file)
-                im_names = data.keys()
-            self.image_paths = sorted(im for im in get_image_list_from_folder(self.image_dir) if str(im) in im_names)
-        else:
-            self.image_paths = sorted(get_image_list_from_folder(self.image_dir))
+    def save_current_annotations(self, coords: List[BboxCoordinate]):
+        self._bbox_state.set_quietly('coords', coords)
+        self._save_annotations(self._app_state.index)
 
+    def _update_im(self, index: int):
+        self._bbox_state.image = self._storage.images[index]
 
-        if not self.image_paths:
-            raise Exception ("!! No Images to dipslay !!")
+    def _update_coords(self, index: int):  # from annotations
+        image_path = str(self._storage.images[index])
+        coords = self._storage.get(image_path) or {}
+        self._bbox_state.labels = coords.get('labels', [])
+        self._bbox_state.coords = [BboxCoordinate(**c) for c in coords.get('bbox', [])]
 
-        self.current_im_num = len(self.image_paths)
+    def _save_annotations(self, index: int, *args, **kwargs):  # to disk
+        image_path = str(self._storage.images[index])
+        self._storage[image_path] = {
+            # error: Item "None" of "Optional[List[BboxCoordinate]]" has
+            # no attribute "__iter__"
+            'bbox': [asdict(bbox) for bbox in self._bbox_state.coords],  # type: ignore
+            'labels': self._bbox_state.labels
+        }
+        self._storage.save()
 
-        self.annotations = AnnotationStorage(self.image_paths)
+    def _idx_changed(self, index: int):
+        """
+        On index change save an old state and update
+        current image path and bbox coordinates for
+        visualisation
+        """
+        self._save_annotations(self._last_index)
+        self._update_im(index)
+        self._update_coords(index)
+        self._last_index = index
 
-        if self.annotation_file_path.exists():
-            self.annotations.load(self.annotation_file_path)
-        else:
-            self.annotations.save(self.annotation_file_path)
-
-    def _update_im(self):
-        self.image_path = str(self.image_paths[self.index])
-
-    def _update_coords(self): # from annotations
-        self.bbox_coords = self.annotations.get(self.image_path) or {}
-
-    def _update_annotations(self, index): # from coordinates
-        self.annotations[str(self.image_paths[index])] = self.bbox_coords
-
-    def _save_annotations(self, *args, **kwargs): # to disk
-        index = kwargs.pop('old_index', self.index)
-        self._update_annotations(index)
-        self.annotations.save(self.annotation_file_path)
-
-    def _handle_client_ready(self):
-        self._update_im()
-        self._update_coords()
-
-    @observe('index')
-    def _idx_changed(self, change):
-        ''' On index change save an old state
-            and update current image path and bbox coordinates for visualisation
-        '''
-        self._save_annotations(old_index = change['old'])
-
-        self._update_im()
-        self._update_coords()
+    def handle_client_ready(self):
+        self._idx_changed(self._last_index)
 
 # Cell
 
-class BBoxAnnotator(BBoxAnnotatorGUI):
+class BBoxAnnotator(Annotator):
     """
     Represents bounding box annotator.
 
@@ -121,28 +349,59 @@ class BBoxAnnotator(BBoxAnnotatorGUI):
     export final annotations in json format
 
     """
-    debug_output = Output()
 
-    def __init__(self, project_path, canvas_size=(200, 400), file_name=None, image_dir='pics', results_dir=None):
-        self._model = BBoxAnnotatorLogic(project_path, file_name=file_name,
-                                         image_dir=image_dir, results_dir=results_dir)
+    def __init__(
+        self,
+        project_path: Path,
+        input_item: InputImage,
+        output_item: OutputImageBbox,
+        annotation_file_path: Path,
+        has_border: bool = False,
+        *args, **kwargs
+    ):
+        app_state = AppWidgetState(
+            uuid=str(id(self)),
+            **{
+                'size': (input_item.width, input_item.height),
+            }
+        )
 
-        super().__init__(canvas_size=canvas_size)
+        super().__init__(app_state)
 
-        self._save_btn.on_click(self._model._save_annotations)
+        self._input_item = input_item
+        self._output_item = output_item
 
-        # set correct slider max value based on image number
-        dlink((self._model, 'current_im_num'), (self._navi.model, 'max_im_number'))
+        self.bbox_state = BBoxState(
+            uuid=str(id(self)),
+            classes=output_item.classes,
+            drawing_enabled=self._output_item.drawing_enabled
+        )
 
-        # draw current image and bbox only when client is ready
-        self.on_client_ready(self._model._handle_client_ready)
+        self.storage = JsonCaptureStorage(
+            im_dir=project_path / input_item.dir,
+            annotation_file_path=annotation_file_path
+        )
 
-        # Link image path and bbox coordinates between model and the ImageWithBox widget
-        link((self._model, 'image_path'), (self._image_box, 'image_path'))
-        link((self._model, 'bbox_coords'), (self._image_box, 'bbox_coords'))
+        self.controller = BBoxAnnotatorController(
+            app_state=self.app_state,
+            bbox_state=self.bbox_state,
+            storage=self.storage,
+            **kwargs
+        )
 
-        # Link current image index from controls to annotator model
-        link((self._navi.model, 'index'), (self._model, 'index'))
+        self.view = BBoxAnnotatorGUI(
+            app_state=self.app_state,
+            bbox_state=self.bbox_state,
+            fit_canvas=self._input_item.fit_canvas,
+            on_save_btn_clicked=self.controller.save_current_annotations,
+            has_border=has_border
+        )
+
+        self.view.on_client_ready(self.controller.handle_client_ready)
+
+    def __repr__(self):
+        display(self.view)
+        return ""
 
     def to_dict(self, only_annotated=True):
-        return self._model.annotations.to_dict(only_annotated)
+        return self.storage.to_dict(only_annotated)

@@ -36,18 +36,7 @@ build_image:
     - docker image prune -f || true
 
 
-read_notebooks:
-  tags:
-    - docker
-  stage: test
-  script:
-    - > 
-      docker run -i --rm
-      $IMG_TAG 
-      /bin/bash -c "poetry run nbdev_read_nbs"
-
-
-check_notebooks_clean:
+check_nbdev:
   tags:
     - docker
   stage: test
@@ -55,18 +44,11 @@ check_notebooks_clean:
     - >
       docker run -i --rm
       $IMG_TAG
-      /bin/bash -c "./scripts/check_clean_nb.sh"
-
-
-check_diff_lib_nbs:
-  tags:
-    - docker
-  stage: test
-  script:
-    - > 
-      docker run -i --rm
-      $IMG_TAG
-      /bin/bash -c "./scripts/check_lib_diff.sh"
+      /bin/bash -c "
+      poetry run nbdev_read_nbs &&
+      ./scripts/check_clean_nb.sh &&
+      ./scripts/check_lib_diff.sh
+      "
 
 
 run_tests:
@@ -80,8 +62,18 @@ run_tests:
       $IMG_TAG
       /bin/bash -c "./scripts/test_nb.sh"
 
+check_lint:
+    tags:
+      - docker
+    stage: test
+    script:
+      - >
+        docker run -i --rm
+        --env MASTER_TOKEN=$MASTER_TOKEN
+        $IMG_TAG
+        /bin/bash -c "./scripts/check_lint.sh"
 
-build_whls:
+build_whls_release:
   tags:
     - docker
   stage: release
@@ -91,3 +83,35 @@ build_whls:
       docker run -i --rm
       $IMG_TAG
       /bin/bash -c "poetry build -f wheel && poetry publish -r palaimon -u $POETRY_HTTP_BASIC_PYPI_USERNAME -p $POETRY_HTTP_BASIC_PYPI_PASSWORD"
+
+
+build_whls_internal:
+  tags:
+    - docker
+  stage: release
+  when: manual
+  script:
+      - >
+        docker run -i $IMG_TAG
+        /bin/bash -c "
+        poetry config repositories.PYPIPALAIMON ${CI_API_V4_URL}/projects/299/packages/pypi &&
+        poetry build -f wheel &&
+        poetry publish --repository PYPIPALAIMON -u gitlab-ci-token -p ${CI_JOB_TOKEN}
+        "
+
+pages:
+  tags:
+    - docker
+  stage: release
+#  only:
+#  - master
+  script:
+    - >
+      docker run -i --rm
+      -v $(pwd)/public:/app/_build/html
+      $IMG_TAG
+      /bin/bash -c "poetry run make docs"
+    - rm -rf $(pwd)/public/.doctrees
+  artifacts:
+    paths:
+    - public

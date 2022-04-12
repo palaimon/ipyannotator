@@ -1,0 +1,11 @@
+{% extends "!layout.html" %} {% block rootrellink %}
+<script type="text/x-thebe-config">
+  {
+      requestKernel: true,
+      binderOptions: {
+          repo: "binder-examples/requirements",
+          ref: "master",
+      },
+  }
+</script>
+{{ super() }} {% endblock %}
