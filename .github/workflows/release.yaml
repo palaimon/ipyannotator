@@ -11,7 +11,7 @@ jobs:
     name: "Run NB Tests"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
         with:
           python-version: '3.8'
@@ -40,7 +40,7 @@ jobs:
     name: "Upload to pypi"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
       - uses: abatilo/actions-poetry@v2.0.0
         with:
