@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Annotator Factory &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Mltypes" href="00b_mltypes.html" />
+    <link rel="prev" title="Internal Components" href="../docs/internal-components.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Annotator Factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="00b_mltypes.html">
+   Mltypes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_helpers.html">
+   Helpers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_download.html">
+   Dowload datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_factory.html">
+   Dataset factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b_dataset_video.html">
+   Generators for MOT data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_navi_widget.html">
+   Navi Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02a_right_menu_widget.html">
+   Right menu Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_storage.html">
+   Storage
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_bbox_annotator.html">
+   Bounding Box Annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_image_button.html">
+   Image button
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_capture_annotator.html">
+   Capture annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_im2im_annotator.html">
+   Image to image annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="12_debug_utils.html">
+   Debug tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="13_datasets_legacy.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="14_datasets_factory_legacy.html">
+   Datasets factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="15_coordinates_input.html">
+   Coordinates Input
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="16_custom_buttons.html">
+   Custom Buttons
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="17_annotator_explorer.html">
+   Annotator Explorer
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="18_bbox_trajectory.html">
+   Bounding Box Trajectory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="19_bbox_video_annotator.html">
+   Bbox video annotator
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp annotator</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="annotator-factory">
+<h1>Annotator Factory<a class="headerlink" href="#annotator-factory" title="Permalink to this headline">¶</a></h1>
+<p>The current notebook will develop the annotator factory. Given an input and output, the factory will return the corresponding annotator. Once called the user can choose between the three actions available: explore, create or improve.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">ipyannotator.base</span> <span class="kn">import</span> <span class="n">generate_subset_anno_json</span><span class="p">,</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">AnnotatorStep</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.mltypes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">OutputVideoBbox</span><span class="p">,</span>
+                                  <span class="n">InputImage</span><span class="p">,</span> <span class="n">OutputImageLabel</span><span class="p">,</span> <span class="n">OutputLabel</span><span class="p">,</span>
+                                  <span class="n">OutputImageBbox</span><span class="p">,</span> <span class="n">OutputGridBox</span><span class="p">,</span> <span class="n">NoOutput</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.bbox_annotator</span> <span class="kn">import</span> <span class="n">BBoxAnnotator</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.bbox_video_annotator</span> <span class="kn">import</span> <span class="n">BBoxVideoAnnotator</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.capture_annotator</span> <span class="kn">import</span> <span class="n">CaptureAnnotator</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.datasets.generators</span> <span class="kn">import</span> <span class="n">draw_bbox</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.im2im_annotator</span> <span class="kn">import</span> <span class="n">Im2ImAnnotator</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.explore_annotator</span> <span class="kn">import</span> <span class="n">ExploreAnnotator</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.storage</span> <span class="kn">import</span> <span class="p">(</span><span class="n">construct_annotation_path</span><span class="p">,</span> <span class="n">group_files_by_class</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The next cell defines the actual factory implementation, expecting the pair of input/output. The following classes defines all supported annotators with correct input/output pairs for internal use.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">class</span> <span class="nc">AnnotatorFactory</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Input</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Output</span><span class="p">]]]</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_annotator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">input_item</span><span class="p">,</span> <span class="n">output_item</span><span class="p">):</span>
+        <span class="n">subclass_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">subclass_output</span> <span class="ow">in</span> <span class="n">subclass</span><span class="o">.</span><span class="n">io</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">subclass_map</span><span class="p">[(</span><span class="n">subclass</span><span class="o">.</span><span class="n">io</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subclass_output</span><span class="p">)]</span> <span class="o">=</span> <span class="n">subclass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">subclass</span> <span class="o">=</span> <span class="n">subclass_map</span><span class="p">[(</span><span class="nb">type</span><span class="p">(</span><span class="n">input_item</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">output_item</span><span class="p">))]</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">AnnotatorFactory</span><span class="p">,</span> <span class="n">subclass</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">subclass</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">instance</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pair </span><span class="si">{</span><span class="p">(</span><span class="n">input_item</span><span class="p">,</span> <span class="n">output_item</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported!&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Bboxer</span><span class="p">(</span><span class="n">AnnotatorFactory</span><span class="p">):</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="p">(</span><span class="n">InputImage</span><span class="p">,</span> <span class="p">[</span><span class="n">OutputImageBbox</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">get_annotator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">BBoxAnnotator</span>
+
+
+<span class="k">class</span> <span class="nc">Im2Imer</span><span class="p">(</span><span class="n">AnnotatorFactory</span><span class="p">):</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="p">(</span><span class="n">InputImage</span><span class="p">,</span> <span class="p">[</span><span class="n">OutputImageLabel</span><span class="p">,</span> <span class="n">OutputLabel</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">get_annotator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Im2ImAnnotator</span>
+
+
+<span class="k">class</span> <span class="nc">Capturer</span><span class="p">(</span><span class="n">AnnotatorFactory</span><span class="p">):</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="p">(</span><span class="n">InputImage</span><span class="p">,</span> <span class="p">[</span><span class="n">OutputGridBox</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">get_annotator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CaptureAnnotator</span>
+
+
+<span class="k">class</span> <span class="nc">ImExplorer</span><span class="p">(</span><span class="n">AnnotatorFactory</span><span class="p">):</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="p">(</span><span class="n">InputImage</span><span class="p">,</span> <span class="p">[</span><span class="n">NoOutput</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">get_annotator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ExploreAnnotator</span>
+
+
+<span class="k">class</span> <span class="nc">VideoBboxer</span><span class="p">(</span><span class="n">AnnotatorFactory</span><span class="p">):</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="p">(</span><span class="n">InputImage</span><span class="p">,</span> <span class="p">[</span><span class="n">OutputVideoBbox</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">get_annotator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">BBoxVideoAnnotator</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following cell uses the factory designed before and define the actions that can be used with the factory.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">class</span> <span class="nc">Annotator</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_item</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="n">output_item</span><span class="p">:</span> <span class="n">Output</span> <span class="o">=</span> <span class="n">NoOutput</span><span class="p">(),</span>
+                 <span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span> <span class="o">=</span> <span class="n">Settings</span><span class="p">()):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_item</span> <span class="o">=</span> <span class="n">input_item</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_item</span> <span class="o">=</span> <span class="n">output_item</span>
+
+    <span class="k">def</span> <span class="nf">explore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Lets visualize existing annotated dataset</span>
+<span class="sd">        As we don&#39;t have images for each class we provide label_dir=None for ipyannotator,</span>
+<span class="sd">        thus class labels will be generated automatically based on annotation.json file.</span>
+
+<span class="sd">        To explore a part of dataset set `k` - number of classes to display;</span>
+<span class="sd">        By default explore `all` (k == -1)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="n">generate_subset_anno_json</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span>
+                                           <span class="n">project_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_file</span><span class="p">,</span>
+                                           <span class="n">number_of_labels</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="n">anno_</span> <span class="o">=</span> <span class="n">construct_annotation_path</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span>
+                                          <span class="n">file_name</span><span class="o">=</span><span class="n">subset</span><span class="p">,</span> <span class="n">results_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">annotator</span> <span class="o">=</span> <span class="n">AnnotatorFactory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_item</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="p">)</span><span class="o">.</span><span class="n">get_annotator</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="o">.</span><span class="n">drawing_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">annotator</span> <span class="o">=</span> <span class="n">annotator</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span>
+                              <span class="n">input_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_item</span><span class="p">,</span>
+                              <span class="n">output_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="p">,</span>
+                              <span class="n">annotation_file_path</span><span class="o">=</span><span class="n">anno_</span><span class="p">,</span>
+                              <span class="n">n_cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">n_cols</span><span class="p">,</span>
+                              <span class="n">question</span><span class="o">=</span><span class="s2">&quot;Classification &lt;explore&gt;&quot;</span><span class="p">,</span>
+                              <span class="n">has_border</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">annotator</span><span class="o">.</span><span class="n">app_state</span><span class="o">.</span><span class="n">annotation_step</span> <span class="o">=</span> <span class="n">AnnotatorStep</span><span class="o">.</span><span class="n">EXPLORE</span>
+
+        <span class="k">return</span> <span class="n">annotator</span>
+
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">anno_</span> <span class="o">=</span> <span class="n">construct_annotation_path</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span>
+                                          <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                          <span class="n">results_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">result_dir</span><span class="p">)</span>
+
+        <span class="n">annotator</span> <span class="o">=</span> <span class="n">AnnotatorFactory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_item</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="p">)</span><span class="o">.</span><span class="n">get_annotator</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="o">.</span><span class="n">drawing_enabled</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">annotator</span> <span class="o">=</span> <span class="n">annotator</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span>
+                              <span class="n">input_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_item</span><span class="p">,</span>
+                              <span class="n">output_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="p">,</span>
+                              <span class="n">annotation_file_path</span><span class="o">=</span><span class="n">anno_</span><span class="p">,</span>
+                              <span class="n">n_cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">n_cols</span><span class="p">,</span>
+                              <span class="n">question</span><span class="o">=</span><span class="s2">&quot;Classification &lt;create&gt;&quot;</span><span class="p">,</span>
+                              <span class="n">has_border</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">annotator</span><span class="o">.</span><span class="n">app_state</span><span class="o">.</span><span class="n">annotation_step</span> <span class="o">=</span> <span class="n">AnnotatorStep</span><span class="o">.</span><span class="n">CREATE</span>
+
+        <span class="k">return</span> <span class="n">annotator</span>
+
+    <span class="k">def</span> <span class="nf">improve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># open labels from create step</span>
+        <span class="n">create_step_annotations</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">result_dir</span> <span class="o">/</span> <span class="s1">&#39;annotations.json&#39;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">create_step_annotations</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+            <span class="n">loaded_image_annotations</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+
+        <span class="c1"># @TODO?</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="p">)</span> <span class="o">==</span> <span class="n">OutputImageLabel</span><span class="p">:</span>
+
+            <span class="c1">#Construct multiple Capturers for each class</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">class_anno</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+                    <span class="n">group_files_by_class</span><span class="p">(</span><span class="n">loaded_image_annotations</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+                <span class="n">anno_</span> <span class="o">=</span> <span class="n">construct_annotation_path</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span>
+                                                  <span class="n">results_dir</span><span class="o">=</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">&#39;</span>
+                                                               <span class="sa">f</span><span class="s1">&#39;/missed/</span><span class="si">{</span><span class="n">class_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
+
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CaptureAnnotator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span>
+                                            <span class="n">input_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_item</span><span class="p">,</span>
+                                            <span class="n">output_item</span><span class="o">=</span><span class="n">OutputGridBox</span><span class="p">(),</span>
+                                            <span class="n">annotation_file_path</span><span class="o">=</span><span class="n">anno_</span><span class="p">,</span>
+                                            <span class="n">n_cols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_rows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                            <span class="n">question</span><span class="o">=</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Check incorrect annotation&#39;</span>
+                                                      <span class="sa">f</span><span class="s1">&#39; for [</span><span class="si">{</span><span class="n">class_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s1">] class&#39;</span><span class="p">),</span>
+                                            <span class="n">filter_files</span><span class="o">=</span><span class="n">class_anno</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="p">)</span> <span class="o">==</span> <span class="n">OutputVideoBbox</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="o">.</span><span class="n">drawing_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="n">out</span> <span class="o">=</span> <span class="n">BBoxVideoAnnotator</span><span class="p">(</span>
+                <span class="n">project_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span>
+                <span class="n">input_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_item</span><span class="p">,</span>
+                <span class="n">output_item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="p">,</span>
+                <span class="n">annotation_file_path</span><span class="o">=</span><span class="n">create_step_annotations</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="p">)</span> <span class="o">==</span> <span class="n">OutputImageBbox</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># back to artificial bbox format -&gt;</span>
+            <span class="n">di</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="n">v</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">],</span>
+                    <span class="n">v</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span>
+                    <span class="n">v</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;width&#39;</span><span class="p">],</span>
+                    <span class="n">v</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span>
+                <span class="p">]</span> <span class="k">if</span> <span class="n">v</span> <span class="k">else</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">loaded_image_annotations</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+            <span class="n">captured_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;captured&quot;</span>
+
+            <span class="c1"># Save annotated images on disk</span>
+            <span class="k">for</span> <span class="n">im</span><span class="p">,</span> <span class="n">bbx</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">di</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+                <span class="c1"># use captured_path instead image_dir, keeping the folder structure</span>
+                <span class="n">old_im_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+
+                <span class="n">index</span> <span class="o">=</span> <span class="n">old_im_path</span><span class="o">.</span><span class="n">parts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_item</span><span class="o">.</span><span class="n">dir</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">new_im_path</span> <span class="o">=</span> <span class="n">captured_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="o">*</span><span class="n">old_im_path</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">index</span><span class="p">:])</span>
+                <span class="n">new_im_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="n">_image</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">bbx</span><span class="p">:</span>
+                    <span class="n">rect</span> <span class="o">=</span> <span class="p">[</span><span class="n">bbx</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bbx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                    <span class="n">rect_dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">bbx</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bbx</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+
+                    <span class="n">_image</span> <span class="o">=</span> <span class="n">draw_bbox</span><span class="p">(</span><span class="n">rect</span><span class="o">=</span><span class="n">rect</span><span class="p">,</span> <span class="n">rect_dimensions</span><span class="o">=</span><span class="n">rect_dimensions</span><span class="p">,</span>
+                                       <span class="n">im</span><span class="o">=</span><span class="n">_image</span><span class="p">,</span> <span class="n">black</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="n">io</span><span class="o">.</span><span class="n">imsave</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">new_im_path</span><span class="p">),</span> <span class="n">_image</span><span class="p">,</span> <span class="n">check_contrast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="c1"># Construct Capturer</span>
+            <span class="n">in_p</span> <span class="o">=</span> <span class="n">InputImage</span><span class="p">(</span><span class="n">image_dir</span><span class="o">=</span><span class="s2">&quot;captured&quot;</span><span class="p">,</span> <span class="n">image_width</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">image_height</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+            <span class="n">out_p</span> <span class="o">=</span> <span class="n">OutputGridBox</span><span class="p">()</span>
+            <span class="n">anno_</span> <span class="o">=</span> <span class="n">construct_annotation_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span>
+                                              <span class="n">results_dir</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">result_dir</span><span class="si">}</span><span class="s1">/missed&#39;</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">CaptureAnnotator</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span> <span class="n">input_item</span><span class="o">=</span><span class="n">in_p</span><span class="p">,</span> <span class="n">output_item</span><span class="o">=</span><span class="n">out_p</span><span class="p">,</span>
+                <span class="n">annotation_file_path</span><span class="o">=</span><span class="n">anno_</span><span class="p">,</span> <span class="n">n_cols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                <span class="n">question</span><span class="o">=</span><span class="s2">&quot;Check images with incorrect or empty bbox annotation&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Improve is not supported for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">update_step</span><span class="p">(</span><span class="n">anno</span><span class="p">):</span>
+                <span class="n">anno</span><span class="o">.</span><span class="n">app_state</span><span class="o">.</span><span class="n">annotation_step</span> <span class="o">=</span> <span class="n">AnnotatorStep</span><span class="o">.</span><span class="n">IMPROVE</span>
+                <span class="k">return</span> <span class="n">anno</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">update_step</span><span class="p">(</span><span class="n">anno</span><span class="p">)</span> <span class="k">for</span> <span class="n">anno</span> <span class="ow">in</span> <span class="n">out</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">app_state</span><span class="o">.</span><span class="n">annotation_step</span> <span class="o">=</span> <span class="n">AnnotatorStep</span><span class="o">.</span><span class="n">IMPROVE</span>
+
+        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"9bd2ec1d0ef9472abe29b945db5a5104": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3d5220279e114728b6243eae05671e4c": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_9bd2ec1d0ef9472abe29b945db5a5104", "msg_id": "", "outputs": []}}, "318408cd995b4751b2a4ef9f2894da2d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f01df5545acf448795d56d014fd4c888": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_318408cd995b4751b2a4ef9f2894da2d", "msg_id": "", "outputs": []}}, "6791565988444f18988b057af21f15f6": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a26ec41bf12b4db19cb49b1350a345f6": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_6791565988444f18988b057af21f15f6", "msg_id": "", "outputs": []}}, "2db5ad74a2fa493a9fee114f8f53d05d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8e1929eb49de40f0b90d5a6b00c906be": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_2db5ad74a2fa493a9fee114f8f53d05d", "msg_id": "", "outputs": []}}, "dc6814708cea416d9b9b48c328274e17": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "aa0bf3242a504abdb171fc8724c61817": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_dc6814708cea416d9b9b48c328274e17", "msg_id": "", "outputs": []}}, "02a9a7d66e784e4184df466b5a491aaa": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "487a4ecdbffe493ea2fb8c0dd2779ee3": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_02a9a7d66e784e4184df466b5a491aaa", "msg_id": "", "outputs": []}}, "2f72fe0953354800836598733f264e0b": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "cb7e34132d524bddbf0176dceda19b5c": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_2f72fe0953354800836598733f264e0b", "msg_id": "", "outputs": []}}, "bf0c19d06c024bbd8fb07d2c879943f7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "96e40b4306bc4af5ab7495a7cec42d9a": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_bf0c19d06c024bbd8fb07d2c879943f7", "msg_id": "", "outputs": []}}, "ad9e1bb9ef6c429782444e6ad1243dd2": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2bf9cbf0fbd64d9081320bd2e227bb43": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_ad9e1bb9ef6c429782444e6ad1243dd2", "msg_id": "", "outputs": []}}, "f09b1c3aa99d4886bb4a406a1f277d71": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2a342af24ca641c192e71cc3c3af15a5": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_f09b1c3aa99d4886bb4a406a1f277d71", "msg_id": "", "outputs": []}}, "bbc6920f00ff4eba8d21c30350d0138d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7c4c7dd2d1e14b60a612a0505484e63d": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_bbc6920f00ff4eba8d21c30350d0138d", "msg_id": "", "outputs": []}}}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../docs/internal-components.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Internal Components</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="00b_mltypes.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Mltypes</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

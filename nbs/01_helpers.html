@@ -1,0 +1,646 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Helpers &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Helpers for Dataset Generation" href="01a_datasets.html" />
+    <link rel="prev" title="Mltypes" href="00b_mltypes.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00a_annotator.html">
+   Annotator Factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="00b_mltypes.html">
+   Mltypes
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Helpers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_download.html">
+   Dowload datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_factory.html">
+   Dataset factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b_dataset_video.html">
+   Generators for MOT data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_navi_widget.html">
+   Navi Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02a_right_menu_widget.html">
+   Right menu Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_storage.html">
+   Storage
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_bbox_annotator.html">
+   Bounding Box Annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_image_button.html">
+   Image button
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_capture_annotator.html">
+   Capture annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_im2im_annotator.html">
+   Image to image annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="12_debug_utils.html">
+   Debug tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="13_datasets_legacy.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="14_datasets_factory_legacy.html">
+   Datasets factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="15_coordinates_input.html">
+   Coordinates Input
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="16_custom_buttons.html">
+   Custom Buttons
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="17_annotator_explorer.html">
+   Annotator Explorer
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="18_bbox_trajectory.html">
+   Bounding Box Trajectory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="19_bbox_video_annotator.html">
+   Bbox video annotator
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp helpers</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Iterable</span>
+
+
+<span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">lis</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lis</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">item</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="helpers">
+<h1>Helpers<a class="headerlink" href="#helpers" title="Permalink to this headline">¶</a></h1>
+<p>Module to add utils for other modules.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span><span class="p">,</span> <span class="n">ImageFont</span>
+
+
+<span class="k">def</span> <span class="nf">text_on_img</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">lbl_w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lbl_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render text in a image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">font</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="o">.</span><span class="n">truetype</span><span class="p">(</span><span class="s2">&quot;lte50712.ttf&quot;</span><span class="p">,</span> <span class="n">font_size</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">lbl_w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lbl_w</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="k">if</span> <span class="n">lbl_h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lbl_h</span> <span class="o">=</span> <span class="mi">150</span>
+
+    <span class="k">assert</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="n">m_width</span><span class="p">,</span> <span class="n">m_heigth</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">)</span>
+    <span class="n">char_num_per_line</span> <span class="o">=</span> <span class="n">lbl_w</span> <span class="o">//</span> <span class="n">m_width</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;RGB&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">lbl_w</span><span class="p">,</span> <span class="n">lbl_h</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">font</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">w</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">lbl_w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">):</span>
+        <span class="n">t_wrapper</span> <span class="o">=</span> <span class="n">words</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">t_wrapper</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">char_num_per_line</span><span class="p">)</span>
+
+    <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">lbl_h</span> <span class="o">-</span> <span class="p">(</span><span class="n">m_heigth</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">t_wrapper</span><span class="p">)))</span> <span class="o">//</span> <span class="mi">2</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">t_wrapper</span><span class="p">:</span>
+        <span class="n">line_w</span><span class="p">,</span> <span class="n">line_h</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">draw</span><span class="o">.</span><span class="n">text</span><span class="p">(((</span><span class="n">lbl_w</span> <span class="o">-</span> <span class="n">line_w</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">offset</span><span class="p">),</span> <span class="n">line</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="n">font</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">offset</span> <span class="o">+=</span> <span class="n">line_h</span>
+
+    <span class="k">if</span> <span class="n">filepath</span><span class="p">:</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">image</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<span class="k">def</span> <span class="nf">reconstruct_class_images</span><span class="p">(</span><span class="n">label_dir</span><span class="p">,</span> <span class="n">annotation_file</span><span class="p">,</span> <span class="n">lbl_w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lbl_h</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">annotation_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+        <span class="n">unique_classes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>  <span class="c1"># ipyannotator format</span>
+
+    <span class="k">for</span> <span class="n">cl_name</span> <span class="ow">in</span> <span class="n">unique_classes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cl_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cl_name</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+
+        <span class="n">cl_im_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cl_name</span><span class="si">}</span><span class="s1">.jpg&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([-\w]+\.(?:jpg|png|jpeg))&quot;</span><span class="p">,</span>
+                                                        <span class="n">cl_name</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="k">else</span> <span class="n">cl_name</span>
+
+        <span class="n">text_on_img</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">cl_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">filepath</span><span class="o">=</span><span class="n">label_dir</span> <span class="o">/</span> <span class="n">cl_im_name</span><span class="p">,</span>
+                    <span class="n">lbl_w</span><span class="o">=</span><span class="n">lbl_w</span><span class="p">,</span> <span class="n">lbl_h</span><span class="o">=</span><span class="n">lbl_h</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="n">sig</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">sig</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">sig</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span> <span class="o">-</span> <span class="n">s</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">augment</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[6, 6, 7, 13]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.datasets.factory</span> <span class="kn">import</span> <span class="n">DS</span> <span class="k">as</span> <span class="n">NDS</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.datasets.factory_legacy</span> <span class="kn">import</span> <span class="n">DS</span><span class="p">,</span> <span class="n">_combine_train_test</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+
+<span class="k">class</span> <span class="nc">Tutorial</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Combines some algorithms to imitate human work with annotators</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DS</span><span class="p">,</span> <span class="n">NDS</span><span class="p">],</span> <span class="n">project_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project_path</span> <span class="o">=</span> <span class="n">project_path</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">DS</span><span class="o">.</span><span class="n">ARTIFICIAL_CLASSIFICATION</span><span class="p">,</span> <span class="n">DS</span><span class="o">.</span><span class="n">ARTIFICIAL_DETECTION</span><span class="p">,</span>
+                                <span class="n">NDS</span><span class="o">.</span><span class="n">ARTIFICIAL_VIDEO</span><span class="p">]:</span>
+            <span class="n">_combine_train_test</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_annotations</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;annotations.json&quot;</span>
+
+    <span class="c1"># Random annotator used in image_classification tutorial [create]</span>
+    <span class="k">def</span> <span class="nf">annotate_randomly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotator</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_annotations</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">anno_</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">filt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">anno_</span><span class="p">))</span>
+
+        <span class="n">label_noise</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+        <span class="k">def</span> <span class="nf">get_random_class</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">choice</span><span class="p">(</span><span class="n">annotator</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">get_labels</span><span class="p">())</span>
+
+        <span class="c1"># assign random label for subset of all annotations to imitate human work with</span>
+        <span class="c1"># &lt;label_noise&gt; amount of errors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filterered</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">get_random_class</span><span class="p">()]</span> <span class="k">if</span> <span class="n">f_</span> <span class="o">&lt;</span> <span class="n">label_noise</span> <span class="k">else</span> <span class="n">y</span> <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+            <span class="n">f_</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">anno_</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">filt</span><span class="p">)}</span>
+
+        <span class="c1"># update ipyannotator&#39;s annotations bassed on previous step and save</span>
+        <span class="n">annotator</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filterered</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">[]))</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">annotator</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">annotator</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">_save_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+
+    <span class="c1"># Annotations fixer used in image_classification tutorial [improve]</span>
+    <span class="k">def</span> <span class="nf">fix_incorrect_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotator</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_annotations</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">anno_</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="c1">#  mark spoiled on create step, imitating human correction</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">annotator</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">app_state</span><span class="o">.</span><span class="n">max_im_number</span><span class="p">):</span>
+                <span class="n">i</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">idx_changed</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">capture_state</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">i</span><span class="o">.</span><span class="n">capture_state</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;answer&#39;</span><span class="p">:</span> <span class="n">anno_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filterered</span><span class="p">[</span><span class="n">k</span><span class="p">]}</span>
+                    <span class="n">i</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">_save_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+
+    <span class="c1"># Random annotator used in bbox tutorial [create]</span>
+    <span class="k">def</span> <span class="nf">add_random_bboxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotator</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_annotations</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">anno_</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">filt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">anno_</span><span class="p">))</span>
+
+        <span class="n">bbox_noise</span> <span class="o">=</span> <span class="mf">0.2</span>
+
+        <span class="c1"># lets randomly annotate each image from code and save annotations</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">f_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">annotator</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">filt</span><span class="p">)):</span>
+            <span class="c1"># do not overwrite existing annotations</span>
+            <span class="k">if</span> <span class="n">annotator</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">f_</span> <span class="o">&lt;</span> <span class="n">bbox_noise</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">anno_</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;bbox&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">bbox</span> <span class="ow">in</span> <span class="n">anno_</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;bbox&#39;</span><span class="p">]:</span>
+                    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bbox</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+                    <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="nb">dict</span><span class="p">(</span>
+                            <span class="nb">zip</span><span class="p">(</span>
+                                <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">],</span>
+                                <span class="n">augment</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">))</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="n">annotator</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bbox&#39;</span><span class="p">:</span> <span class="n">values</span><span class="p">,</span> <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="p">[[]]}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">annotator</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">anno_</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+        <span class="n">annotator</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">_update_coords</span><span class="p">(</span><span class="n">annotator</span><span class="o">.</span><span class="n">app_state</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>  <span class="c1"># update screen</span>
+
+        <span class="n">annotator</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">_save_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>  <span class="c1"># save to file</span>
+
+    <span class="c1"># Annotations fixer used in bbox tutorial [improve]</span>
+    <span class="k">def</span> <span class="nf">fix_incorrect_bboxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">improver</span><span class="p">,</span> <span class="n">creator</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_annotations</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">anno_</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">im_dir_path</span> <span class="o">=</span> <span class="n">creator</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">im_dir</span>
+        <span class="n">improver</span><span class="o">.</span><span class="n">app_state</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">improver</span><span class="o">.</span><span class="n">app_state</span><span class="o">.</span><span class="n">max_im_number</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">improver</span><span class="o">.</span><span class="n">capture_state</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">capture_im_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+                <span class="n">index</span> <span class="o">=</span> <span class="n">capture_im_path</span><span class="o">.</span><span class="n">parts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;captured&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">new_im_path</span> <span class="o">=</span> <span class="n">im_dir_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="o">*</span><span class="n">capture_im_path</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="n">index</span><span class="p">:])</span>
+                <span class="n">v_expl</span> <span class="o">=</span> <span class="n">anno_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">new_im_path</span><span class="p">),</span> <span class="p">{})</span>
+                <span class="n">v_cret</span> <span class="o">=</span> <span class="n">creator</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">new_im_path</span><span class="p">),</span> <span class="p">{})</span>
+                <span class="n">improver</span><span class="o">.</span><span class="n">capture_state</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;answer&#39;</span><span class="p">:</span> <span class="n">v_expl</span> <span class="o">!=</span> <span class="n">v_cret</span><span class="p">}</span>
+            <span class="n">improver</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">_navi</span><span class="o">.</span><span class="n">_next_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">annotate_video_bboxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">mot_gt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_path</span> <span class="o">/</span> <span class="s1">&#39;mot.csv&#39;</span><span class="p">)</span>
+        <span class="n">mot_gt</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;frame&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;conf&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;label&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;vis&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;x&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;y&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;width&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;height&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">mot_gt</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;frame&#39;</span><span class="p">])</span>
+        <span class="n">mot_gt</span><span class="p">[</span><span class="s1">&#39;frame&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mot_gt</span><span class="p">[</span><span class="s1">&#39;frame&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">full_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">project_path</span><span class="si">}</span><span class="s1">/images&#39;</span>
+        <span class="n">mot_gt</span><span class="p">[</span><span class="s1">&#39;frame&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mot_gt</span><span class="p">[</span><span class="s1">&#39;frame&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">full_path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="s1">&#39;.jpg&#39;</span><span class="p">)</span>
+        <span class="n">mot_gt</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">mot_gt</span><span class="p">[</span><span class="s1">&#39;frame&#39;</span><span class="p">]</span>
+        <span class="n">mot_gt</span> <span class="o">=</span> <span class="n">mot_gt</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;conf&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;vis&#39;</span><span class="p">])</span>
+<span class="c1">#         mot_gt = mot_gt[mot_gt.columns.drop([&#39;frame&#39;, &#39;conf&#39;, &#39;label&#39;, &#39;vis&#39;])]</span>
+        <span class="n">mot_gt</span> <span class="o">=</span> <span class="n">mot_gt</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">mot_gt</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="c1"># Hacky way to occlude the video tutorial avoiding</span>
+        <span class="c1"># to render indexes on specific frames</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">parsed</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">bboxes</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">bbox</span> <span class="ow">in</span> <span class="n">bboxes</span><span class="p">:</span>
+                <span class="n">tmp_bbox</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="k">del</span> <span class="n">bbox</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+                <span class="n">bbox</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mutate_id</span><span class="p">(</span><span class="n">tmp_bbox</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="n">annotations</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;bbox&#39;</span><span class="p">:</span> <span class="n">bboxes</span><span class="p">,</span>
+                    <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_to_label</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span> <span class="k">for</span> <span class="n">bbox</span> <span class="ow">in</span> <span class="n">bboxes</span><span class="p">]</span>
+                <span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># add circle annotation to specific frames</span>
+                <span class="n">bboxes</span> <span class="o">=</span> <span class="p">[</span><span class="n">bbox</span> <span class="k">for</span> <span class="n">bbox</span> <span class="ow">in</span> <span class="n">bboxes</span> <span class="k">if</span> <span class="n">bbox</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">bbox</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]]</span>
+                <span class="n">annotations</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;bbox&#39;</span><span class="p">:</span> <span class="n">bboxes</span><span class="p">,</span>
+                    <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="s1">&#39;Circle&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">bbox</span> <span class="ow">in</span> <span class="n">bboxes</span><span class="p">]</span>
+                <span class="p">}</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_path</span> <span class="o">/</span> <span class="s1">&#39;create_results/annotations.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">annotations</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">annotations</span>
+
+    <span class="k">def</span> <span class="nf">_mutate_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;2&#39;</span>
+        <span class="k">if</span> <span class="n">bbox</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">bbox</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+        <span class="k">return</span> <span class="nb">id</span> <span class="k">if</span> <span class="n">index</span> <span class="o">&gt;</span> <span class="mi">8</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_bbox_to_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">bbox</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">bbox</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;Circle&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;Rectangle&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="00b_mltypes.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Mltypes</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="01a_datasets.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Helpers for Dataset Generation</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

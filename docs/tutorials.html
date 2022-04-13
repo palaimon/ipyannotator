@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Tutorials &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Image classification - Assigning meaning to images via classes" href="../nbs/01b_tutorial_image_classification.html" />
+    <link rel="prev" title="Ipyannotator - the infinitely hackable annotation framework" href="../index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/01b_tutorial_image_classification.html">
+   Image classification - Assigning meaning to images via classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/01c_tutorial_bbox.html">
+   Bounding Box Annotator - Identifying objects in images through boxes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/01d_tutorial_video_annotator.html">
+   Video Annotator - Tracking objects through video frames
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/08_tutorial_road_damage.html">
+   Road damage - Iterative annotations on road damage images
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09_voila_example.html">
+   Voila - Using Ipyannotator as a standalone web application
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/11_build_annotator_tutorial.html">
+   Build Annotator - Understanding Ipyannotator design to easily extend and customize
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/20_image_classification_user_story.html">
+   Image classification - Real project example with CIFAR-10 dataset
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="tutorials">
+<h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
+<p>Ipyannotator uses tutorials to demonstrate how the library can be used.</p>
+<p>All tutorials are statically generated from jupyter notebooks.
+All notebooks can be found on our <a class="reference external" href="https://github.com/palaimon/ipyannotator/tree/main/nbs">Github’s repository</a></p>
+<p>The notebooks contains the development dependencies:
+[pytest](<a class="reference external" href="https://docs.pytest.org/en/7.1.x/">https://docs.pytest.org/en/7.1.x/</a>) and [ipytest](<a class="reference external" href="https://github.com/chmp/ipytest">https://github.com/chmp/ipytest</a>),
+if you want to run the notebooks remove the tests or install the libraries mentioned.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/01b_tutorial_image_classification.html">Image classification - Assigning meaning to images via classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/01c_tutorial_bbox.html">Bounding Box Annotator - Identifying objects in images through boxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/01d_tutorial_video_annotator.html">Video Annotator - Tracking objects through video frames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/08_tutorial_road_damage.html">Road damage - Iterative annotations on road damage images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/09_voila_example.html">Voila - Using Ipyannotator as a standalone web application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/11_build_annotator_tutorial.html">Build Annotator - Understanding Ipyannotator design to easily extend and customize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/20_image_classification_user_story.html">Image classification - Real project example with CIFAR-10 dataset</a></li>
+</ul>
+</div>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Ipyannotator - the infinitely hackable annotation framework</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../nbs/01b_tutorial_image_classification.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Image classification - Assigning meaning to images via classes</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

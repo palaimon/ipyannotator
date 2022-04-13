@@ -1,0 +1,1071 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Storage &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bounding Box Annotator" href="04_bbox_annotator.html" />
+    <link rel="prev" title="Right menu Widget" href="02a_right_menu_widget.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00a_annotator.html">
+   Annotator Factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="00b_mltypes.html">
+   Mltypes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_helpers.html">
+   Helpers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_download.html">
+   Dowload datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_factory.html">
+   Dataset factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b_dataset_video.html">
+   Generators for MOT data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_navi_widget.html">
+   Navi Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02a_right_menu_widget.html">
+   Right menu Widget
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Storage
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_bbox_annotator.html">
+   Bounding Box Annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_image_button.html">
+   Image button
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_capture_annotator.html">
+   Capture annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_im2im_annotator.html">
+   Image to image annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="12_debug_utils.html">
+   Debug tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="13_datasets_legacy.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="14_datasets_factory_legacy.html">
+   Datasets factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="15_coordinates_input.html">
+   Coordinates Input
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="16_custom_buttons.html">
+   Custom Buttons
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="17_annotator_explorer.html">
+   Annotator Explorer
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="18_bbox_trajectory.html">
+   Bounding Box Trajectory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="19_bbox_video_annotator.html">
+   Bbox video annotator
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Storage
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#project-structure-setup">
+   Project Structure setup
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#generic-storage-for-annotations">
+   Generic Storage for Annotations
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#db-backed-storage">
+   DB backed storage
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#write-sqlite-functions">
+     write sqlite functions
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sql-helper-functions">
+     SQL helper functions
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#persistent-storage-with-history-support">
+     Persistent Storage with history support
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp storage</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="storage">
+<h1>Storage<a class="headerlink" href="#storage" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">MutableMapping</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="project-structure-setup">
+<h1>Project Structure setup<a class="headerlink" href="#project-structure-setup" title="Permalink to this headline">¶</a></h1>
+<p>just to folders, first containing object (e.g images) to annotate and second folder
+contains annotation data/results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">def</span> <span class="nf">group_files_by_class</span><span class="p">(</span><span class="n">annotations_dict</span><span class="p">):</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">file</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">annotations_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">class_</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+            <span class="n">grouped</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">grouped</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+
+<span class="k">def</span> <span class="nf">construct_annotation_path</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">results_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">elif</span> <span class="n">project_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="n">project_path</span><span class="p">,</span> <span class="s1">&#39;results&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">results_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">)</span>
+
+        <span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s1">&#39;annotations.json&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Annotations file already exists in </span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s2">!&quot;</span>
+                          <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> If you want to create annotations from scratch&quot;</span>
+                          <span class="s2">&quot; - use empty dir!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must define `project_path` or `file_name`!&quot;</span><span class="p">)</span>
+
+    <span class="n">results_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">annotation_file_path</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">construct_annotation_path</span><span class="p">(</span><span class="s1">&#39;../data/test_anno_path&#39;</span><span class="p">),</span>
+ <span class="n">construct_annotation_path</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;../results/annotations.json&#39;</span><span class="p">),</span>
+ <span class="n">construct_annotation_path</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="s1">&#39;../test_anno_path&#39;</span><span class="p">,</span> <span class="n">results_dir</span><span class="o">=</span><span class="s1">&#39;outpi&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Path(&#39;../data/test_anno_path/results/annotations.json&#39;),
+ Path(&#39;../results/annotations.json&#39;),
+ Path(&#39;../test_anno_path/outpi/annotations.json&#39;))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.base</span> <span class="kn">import</span> <span class="n">validate_project_path</span>
+
+
+<span class="k">def</span> <span class="nf">setup_project_paths</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_dir</span><span class="o">=</span><span class="s1">&#39;pics&#39;</span><span class="p">,</span>
+                        <span class="n">label_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">results_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">project_path</span> <span class="o">=</span> <span class="n">validate_project_path</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+
+    <span class="n">im_dir</span> <span class="o">=</span> <span class="n">project_path</span> <span class="o">/</span> <span class="n">image_dir</span>
+
+    <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">parent</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: `results_dir` is deduced from `file_name` path: </span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="n">project_path</span><span class="p">,</span> <span class="s1">&#39;results&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">results_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">)</span>
+
+        <span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s1">&#39;annotations.json&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: Annotations file already exists in </span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s2">&quot;</span>
+                  <span class="s2">&quot;!</span><span class="se">\n</span><span class="s2">         If you want to create annotations from scratch&quot;</span>
+                  <span class="s2">&quot; - use empty dir isntead.&quot;</span><span class="p">)</span>
+
+    <span class="n">results_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">project_paths</span> <span class="o">=</span> <span class="p">(</span><span class="n">im_dir</span><span class="p">,</span> <span class="n">annotation_file_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">label_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">project_paths</span> <span class="o">+=</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">label_dir</span><span class="p">),)</span>
+
+    <span class="k">return</span> <span class="n">project_paths</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+
+<span class="k">def</span> <span class="nf">get_image_list_from_folder</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+    <span class="sd">&#39;&#39;&#39; Scans &lt;image_dir&gt; to construct list of existing images as &lt;Path&gt; objects</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># if no files in `image_dir` assume all images are under `class_name` directories</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">Path</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)]):</span>
+        <span class="n">path_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">image_dir</span><span class="si">}</span><span class="s1">/*/*&#39;</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">path_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)</span> <span class="k">if</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">))]</span>
+
+    <span class="k">return</span> <span class="n">path_list</span>
+
+
+<span class="k">def</span> <span class="nf">strip_path</span><span class="p">(</span><span class="n">paths</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="generic-storage-for-annotations">
+<h1>Generic Storage for Annotations<a class="headerlink" href="#generic-storage-for-annotations" title="Permalink to this headline">¶</a></h1>
+<p>key values store</p>
+<ul class="simple">
+<li><p>key, object_id / file_name</p></li>
+<li><p>value json blob containing annotation</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+
+<span class="k">class</span> <span class="nc">MapeableStorage</span><span class="p">(</span><span class="n">MutableMapping</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_annotated</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">only_annotated</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">MapeableStorage</span><span class="p">()</span>
+<span class="n">m</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;test&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">m</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+
+<span class="k">class</span> <span class="nc">AnnotationStorage</span><span class="p">(</span><span class="n">MapeableStorage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents generic storage for annotations.</span>
+
+<span class="sd">    `key` is object_id / file_name and `value` - json blob containing annotation.</span>
+
+<span class="sd">    im_paths - list of existing images as &lt;Path&gt; objects</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_paths</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">):</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">im_paths</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_file</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.helpers</span> <span class="kn">import</span> <span class="n">flatten</span><span class="p">,</span> <span class="n">reconstruct_class_images</span>
+
+
+<span class="k">class</span> <span class="nc">JsonLabelStorage</span><span class="p">(</span><span class="n">AnnotationStorage</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">label_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Path</span><span class="p">],</span> <span class="n">annotation_file_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">annotation_file_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_dir</span> <span class="o">=</span> <span class="n">label_dir</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">annotation_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                                            <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">())</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="n">get_image_list_from_folder</span><span class="p">(</span><span class="n">im_dir</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_dir</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="c1"># artificialy generate labels if no class images given (TODO: temorary workaround)</span>
+            <span class="k">if</span> <span class="s1">&#39;class_autogenerated_&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">label_dir</span><span class="p">):</span>
+                <span class="n">label_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span><span class="p">:</span>
+                    <span class="n">reconstruct_class_images</span><span class="p">(</span><span class="n">label_dir</span><span class="p">,</span> <span class="n">annotation_file_path</span><span class="p">,</span> <span class="n">lbl_w</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">lbl_h</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Annotation file should be provided&quot;</span>
+                                  <span class="s2">&quot; to generate labels automatically!&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">strip_path</span><span class="p">(</span><span class="n">get_image_list_from_folder</span><span class="p">(</span><span class="n">label_dir</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_dir</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">label_dir</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;label_dir should have str or Path type&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span><span class="p">:</span>  <span class="c1"># init from json</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># init storage from folder</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_im_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_files</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;!! No Images to dipslay !!&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">filter_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">images</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="ow">in</span> <span class="n">filter_files</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;!! No image files to display. Check filter !!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">images</span>
+
+    <span class="k">def</span> <span class="nf">get_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;!! No labels to display !!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_dir</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+            <span class="k">return</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">values</span><span class="p">])</span>
+
+        <span class="c1"># create mod -&gt; display all labels from folder, not json</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+
+<span class="k">class</span> <span class="nc">JsonCaptureStorage</span><span class="p">(</span><span class="n">AnnotationStorage</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">annotation_file_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">im_dir</span> <span class="o">=</span> <span class="n">im_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">annotation_file_path</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">annotation_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                                            <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">())</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">get_image_list_from_folder</span><span class="p">(</span><span class="n">im_dir</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span><span class="p">:</span>  <span class="c1"># init from json</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># init storage from folder</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_im_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_files</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;!! No Images to dipslay !!&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">filter_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">images</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="ow">in</span> <span class="n">filter_files</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;!! No image files to display. Check filter !!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">images</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="db-backed-storage">
+<h1>DB backed storage<a class="headerlink" href="#db-backed-storage" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Changes in annotation should be tracked in db.</p></li>
+<li><p>db</p>
+<ul>
+<li><p>sqlite memory / disk, how to sync so that race conditons are avoided?</p></li>
+<li><p>remote db (postgres, mysql etc.) with sqlalchemy layer</p></li>
+</ul>
+</li>
+</ul>
+<section id="write-sqlite-functions">
+<h2>write sqlite functions<a class="headerlink" href="#write-sqlite-functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>init db</p></li>
+<li><p>write json + timestamp to db BUT only if json has changed!</p></li>
+<li><p>iterate over db</p></li>
+<li><p>iterate over values with latest timestamp</p></li>
+<li><p>get all history for key</p></li>
+<li><p>allow for metadata?</p></li>
+<li><p>check how sqlite write locks work</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># export</span>
+
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">def</span> <span class="nf">_list_tables</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        name</span>
+<span class="s2">    FROM</span>
+<span class="s2">        sqlite_master</span>
+<span class="s2">    WHERE</span>
+<span class="s2">        type = &#39;table&#39; AND</span>
+<span class="s2">        name NOT LIKE &#39;sqlite_%&#39;;</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">suppliers</span><span class="p">;</span><span class="w"></span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">suppliers</span><span class="w"> </span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="n">supplier_id</span><span class="w">   </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="n">supplier_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w">    </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="n">group_id</span><span class="w">      </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">group_id</span><span class="p">)</span><span class="w"></span>
+<span class="w">       </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">supplier_groups</span><span class="w"> </span><span class="p">(</span><span class="n">group_id</span><span class="p">)</span><span class="w"> </span>
+<span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">def</span> <span class="nf">_create_tables</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS data (objectID TEXT,</span>
+<span class="s2">                                 timestamp DATETIME DEFAULT(STRFTIME(&#39;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:</span><span class="si">%f</span><span class="s2">&#39;, &#39;NOW&#39;)),</span>
+<span class="s2">                                 data JSON,</span>
+<span class="s2">                                 author TEXT,</span>
+<span class="s2">                                 PRIMARY KEY (objectId, timestamp)</span>
+<span class="s2">                                );</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    CREATE TABLE IF NOT EXISTS objects (objectID TEXT,</span>
+<span class="s2">                                        orderID INTEGER PRIMARY KEY AUTOINCREMENT</span>
+
+<span class="s2">                                       )</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">def</span> <span class="nf">_list_table</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">latest</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">latest</span><span class="p">:</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SELECT * from </span><span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">        GROUP BY objectID</span>
+<span class="s2">        ORDER BY timestamp</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SELECT * from </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sql-helper-functions">
+<h2>SQL helper functions<a class="headerlink" href="#sql-helper-functions" title="Permalink to this headline">¶</a></h2>
+<p>is needed for consistant iteration order</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">_get_order_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;objects&#39;</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT orderID from </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">    WHERE objectID = &#39;</span><span class="si">{}</span><span class="s2">&#39;</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">_create_order_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;objects&#39;</span><span class="p">):</span>
+    <span class="n">order_id</span> <span class="o">=</span> <span class="n">_get_order_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="n">table_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">order_id</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">order_id</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    INSERT INTO </span><span class="si">{}</span><span class="s2">(&#39;objectID&#39;) VALUES(&#39;</span><span class="si">{}</span><span class="s2">&#39;)</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_get_order_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="n">table_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT data FROM </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">    WHERE objectID = &#39;</span><span class="si">{}</span><span class="s2">&#39;</span>
+
+<span class="s2">    GROUP BY objectID</span>
+<span class="s2">    ORDER BY timestamp</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">_get_object_id_at_pos</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;objects&#39;</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT objectID FROM </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">    ORDER BY orderID</span>
+<span class="s2">    LIMIT </span><span class="si">{}</span><span class="s2">, 1</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">_insert</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="s1">&#39;author&#39;</span><span class="p">):</span>
+    <span class="c1"># insert if values have been changed</span>
+
+    <span class="n">last</span> <span class="o">=</span> <span class="n">_get</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+
+<span class="c1">#     if last is None:</span>
+    <span class="n">_create_order_id</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="n">last</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;insert into </span><span class="si">{}</span><span class="s2">(&#39;objectID&#39;, &#39;author&#39;, &#39;data&#39;) values (?, ?, ?)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">),</span>
+              <span class="p">[</span><span class="n">object_id</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)])</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">_to_dict</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT objectID, data from </span><span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">    GROUP BY objectID</span>
+<span class="s2">    ORDER BY timestamp</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">_row_count</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT COUNT(DISTINCT objectID) FROM </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">_delete_last</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    DELETE FROM </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">    WHERE objectId = &#39;</span><span class="si">{}</span><span class="s2">&#39;</span>
+<span class="s2">    ORDER BY timestamp</span>
+<span class="s2">    LIMIT 1</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">_delete_all</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    DELETE FROM </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">    WHERE objectId = &#39;</span><span class="si">{}</span><span class="s2">&#39;</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="persistent-storage-with-history-support">
+<h2>Persistent Storage with history support<a class="headerlink" href="#persistent-storage-with-history-support" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+
+<span class="k">class</span> <span class="nc">AnnotationStorageIterator</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotator_storage</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">annotator_storage</span> <span class="o">=</span> <span class="n">annotator_storage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotator_storage</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">prev</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotator_storage</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+
+<span class="k">class</span> <span class="nc">AnnotationDBStorage</span><span class="p">(</span><span class="n">MutableMapping</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn_string</span><span class="p">,</span> <span class="n">im_paths</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">conn_string</span><span class="p">)</span>
+        <span class="n">_create_tables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">im_paths</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="p">{}</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">im_paths</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dict_</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">_insert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">_get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span>
+        <span class="k">return</span> <span class="n">item</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">_get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">default</span>
+
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">_delete_last</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">_delete_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="c1"># bug fix needed when combined with del operations</span>
+        <span class="n">object_id</span> <span class="o">=</span> <span class="n">_get_object_id_at_pos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">object_id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span>
+        <span class="k">return</span> <span class="n">_get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">_insert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">AnnotationStorageIterator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_row_count</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">_list_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39; ...&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="02a_right_menu_widget.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Right menu Widget</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="04_bbox_annotator.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bounding Box Annotator</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

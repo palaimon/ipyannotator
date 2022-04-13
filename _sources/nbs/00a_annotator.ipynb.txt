@@ -1,0 +1,378 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp annotator"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Annotator Factory\n",
+    "\n",
+    "The current notebook will develop the annotator factory. Given an input and output, the factory will return the corresponding annotator. Once called the user can choose between the three actions available: explore, create or improve."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "import json\n",
+    "from abc import ABC, abstractmethod\n",
+    "from pathlib import Path\n",
+    "from typing import Tuple, Type, List\n",
+    "\n",
+    "from skimage import io\n",
+    "from tqdm.notebook import tqdm\n",
+    "\n",
+    "from ipyannotator.base import generate_subset_anno_json, Settings, AnnotatorStep\n",
+    "from ipyannotator.mltypes import (Input, Output, OutputVideoBbox,\n",
+    "                                  InputImage, OutputImageLabel, OutputLabel,\n",
+    "                                  OutputImageBbox, OutputGridBox, NoOutput)\n",
+    "from ipyannotator.bbox_annotator import BBoxAnnotator\n",
+    "from ipyannotator.bbox_video_annotator import BBoxVideoAnnotator\n",
+    "from ipyannotator.capture_annotator import CaptureAnnotator\n",
+    "from ipyannotator.datasets.generators import draw_bbox\n",
+    "from ipyannotator.im2im_annotator import Im2ImAnnotator\n",
+    "from ipyannotator.explore_annotator import ExploreAnnotator\n",
+    "from ipyannotator.storage import (construct_annotation_path, group_files_by_class)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The next cell defines the actual factory implementation, expecting the pair of input/output. The following classes defines all supported annotators with correct input/output pairs for internal use."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "import ipytest\n",
+    "ipytest.autoconfig(raise_on_error=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "class AnnotatorFactory(ABC):\n",
+    "    io: Tuple[Type[Input], List[Type[Output]]]\n",
+    "\n",
+    "    @abstractmethod\n",
+    "    def get_annotator(self):\n",
+    "        pass\n",
+    "\n",
+    "    def __new__(cls, input_item, output_item):\n",
+    "        subclass_map = {}\n",
+    "\n",
+    "        for subclass in cls.__subclasses__():\n",
+    "            for subclass_output in subclass.io[1]:\n",
+    "                subclass_map[(subclass.io[0], subclass_output)] = subclass\n",
+    "\n",
+    "        try:\n",
+    "            subclass = subclass_map[(type(input_item), type(output_item))]\n",
+    "            instance = super(AnnotatorFactory, subclass).__new__(subclass)\n",
+    "            return instance\n",
+    "        except KeyError:\n",
+    "            print(f\"Pair {(input_item, output_item)} is not supported!\")\n",
+    "\n",
+    "\n",
+    "class Bboxer(AnnotatorFactory):\n",
+    "    io = (InputImage, [OutputImageBbox])\n",
+    "\n",
+    "    def get_annotator(self):\n",
+    "        return BBoxAnnotator\n",
+    "\n",
+    "\n",
+    "class Im2Imer(AnnotatorFactory):\n",
+    "    io = (InputImage, [OutputImageLabel, OutputLabel])\n",
+    "\n",
+    "    def get_annotator(self):\n",
+    "        return Im2ImAnnotator\n",
+    "\n",
+    "\n",
+    "class Capturer(AnnotatorFactory):\n",
+    "    io = (InputImage, [OutputGridBox])\n",
+    "\n",
+    "    def get_annotator(self):\n",
+    "        return CaptureAnnotator\n",
+    "\n",
+    "\n",
+    "class ImExplorer(AnnotatorFactory):\n",
+    "    io = (InputImage, [NoOutput])\n",
+    "\n",
+    "    def get_annotator(self):\n",
+    "        return ExploreAnnotator\n",
+    "\n",
+    "\n",
+    "class VideoBboxer(AnnotatorFactory):\n",
+    "    io = (InputImage, [OutputVideoBbox])\n",
+    "\n",
+    "    def get_annotator(self):\n",
+    "        return BBoxVideoAnnotator"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_get_im2im_annotator_from_output_image_label():\n",
+    "    inp = InputImage()\n",
+    "    outp = OutputImageLabel()\n",
+    "    factory = AnnotatorFactory(inp, outp).get_annotator()\n",
+    "    assert factory == Im2ImAnnotator"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_get_im2im_annotator_from_output_label():\n",
+    "    inp = InputImage()\n",
+    "    outp = OutputLabel(class_labels=('A', 'B'))\n",
+    "    factory = AnnotatorFactory(inp, outp).get_annotator()\n",
+    "    assert factory == Im2ImAnnotator"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The following cell uses the factory designed before and define the actions that can be used with the factory."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "class Annotator:\n",
+    "    def __init__(self, input_item: Input, output_item: Output = NoOutput(),\n",
+    "                 settings: Settings = Settings()):\n",
+    "        self.settings = settings\n",
+    "        self.input_item = input_item\n",
+    "        self.output_item = output_item\n",
+    "\n",
+    "    def explore(self, k=-1):\n",
+    "        '''\n",
+    "        Lets visualize existing annotated dataset\n",
+    "        As we don't have images for each class we provide label_dir=None for ipyannotator,\n",
+    "        thus class labels will be generated automatically based on annotation.json file.\n",
+    "\n",
+    "        To explore a part of dataset set `k` - number of classes to display;\n",
+    "        By default explore `all` (k == -1)\n",
+    "        '''\n",
+    "        subset = generate_subset_anno_json(project_path=self.settings.project_path,\n",
+    "                                           project_file=self.settings.project_file,\n",
+    "                                           number_of_labels=k)\n",
+    "\n",
+    "        anno_ = construct_annotation_path(project_path=self.settings.project_path,\n",
+    "                                          file_name=subset, results_dir=None)\n",
+    "\n",
+    "        annotator = AnnotatorFactory(self.input_item, self.output_item).get_annotator()\n",
+    "\n",
+    "        self.output_item.drawing_enabled = False\n",
+    "        annotator = annotator(project_path=self.settings.project_path,\n",
+    "                              input_item=self.input_item,\n",
+    "                              output_item=self.output_item,\n",
+    "                              annotation_file_path=anno_,\n",
+    "                              n_cols=self.settings.n_cols,\n",
+    "                              question=\"Classification <explore>\",\n",
+    "                              has_border=True)\n",
+    "\n",
+    "        annotator.app_state.annotation_step = AnnotatorStep.EXPLORE\n",
+    "\n",
+    "        return annotator\n",
+    "\n",
+    "    def create(self):\n",
+    "        anno_ = construct_annotation_path(project_path=self.settings.project_path,\n",
+    "                                          file_name=None,\n",
+    "                                          results_dir=self.settings.result_dir)\n",
+    "\n",
+    "        annotator = AnnotatorFactory(self.input_item, self.output_item).get_annotator()\n",
+    "\n",
+    "        self.output_item.drawing_enabled = True\n",
+    "        annotator = annotator(project_path=self.settings.project_path,\n",
+    "                              input_item=self.input_item,\n",
+    "                              output_item=self.output_item,\n",
+    "                              annotation_file_path=anno_,\n",
+    "                              n_cols=self.settings.n_cols,\n",
+    "                              question=\"Classification <create>\",\n",
+    "                              has_border=True)\n",
+    "\n",
+    "        annotator.app_state.annotation_step = AnnotatorStep.CREATE\n",
+    "\n",
+    "        return annotator\n",
+    "\n",
+    "    def improve(self):\n",
+    "        # open labels from create step\n",
+    "        create_step_annotations = Path(\n",
+    "            self.settings.project_path) / self.settings.result_dir / 'annotations.json'\n",
+    "\n",
+    "        with open(create_step_annotations) as infile:\n",
+    "            loaded_image_annotations = json.load(infile)\n",
+    "\n",
+    "        # @TODO?\n",
+    "        if type(self.output_item) == OutputImageLabel:\n",
+    "\n",
+    "            #Construct multiple Capturers for each class\n",
+    "            out = []\n",
+    "            for class_name, class_anno in tqdm(\n",
+    "                    group_files_by_class(loaded_image_annotations).items()):\n",
+    "                anno_ = construct_annotation_path(project_path=self.settings.project_path,\n",
+    "                                                  results_dir=(f'{self.settings.result_dir}'\n",
+    "                                                               f'/missed/{class_name[:-4]}'))\n",
+    "\n",
+    "                out.append(CaptureAnnotator(self.settings.project_path,\n",
+    "                                            input_item=self.input_item,\n",
+    "                                            output_item=OutputGridBox(),\n",
+    "                                            annotation_file_path=anno_,\n",
+    "                                            n_cols=2, n_rows=5,\n",
+    "                                            question=(f'Check incorrect annotation'\n",
+    "                                                      f' for [{class_name[:-4]}] class'),\n",
+    "                                            filter_files=class_anno))\n",
+    "\n",
+    "        elif type(self.output_item) == OutputVideoBbox:\n",
+    "            self.output_item.drawing_enabled = False\n",
+    "\n",
+    "            out = BBoxVideoAnnotator(\n",
+    "                project_path=self.settings.project_path,\n",
+    "                input_item=self.input_item,\n",
+    "                output_item=self.output_item,\n",
+    "                annotation_file_path=create_step_annotations,\n",
+    "            )\n",
+    "\n",
+    "        elif type(self.output_item) == OutputImageBbox:\n",
+    "            out = None\n",
+    "            # back to artificial bbox format ->\n",
+    "            di = {\n",
+    "                k: [\n",
+    "                    v['bbox'][0]['x'],\n",
+    "                    v['bbox'][0]['y'],\n",
+    "                    v['bbox'][0]['width'],\n",
+    "                    v['bbox'][0]['height']\n",
+    "                ] if v else [] for k, v in loaded_image_annotations.items()}\n",
+    "\n",
+    "            captured_path = Path(self.settings.project_path) / \"captured\"\n",
+    "\n",
+    "            # Save annotated images on disk\n",
+    "            for im, bbx in tqdm(di.items()):\n",
+    "                # use captured_path instead image_dir, keeping the folder structure\n",
+    "                old_im_path = Path(im)\n",
+    "\n",
+    "                index = old_im_path.parts.index(self.input_item.dir) + 1\n",
+    "                new_im_path = captured_path.joinpath(*old_im_path.parts[index:])\n",
+    "                new_im_path.parent.mkdir(parents=True, exist_ok=True)\n",
+    "\n",
+    "                _image = io.imread(im)\n",
+    "                if bbx:\n",
+    "                    rect = [bbx[1], bbx[0]]\n",
+    "                    rect_dimensions = [bbx[3], bbx[2]]\n",
+    "\n",
+    "                    _image = draw_bbox(rect=rect, rect_dimensions=rect_dimensions,\n",
+    "                                       im=_image, black=True)\n",
+    "\n",
+    "                io.imsave(str(new_im_path), _image, check_contrast=False)\n",
+    "\n",
+    "            # Construct Capturer\n",
+    "            in_p = InputImage(image_dir=\"captured\", image_width=150, image_height=150)\n",
+    "            out_p = OutputGridBox()\n",
+    "            anno_ = construct_annotation_path(self.settings.project_path,\n",
+    "                                              results_dir=f'{self.settings.result_dir}/missed')\n",
+    "            out = CaptureAnnotator(\n",
+    "                self.settings.project_path, input_item=in_p, output_item=out_p,\n",
+    "                annotation_file_path=anno_, n_cols=3,\n",
+    "                question=\"Check images with incorrect or empty bbox annotation\")\n",
+    "\n",
+    "        else:\n",
+    "            raise Exception(f\"Improve is not supported for {self.output_item}\")\n",
+    "        if isinstance(out, list):\n",
+    "            def update_step(anno):\n",
+    "                anno.app_state.annotation_step = AnnotatorStep.IMPROVE\n",
+    "                return anno\n",
+    "            out = [update_step(anno) for anno in out]\n",
+    "        else:\n",
+    "            out.app_state.annotation_step = AnnotatorStep.IMPROVE\n",
+    "\n",
+    "        return out"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

@@ -1,0 +1,566 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Navi Widget &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Right menu Widget" href="02a_right_menu_widget.html" />
+    <link rel="prev" title="Generators for MOT data" href="01b_dataset_video.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00a_annotator.html">
+   Annotator Factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="00b_mltypes.html">
+   Mltypes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_helpers.html">
+   Helpers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_download.html">
+   Dowload datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_factory.html">
+   Dataset factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b_dataset_video.html">
+   Generators for MOT data
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Navi Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02a_right_menu_widget.html">
+   Right menu Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_storage.html">
+   Storage
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_bbox_annotator.html">
+   Bounding Box Annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_image_button.html">
+   Image button
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_capture_annotator.html">
+   Capture annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_im2im_annotator.html">
+   Image to image annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="12_debug_utils.html">
+   Debug tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="13_datasets_legacy.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="14_datasets_factory_legacy.html">
+   Datasets factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="15_coordinates_input.html">
+   Coordinates Input
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="16_custom_buttons.html">
+   Custom Buttons
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="17_annotator_explorer.html">
+   Annotator Explorer
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="18_bbox_trajectory.html">
+   Bounding Box Trajectory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="19_bbox_video_annotator.html">
+   Bbox video annotator
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nbdev</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="c1"># default_exp navi_widget</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="navi-widget">
+<h1>Navi Widget<a class="headerlink" href="#navi-widget" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">Button</span><span class="p">,</span> <span class="n">IntSlider</span><span class="p">,</span> <span class="n">HBox</span><span class="p">,</span> <span class="n">Layout</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+
+<span class="k">class</span> <span class="nc">NaviGUI</span><span class="p">(</span><span class="n">HBox</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_im_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_im_number_slider</span> <span class="o">=</span> <span class="n">IntSlider</span><span class="p">(</span>
+            <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="nb">max</span><span class="o">=</span><span class="n">max_im_number</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Image Nr.&#39;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prev_btn</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;&lt; Previous&#39;</span><span class="p">,</span>
+                                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next_btn</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Next &gt;&#39;</span><span class="p">,</span>
+                                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">))</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_prev_btn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_btn</span><span class="p">],</span>
+                         <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="s1">&#39;flex&#39;</span><span class="p">,</span> <span class="n">flex_flow</span><span class="o">=</span><span class="s1">&#39;row wrap&#39;</span><span class="p">,</span> <span class="n">align_items</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+
+<span class="k">class</span> <span class="nc">NaviLogic</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Acts like an intermediator between GUI and its interactions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gui</span><span class="p">:</span> <span class="n">NaviGUI</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gui</span> <span class="o">=</span> <span class="n">gui</span>
+
+    <span class="k">def</span> <span class="nf">slider_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gui</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">change</span><span class="p">[</span><span class="s1">&#39;new&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_slider_value</span><span class="p">(</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;new&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">set_slider_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gui</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">index</span>
+
+    <span class="k">def</span> <span class="nf">set_slider_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_im_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gui</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="n">max_im_number</span>
+
+    <span class="k">def</span> <span class="nf">_increment_state_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">max_im_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gui</span><span class="o">.</span><span class="n">_max_im_num</span>
+        <span class="n">safe_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gui</span><span class="o">.</span><span class="n">_index</span> <span class="o">+</span> <span class="n">index</span><span class="p">)</span> <span class="o">%</span> <span class="n">max_im_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gui</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">safe_index</span> <span class="o">+</span> <span class="n">max_im_number</span><span class="p">)</span> <span class="o">%</span> <span class="n">max_im_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_slider_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gui</span><span class="o">.</span><span class="n">_index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">check_im_num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_im_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_gui</span><span class="p">,</span> <span class="s1">&#39;_im_number_slider&#39;</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gui</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="n">max_im_number</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+
+<span class="k">class</span> <span class="nc">Navi</span><span class="p">(</span><span class="n">NaviGUI</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents simple navigation module with slider.</span>
+
+<span class="sd">    on_navi_clicked: callable</span>
+<span class="sd">        A callback that runs after every navigation</span>
+<span class="sd">        change. The callback should have, as a</span>
+<span class="sd">        parameter the navi&#39;s index.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_im_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">on_navi_clicked</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_im_num</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_im_num</span> <span class="o">=</span> <span class="n">max_im_num</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_navi_clicked</span> <span class="o">=</span> <span class="n">on_navi_clicked</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">NaviLogic</span><span class="p">(</span><span class="n">gui</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_listen_next_click</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_listen_prev_click</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_listen_slider_changes</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span>
+
+    <span class="nd">@index</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set_slider_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_external_call</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_im_num</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_im_num</span>
+
+    <span class="nd">@max_im_num</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">max_im_num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set_slider_max</span><span class="p">(</span><span class="n">value</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_im_num</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_next_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_increment_state_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_slider_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">slider_updated</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_external_call</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_prev_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_increment_state_index</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_listen_slider_changes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_slider_updated</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="s1">&#39;value&#39;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_listen_next_click</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next_btn</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_clicked</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_listen_prev_click</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prev_btn</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prev_clicked</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_external_call</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_navi_clicked</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">on_navi_clicked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Navi callable was not defined.&quot;</span>
+                <span class="s2">&quot;The navigation will not trigger any action!&quot;</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># it start navi with slider index at 0</span>
+
+<span class="n">navi</span> <span class="o">=</span> <span class="n">Navi</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">navi</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span>
+
+<span class="c1"># it changes state if slider.value changes</span>
+
+<span class="n">navi</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">assert</span> <span class="n">navi</span><span class="o">.</span><span class="n">_index</span> <span class="o">==</span> <span class="mi">2</span>
+
+<span class="c1"># it changes state and slider.value if button is clicked</span>
+
+<span class="n">navi</span><span class="o">.</span><span class="n">_next_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+
+<span class="k">assert</span> <span class="n">navi</span><span class="o">.</span><span class="n">_index</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="k">assert</span> <span class="n">navi</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">3</span>
+
+<span class="n">navi</span><span class="o">.</span><span class="n">_prev_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+
+<span class="k">assert</span> <span class="n">navi</span><span class="o">.</span><span class="n">_index</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="k">assert</span> <span class="n">navi</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">2</span>
+
+<span class="c1"># it changes slider.max if navi changes max im num</span>
+<span class="n">navi</span><span class="o">.</span><span class="n">max_im_num</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="k">assert</span> <span class="n">navi</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">max</span> <span class="o">==</span> <span class="mi">5</span>
+
+<span class="c1"># it changes slider.index if navi changes its index</span>
+<span class="n">navi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="k">assert</span> <span class="n">navi</span><span class="o">.</span><span class="n">_im_number_slider</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">3</span>
+
+<span class="c1"># testing callback</span>
+<span class="n">callback_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">increment_callback</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">callback_index</span>
+    <span class="n">callback_index</span> <span class="o">=</span> <span class="n">index</span>
+
+
+<span class="n">navi</span><span class="o">.</span><span class="n">on_navi_clicked</span> <span class="o">=</span> <span class="n">increment_callback</span>
+
+<span class="n">navi</span><span class="o">.</span><span class="n">_next_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">callback_index</span> <span class="o">==</span> <span class="mi">4</span>
+
+<span class="n">navi</span><span class="o">.</span><span class="n">_prev_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">callback_index</span> <span class="o">==</span> <span class="mi">3</span>
+
+<span class="n">navi</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">assert</span> <span class="n">callback_index</span> <span class="o">==</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;ipython-input-6-72704c14ee75&gt;:69: UserWarning: Navi callable was not defined.The navigation will not trigger any action!
+  warnings.warn(
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">navi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"version_major": 2, "version_minor": 0, "model_id": "e44ee8968f4f4e8f980c1be3a4b41cb5"}
+</script></div>
+</div>
+</section>
+
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"e77e8fd349264b748b9c9b0ccf38088a": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7afc3013fb4f4c59af899b8d31a04cff": {"model_name": "SliderStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "SliderStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": "", "handle_color": null}}, "1c8b0a4984c94aa2b112bb2e7b769d9f": {"model_name": "IntSliderModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "IntSliderModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "IntSliderView", "continuous_update": true, "description": "Image Nr.", "description_tooltip": null, "disabled": false, "layout": "IPY_MODEL_e77e8fd349264b748b9c9b0ccf38088a", "max": 5, "min": 0, "orientation": "horizontal", "readout": true, "readout_format": "d", "step": 1, "style": "IPY_MODEL_7afc3013fb4f4c59af899b8d31a04cff", "value": 2}}, "16644777e44a4f57980afe01d9132c14": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "auto"}}, "a83f39b6370d4752bf22cc55468fc71b": {"model_name": "ButtonStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ButtonStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "button_color": null, "font_weight": ""}}, "c41f0450874e46e29b874fdd2175eaad": {"model_name": "ButtonModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ButtonModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ButtonView", "button_style": "", "description": "< Previous", "disabled": false, "icon": "", "layout": "IPY_MODEL_16644777e44a4f57980afe01d9132c14", "style": "IPY_MODEL_a83f39b6370d4752bf22cc55468fc71b", "tooltip": ""}}, "d558451022c8461f8dc08329a9b0151d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "auto"}}, "ef2c838225c44fc985ec453ce9dc4b58": {"model_name": "ButtonStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ButtonStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "button_color": null, "font_weight": ""}}, "a29a8c6d31e94d4f8ca5240f5a25280d": {"model_name": "ButtonModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ButtonModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ButtonView", "button_style": "", "description": "Next >", "disabled": false, "icon": "", "layout": "IPY_MODEL_d558451022c8461f8dc08329a9b0151d", "style": "IPY_MODEL_ef2c838225c44fc985ec453ce9dc4b58", "tooltip": ""}}, "454975014de5475a8344fc3d4827b054": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": "center", "align_self": null, "border": null, "bottom": null, "display": "flex", "flex": null, "flex_flow": "row wrap", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e44ee8968f4f4e8f980c1be3a4b41cb5": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_c41f0450874e46e29b874fdd2175eaad", "IPY_MODEL_1c8b0a4984c94aa2b112bb2e7b769d9f", "IPY_MODEL_a29a8c6d31e94d4f8ca5240f5a25280d"], "layout": "IPY_MODEL_454975014de5475a8344fc3d4827b054"}}}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="01b_dataset_video.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Generators for MOT data</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="02a_right_menu_widget.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Right menu Widget</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

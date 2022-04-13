@@ -1,0 +1,1163 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp im2im_annotator"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from nbdev import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "import io\n",
+    "import warnings\n",
+    "from pathlib import Path\n",
+    "from copy import deepcopy\n",
+    "from typing import Optional, Callable, Union, Iterable\n",
+    "\n",
+    "from ipycanvas import Canvas\n",
+    "from ipywidgets import (AppLayout, VBox, HBox, Button, Layout, HTML, Output, Image)\n",
+    "\n",
+    "from ipyannotator.base import BaseState, AppWidgetState, Annotator, AnnotatorStep\n",
+    "from ipyannotator.bbox_canvas import ImageRenderer\n",
+    "from ipyannotator.mltypes import OutputImageLabel, OutputLabel, InputImage\n",
+    "from ipyannotator.ipytyping.annotations import LabelStore, LabelStoreCaster\n",
+    "from ipyannotator.custom_widgets.grid_menu import GridMenu, Grid\n",
+    "from ipyannotator.navi_widget import Navi\n",
+    "from ipyannotator.storage import JsonLabelStorage\n",
+    "from IPython.display import display\n",
+    "from ipyannotator.doc_utils import is_building_docs\n",
+    "from PIL import Image as PILImage"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import ipytest\n",
+    "import pytest\n",
+    "ipytest.autoconfig(raise_on_error=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Image to image annotator\n",
+    "\n",
+    "The image to image annotator (Im2ImAnnotator) allows the users to navigate through multiple images and select multiple options in any one of them. The current notebook develops this annotator."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## State\n",
+    "\n",
+    "The data shared across the annotator are:\n",
+    "\n",
+    "- The `annotations` attribute represents all annotations options that could be selected and the user's answers;\n",
+    "- The `disp_number` attribute represents the number of options to be displayed;\n",
+    "- The `question_value` attribute represents the label to be shown above the selectable options;\n",
+    "- The `n_rows` and `n_cols` displays the number of options to be shows per rows and columns respectively;\n",
+    "- The `image_path` attibute it's the image been currently annotated;\n",
+    "- The `im_width` and `im_height` displays the image size;\n",
+    "- The `label_width` and `label_height` displays the selectable options size;"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# exporti\n",
+    "\n",
+    "class Im2ImState(BaseState):\n",
+    "    annotations: LabelStore = LabelStore()\n",
+    "    question_value: str = ''\n",
+    "    grid: Grid\n",
+    "    image_path: Optional[str]\n",
+    "    im_width: int = 300\n",
+    "    im_height: int = 300"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## View\n",
+    "\n",
+    "For the view an internal component called `ImCanvas` was developed and used to display the current image been annotated."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# export\n",
+    "if is_building_docs():\n",
+    "    class ImCanvas(Image):\n",
+    "        def __init__(\n",
+    "            self,\n",
+    "            width: int = 150,\n",
+    "            height: int = 150,\n",
+    "            has_border: bool = False,\n",
+    "            fit_canvas: bool = False\n",
+    "        ):\n",
+    "            super().__init__(width=width, height=height)\n",
+    "            image = PILImage.new('RGB', (100, 100), (255, 255, 255))\n",
+    "            b = io.BytesIO()\n",
+    "            image.save(b, format='PNG')\n",
+    "            self.value = b.getvalue()\n",
+    "\n",
+    "        def _draw_image(self, image_path: str):\n",
+    "            self.value = Image.from_file(image_path).value\n",
+    "\n",
+    "        def _clear_image(self):\n",
+    "            pass\n",
+    "\n",
+    "        def observe_client_ready(self, cb=None):\n",
+    "            pass\n",
+    "else:\n",
+    "    class ImCanvas(HBox):  # type: ignore\n",
+    "        def __init__(\n",
+    "            self,\n",
+    "            width: int = 150,\n",
+    "            height: int = 150,\n",
+    "            has_border: bool = False,\n",
+    "            fit_canvas: bool = False\n",
+    "        ):\n",
+    "            self.has_border = has_border\n",
+    "            self.fit_canvas = fit_canvas\n",
+    "            self._canvas = Canvas(width=width, height=height)\n",
+    "            super().__init__([self._canvas])\n",
+    "\n",
+    "        def _draw_image(self, image_path: str):\n",
+    "            img_render_strategy = ImageRenderer(\n",
+    "                clear=True,\n",
+    "                has_border=self.has_border,\n",
+    "                fit_canvas=self.fit_canvas\n",
+    "            )\n",
+    "\n",
+    "            self._image_scale = img_render_strategy.render(\n",
+    "                self._canvas,\n",
+    "                image_path\n",
+    "            )\n",
+    "\n",
+    "        def _clear_image(self):\n",
+    "            self._canvas.clear()\n",
+    "\n",
+    "        # needed to support voila\n",
+    "        # https://ipycanvas.readthedocs.io/en/latest/advanced.html#ipycanvas-in-voila\n",
+    "        def observe_client_ready(self, cb=None):\n",
+    "            self._canvas.on_client_ready(cb)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "im = ImCanvas(35, 35)\n",
+    "im._draw_image('../data/projects/im2im1/class_images/blocks_1.png')\n",
+    "im"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "im._clear_image()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The `Im2ImAnnotatorGUI` uses the `ImCanvas` developed before and the component `CaptureGrid` that displays the selectable options on the view."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class Im2ImAnnotatorGUI(AppLayout):\n",
+    "    debug_output = Output(layout={'border': '1px solid black'})\n",
+    "\n",
+    "    def __init__(\n",
+    "        self,\n",
+    "        app_state: AppWidgetState,\n",
+    "        im2im_state: Im2ImState,\n",
+    "        state_to_widget: LabelStoreCaster,\n",
+    "        label_autosize=False,\n",
+    "        on_save_btn_clicked: Callable = None,\n",
+    "        on_grid_box_clicked: Callable = None,\n",
+    "        on_navi_clicked: Callable = None,\n",
+    "        has_border: bool = False,\n",
+    "        fit_canvas: bool = False\n",
+    "    ):\n",
+    "        self._app_state = app_state\n",
+    "        self._im2im_state = im2im_state\n",
+    "        self._on_save_btn_clicked = on_save_btn_clicked\n",
+    "        self._on_navi_clicked = on_navi_clicked\n",
+    "        self._on_grid_box_clicked = on_grid_box_clicked\n",
+    "        self.state_to_widget = state_to_widget\n",
+    "\n",
+    "        if label_autosize:\n",
+    "            if self._im2im_state.im_width < 100 or self._im2im_state.im_height < 100:\n",
+    "                self._im2im_state.grid.width = 10\n",
+    "                self._im2im_state.grid.height = 10\n",
+    "            elif self._im2im_state.im_width > 1000 or self._im2im_state.im_height > 1000:\n",
+    "                self._im2im_state.grid.width = 50\n",
+    "                self._im2im_state.grid.height = 10\n",
+    "            else:\n",
+    "                label_width = min(self._im2im_state.im_width, self._im2im_state.im_height) // 10\n",
+    "                self._im2im_state.grid.width = label_width\n",
+    "                self._im2im_state.grid.height = label_width\n",
+    "\n",
+    "        self._image = ImCanvas(\n",
+    "            width=self._im2im_state.im_width,\n",
+    "            height=self._im2im_state.im_height,\n",
+    "            has_border=has_border,\n",
+    "            fit_canvas=fit_canvas\n",
+    "        )\n",
+    "\n",
+    "        self._navi = Navi()\n",
+    "        self._navi.on_navi_clicked = self.on_navi_clicked\n",
+    "        self._save_btn = Button(description=\"Save\",\n",
+    "                                layout=Layout(width='auto'))\n",
+    "\n",
+    "        self._controls_box = HBox(\n",
+    "            [self._navi, self._save_btn],\n",
+    "            layout=Layout(\n",
+    "                display='flex',\n",
+    "                justify_content='center',\n",
+    "                flex_flow='wrap',\n",
+    "                align_items='center'\n",
+    "            )\n",
+    "        )\n",
+    "\n",
+    "        self._grid_box = GridMenu(self._im2im_state.grid)\n",
+    "\n",
+    "        self._grid_label = HTML(value=\"<b>LABEL</b>\",)\n",
+    "        self._labels_box = VBox(\n",
+    "            children=[self._grid_label, self._grid_box],\n",
+    "            layout=Layout(\n",
+    "                display='flex',\n",
+    "                justify_content='center',\n",
+    "                align_items='center')\n",
+    "        )\n",
+    "\n",
+    "        self._save_btn.on_click(self._on_btn_clicked)\n",
+    "        self._grid_box.on_click(self.on_grid_clicked)\n",
+    "\n",
+    "        if self._app_state.max_im_number:\n",
+    "            self._set_navi_max_im_number(self._app_state.max_im_number)\n",
+    "\n",
+    "        if self._im2im_state.annotations:\n",
+    "            self._grid_box.load(\n",
+    "                self.state_to_widget(self._im2im_state.annotations)\n",
+    "            )\n",
+    "\n",
+    "        if self._im2im_state.question_value:\n",
+    "            self._set_label(self._im2im_state.question_value)\n",
+    "\n",
+    "        self._im2im_state.subscribe(self._set_label, 'question_value')\n",
+    "        self._im2im_state.subscribe(self._image._draw_image, 'image_path')\n",
+    "        self._im2im_state.subscribe(self.load_menu, 'annotations')\n",
+    "\n",
+    "        layout = Layout(\n",
+    "            display='flex',\n",
+    "            justify_content='center',\n",
+    "            align_items='center'\n",
+    "        )\n",
+    "\n",
+    "        im2im_display = HBox([\n",
+    "            VBox([self._image, self._controls_box]),\n",
+    "            self._labels_box\n",
+    "        ], layout=layout)\n",
+    "\n",
+    "        super().__init__(\n",
+    "            header=None,\n",
+    "            left_sidebar=None,\n",
+    "            center=im2im_display,\n",
+    "            right_sidebar=None,\n",
+    "            footer=None,\n",
+    "            pane_widths=(6, 4, 0),\n",
+    "            pane_heights=(1, 1, 1))\n",
+    "\n",
+    "    @debug_output.capture(clear_output=False)\n",
+    "    def load_menu(self, annotations: LabelStore):\n",
+    "        self._grid_box.load(\n",
+    "            self.state_to_widget(annotations)\n",
+    "        )\n",
+    "\n",
+    "    @debug_output.capture(clear_output=False)\n",
+    "    def on_navi_clicked(self, index: int):\n",
+    "        if self._on_navi_clicked:\n",
+    "            self._on_navi_clicked(index)\n",
+    "\n",
+    "    def _set_navi_max_im_number(self, max_im_number: int):\n",
+    "        self._navi.max_im_num = max_im_number\n",
+    "\n",
+    "    def _set_label(self, question_value: str):\n",
+    "        self._grid_label.value = question_value\n",
+    "\n",
+    "    def _on_btn_clicked(self, *args):\n",
+    "        if self._on_save_btn_clicked:\n",
+    "            self._on_save_btn_clicked(*args)\n",
+    "        else:\n",
+    "            warnings.warn(\"Save button click didn't triggered any event.\")\n",
+    "\n",
+    "    @debug_output.capture(clear_output=False)\n",
+    "    def on_grid_clicked(self, event, value=None):\n",
+    "        if self._on_grid_box_clicked:\n",
+    "            self._on_grid_box_clicked(event, value)\n",
+    "        else:\n",
+    "            warnings.warn(\"Grid box click didn't triggered any event.\")\n",
+    "\n",
+    "    def on_client_ready(self, callback):\n",
+    "        self._image.observe_client_ready(callback)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "label_state = {\n",
+    "    '../data/projects/im2im1/class_images/blocks_1.png': {'answer': False},\n",
+    "    '../data/projects/im2im1/class_images/blocks_9.png': {'answer': False},\n",
+    "    '../data/projects/im2im1/class_images/blocks_12.png': {'answer': True},\n",
+    "    '../data/projects/im2im1/class_images/blocks_32.png': {'answer': False},\n",
+    "    '../data/projects/im2im1/class_images/blocks_37.png': {'answer': False},\n",
+    "    '../data/projects/im2im1/class_images/blocks_69.png': {'answer': True}\n",
+    "}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grid = Grid(\n",
+    "    width=50,\n",
+    "    height=50,\n",
+    "    n_rows=2,\n",
+    "    n_cols=3\n",
+    ")\n",
+    "im2im_state_dict = {\n",
+    "    'im_height': 200,\n",
+    "    'im_width': 200,\n",
+    "    'grid': grid\n",
+    "}\n",
+    "\n",
+    "output = OutputImageLabel()\n",
+    "state_to_widget = LabelStoreCaster(output)\n",
+    "\n",
+    "app_state = AppWidgetState()\n",
+    "im2im_state = Im2ImState(**im2im_state_dict)  # type: ignore\n",
+    "\n",
+    "im2im_ = Im2ImAnnotatorGUI(\n",
+    "    state_to_widget=state_to_widget,\n",
+    "    app_state=app_state,\n",
+    "    im2im_state=im2im_state\n",
+    ")\n",
+    "\n",
+    "im2im_._im2im_state.image_path = '../data/projects/im2im1/pics/Grass1.png'\n",
+    "im2im_"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "im2im_._grid_box.load(state_to_widget(label_state))  # type: ignore"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def _label_state_to_storage_format(label_state):\n",
+    "    return [Path(k).name for k, v in label_state.items() if v['answer']]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "label_state_storage = _label_state_to_storage_format(label_state)\n",
+    "label_state_storage"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def _storage_format_to_label_state(\n",
+    "    storage_format,\n",
+    "    label_names,\n",
+    "    label_dir: str\n",
+    "):\n",
+    "    try:\n",
+    "        path = Path(label_dir)\n",
+    "        return {str(path / label): {\n",
+    "            'answer': label in storage_format} for label in label_names}\n",
+    "    except Exception:\n",
+    "        return {label: {'answer': label in storage_format} for label in label_names}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from fastcore.test import test_eq\n",
+    "\n",
+    "label_names = ['blocks_1.png', 'blocks_9.png', 'blocks_12.png',\n",
+    "               'blocks_32.png', 'blocks_37.png', 'blocks_69.png']\n",
+    "\n",
+    "restored_label_state = _storage_format_to_label_state(\n",
+    "    label_state_storage, label_names, '../data/projects/im2im1/class_images/')\n",
+    "test_eq(label_state, restored_label_state)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import tempfile\n",
+    "tmp_dir = tempfile.TemporaryDirectory()\n",
+    "\n",
+    "print(tmp_dir.name)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "# dataset generator annotation format\n",
+    "\n",
+    "# annotations = {\n",
+    "#     'img_0.jpg': {'labels': [('red', 'rectangle'), ('red', 'rectangle')],\n",
+    "#                   'bboxs': [(3, 21, 82, 82), (19, 98, 82, 145)]},\n",
+    "#     'img_1.jpg': {'labels': [('blue', 'ellipse')],\n",
+    "#                   'bboxs': [(22, 51, 67, 84)]},\n",
+    "#     'img_2.jpg': {'labels': [('yellow', 'ellipse'), ('yellow', 'ellipse'), ('blue', 'rectangle')],\n",
+    "#                   'bboxs': [(75, 33, 128, 120), (4, 66, 59, 95), (30, 35, 75, 62)]},\n",
+    "#     'img_3.jpg': {'labels': [('blue', 'ellipse'), ('red', 'ellipse'), ('yellow', 'ellipse')],\n",
+    "#                   'bboxs': [(47, 55, 116, 96), (99, 27, 138, 50), (0, 3, 47, 56)]}\n",
+    "# }"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "#old ipyannotator annotation format\n",
+    "\n",
+    "annotations = {\n",
+    "    str(Path(tmp_dir.name) / 'img_0.jpg'): ['yellow.jpg'],\n",
+    "    str(Path(tmp_dir.name) / 'img_1.jpg'): ['red'],\n",
+    "    str(Path(tmp_dir.name) / 'img_2.jpg'): ['red'],\n",
+    "    str(Path(tmp_dir.name) / 'img_3.jpg'): ['red'],\n",
+    "    str(Path(tmp_dir.name) / 'img_4.jpg'): ['yellow'],\n",
+    "    str(Path(tmp_dir.name) / 'img_5.jpg'): ['yellow'],\n",
+    "    str(Path(tmp_dir.name) / 'img_6.jpg'): ['yellow'],\n",
+    "    str(Path(tmp_dir.name) / 'img_7.jpg'): ['blue'],\n",
+    "    str(Path(tmp_dir.name) / 'img_8.jpg'): ['blue'],\n",
+    "    str(Path(tmp_dir.name) / 'img_9.jpg'): ['yellow']\n",
+    "}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import json\n",
+    "\n",
+    "annot_file = Path(tmp_dir.name) / 'annotations.json'\n",
+    "with open(annot_file, 'w') as f:\n",
+    "    json.dump(annotations, f, indent=2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from ipyannotator.storage import validate_project_path\n",
+    "project_path = validate_project_path('../data/projects/im2im1/')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "imz = InputImage('pics')\n",
+    "\n",
+    "lblz = OutputImageLabel(label_dir='class_images')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Controller"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class Im2ImAnnotatorController:\n",
+    "    debug_output = Output(layout={'border': '1px solid black'})\n",
+    "\n",
+    "    def __init__(\n",
+    "        self,\n",
+    "        app_state: AppWidgetState,\n",
+    "        im2im_state: Im2ImState,\n",
+    "        storage: JsonLabelStorage,\n",
+    "        input_item=None,\n",
+    "        output_item=None,\n",
+    "        question=None,\n",
+    "    ):\n",
+    "        self._app_state = app_state\n",
+    "        self._im2im_state = im2im_state\n",
+    "        self._storage = storage\n",
+    "\n",
+    "        self.input_item = input_item\n",
+    "        self.output_item = output_item\n",
+    "\n",
+    "        self.images = self._storage.get_im_names(None)\n",
+    "        self._app_state.max_im_number = len(self.images)\n",
+    "\n",
+    "        self.labels = self._storage.get_labels()\n",
+    "        self.labels_num = len(self.labels)\n",
+    "\n",
+    "        # Tracks the app_state.index history\n",
+    "        self._last_index = 0\n",
+    "\n",
+    "        if question:\n",
+    "            self._im2im_state.question_value = (f'<center><p style=\"font-size:20px;\">'\n",
+    "                                                f'{question}</p></center>')\n",
+    "\n",
+    "    def _update_im(self):\n",
+    "        # print('_update_im')\n",
+    "        index = self._app_state.index\n",
+    "        self._im2im_state.image_path = str(self.images[index])\n",
+    "\n",
+    "    def _update_state(self, change=None):  # from annotations\n",
+    "        # print('_update_state')\n",
+    "        image_path = self._im2im_state.image_path\n",
+    "\n",
+    "        if not image_path:\n",
+    "            return\n",
+    "        tmp_annotations = LabelStore()\n",
+    "        if image_path in self._storage:\n",
+    "            current_annotation = self._storage.get(str(image_path)) or {}\n",
+    "            tmp_annotations.update(\n",
+    "                _storage_format_to_label_state(\n",
+    "                    storage_format=current_annotation or [],\n",
+    "                    label_names=self.labels,\n",
+    "                    label_dir=self._storage.label_dir\n",
+    "                )\n",
+    "            )\n",
+    "            self._im2im_state.annotations = tmp_annotations\n",
+    "\n",
+    "    def _update_annotations(self, index: int):  # from screen\n",
+    "        # print('_update_annotations')\n",
+    "        image_path = self._im2im_state.image_path\n",
+    "        if image_path:\n",
+    "            self._storage[image_path] = _label_state_to_storage_format(\n",
+    "                self._im2im_state.annotations\n",
+    "            )\n",
+    "\n",
+    "    def save_annotations(self, index: int):  # to disk\n",
+    "        # print('_save_annotations')\n",
+    "        self._update_annotations(index)\n",
+    "        self._storage.save()\n",
+    "\n",
+    "    def idx_changed(self, index: int):\n",
+    "        \"\"\" On index change save old state\n",
+    "            and update current state for visualisation\n",
+    "        \"\"\"\n",
+    "        # print('_idx_changed')\n",
+    "        self._app_state.set_quietly('index', index)\n",
+    "        self.save_annotations(self._last_index)\n",
+    "        # update new screen\n",
+    "        self._update_im()\n",
+    "        self._update_state()\n",
+    "        self._last_index = index\n",
+    "\n",
+    "    @debug_output.capture(clear_output=False)\n",
+    "    def handle_grid_click(self, event, name):\n",
+    "        # print('_handle_grid_click')\n",
+    "        label_changed = name\n",
+    "\n",
+    "        # check if the im2im is using the label as path\n",
+    "        # otherwise it uses the iterable of labels\n",
+    "        if isinstance(self._storage.label_dir, Path):\n",
+    "            label_changed = self._storage.label_dir / name\n",
+    "\n",
+    "            if label_changed.is_dir():\n",
+    "                # button without image - invalid\n",
+    "                return\n",
+    "\n",
+    "            label_changed = str(label_changed)\n",
+    "        current_label_state = deepcopy(self._im2im_state.annotations)\n",
+    "\n",
+    "        # inverse state\n",
+    "        current_label_state[label_changed] = {\n",
+    "            'answer': not self._im2im_state.annotations[label_changed].get('answer', False)\n",
+    "        }\n",
+    "\n",
+    "        # change traitlets.Dict entirely to have change events issued\n",
+    "        self._im2im_state.annotations = current_label_state\n",
+    "\n",
+    "    def handle_client_ready(self):\n",
+    "        self._update_im()\n",
+    "        self._update_state()\n",
+    "\n",
+    "    def to_dict(self, only_annotated: bool) -> dict:\n",
+    "        return self._storage.to_dict(only_annotated)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# remove if the results folder exists this allows\n",
+    "# the next command to construct the annotation path\n",
+    "! rm -rf ../data/projects/im2im1/results"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from ipyannotator.storage import construct_annotation_path\n",
+    "\n",
+    "anno_file_path = construct_annotation_path(project_path)\n",
+    "\n",
+    "app_state = AppWidgetState()\n",
+    "im2im_state = Im2ImState(grid=grid)\n",
+    "\n",
+    "storage = JsonLabelStorage(\n",
+    "    im_dir=project_path / imz.dir,\n",
+    "    label_dir=project_path / lblz.dir,\n",
+    "    annotation_file_path=anno_file_path\n",
+    ")\n",
+    "\n",
+    "i_ = Im2ImAnnotatorController(\n",
+    "    app_state=app_state,\n",
+    "    im2im_state=im2im_state,\n",
+    "    storage=storage,\n",
+    "    input_item=imz,\n",
+    "    output_item=lblz\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "# (Next-> button emulation)\n",
+    "# Increment index to initiate annotation save and switch state for a new screen"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# # hide\n",
+    "\n",
+    "# # \"Im2ImAnnotatorController\" has no attribute \"index\"\n",
+    "i_.index = 2  # type: ignore\n",
+    "dict(i_._im2im_state.annotations)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# export\n",
+    "\n",
+    "class Im2ImAnnotator(Annotator):\n",
+    "    \"\"\"\n",
+    "    Represents image-to-image annotator.\n",
+    "\n",
+    "    Gives an ability to itarate through image dataset,\n",
+    "    map images with labels for classification,\n",
+    "    export final annotations in json format\n",
+    "\n",
+    "    \"\"\"\n",
+    "\n",
+    "    def __init__(\n",
+    "        self,\n",
+    "        project_path: Path,\n",
+    "        input_item: InputImage,\n",
+    "        output_item: Union[OutputImageLabel, OutputLabel],\n",
+    "        annotation_file_path,\n",
+    "        n_rows=None,\n",
+    "        n_cols=None,\n",
+    "        label_autosize=False,\n",
+    "        question=None,\n",
+    "        has_border=False\n",
+    "    ):\n",
+    "        assert input_item, \"WARNING: Provide valid Input\"\n",
+    "        assert output_item, \"WARNING: Provide valid Output\"\n",
+    "\n",
+    "        self.project_path = project_path\n",
+    "        self.input_item = input_item\n",
+    "        self.output_item = output_item\n",
+    "        app_state = AppWidgetState(uuid=str(id(self)))\n",
+    "\n",
+    "        super().__init__(app_state)\n",
+    "\n",
+    "        grid = Grid(\n",
+    "            width=output_item.width,\n",
+    "            height=output_item.height,\n",
+    "            n_rows=n_rows,\n",
+    "            n_cols=n_cols\n",
+    "        )\n",
+    "\n",
+    "        self.im2im_state = Im2ImState(\n",
+    "            uuid=str(id(self)),\n",
+    "            grid=grid,\n",
+    "            annotations=LabelStore(),\n",
+    "            im_height=input_item.height,\n",
+    "            im_width=input_item.width\n",
+    "        )\n",
+    "\n",
+    "        self.storage = JsonLabelStorage(\n",
+    "            im_dir=project_path / input_item.dir,\n",
+    "            label_dir=self._get_label_dir(),\n",
+    "            annotation_file_path=annotation_file_path\n",
+    "        )\n",
+    "\n",
+    "        self.controller = Im2ImAnnotatorController(\n",
+    "            app_state=self.app_state,\n",
+    "            im2im_state=self.im2im_state,\n",
+    "            storage=self.storage,\n",
+    "            input_item=input_item,\n",
+    "            output_item=output_item,\n",
+    "            question=question,\n",
+    "        )\n",
+    "\n",
+    "        self.state_to_widget = LabelStoreCaster(output_item)\n",
+    "\n",
+    "        self.view = Im2ImAnnotatorGUI(\n",
+    "            app_state=self.app_state,\n",
+    "            im2im_state=self.im2im_state,\n",
+    "            state_to_widget=self.state_to_widget,\n",
+    "            label_autosize=label_autosize,\n",
+    "            on_navi_clicked=self.controller.idx_changed,\n",
+    "            on_save_btn_clicked=self.controller.save_annotations,\n",
+    "            on_grid_box_clicked=self.controller.handle_grid_click,\n",
+    "            has_border=has_border,\n",
+    "            fit_canvas=input_item.fit_canvas\n",
+    "        )\n",
+    "\n",
+    "        self.app_state.subscribe(self._on_annotation_step_change, 'annotation_step')\n",
+    "\n",
+    "        # draw current image and bbox only when client is ready\n",
+    "        self.view.on_client_ready(self.controller.handle_client_ready)\n",
+    "\n",
+    "    def _on_annotation_step_change(self, annotation_step: AnnotatorStep):\n",
+    "        if annotation_step == AnnotatorStep.EXPLORE:\n",
+    "            self.state_to_widget.widgets_disabled = True\n",
+    "            self.view._grid_box.clear()\n",
+    "        elif self.state_to_widget.widgets_disabled:\n",
+    "            self.state_to_widget.widgets_disabled = False\n",
+    "\n",
+    "        # forces annotator to have img loaded\n",
+    "        self.controller._update_im()\n",
+    "        self.controller._update_state()\n",
+    "        self.view.load_menu(self.im2im_state.annotations)\n",
+    "\n",
+    "    def _get_label_dir(self) -> Union[Iterable[str], Path]:\n",
+    "        if isinstance(self.output_item, OutputImageLabel):\n",
+    "            return self.project_path / self.output_item.dir\n",
+    "        elif isinstance(self.output_item, OutputLabel):\n",
+    "            return self.output_item.class_labels\n",
+    "        else:\n",
+    "            raise ValueError(\n",
+    "                \"output_item should have type OutputLabel or OutputImageLabel\"\n",
+    "            )\n",
+    "\n",
+    "    def __repr__(self):\n",
+    "        display(self.view)\n",
+    "        return \"\"\n",
+    "\n",
+    "    def to_dict(self, only_annotated=True):\n",
+    "        return self.controller.to_dict(only_annotated)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "! rm -rf ..data/projects/im2im1/results"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "proj_path = validate_project_path('../data/projects/im2im1')\n",
+    "anno_file_path = construct_annotation_path(\n",
+    "    file_name='../data/projects/im2im1/results/annotation.json')\n",
+    "\n",
+    "in_p = InputImage(image_dir='pics', image_width=300, image_height=300)\n",
+    "\n",
+    "out_p = OutputImageLabel(label_dir='class_images', label_width=150, label_height=50)\n",
+    "\n",
+    "im2im = Im2ImAnnotator(\n",
+    "    project_path=proj_path,\n",
+    "    input_item=in_p,\n",
+    "    output_item=out_p,\n",
+    "    annotation_file_path=anno_file_path,\n",
+    "    n_cols=2,\n",
+    "    question=\"HelloWorld\"\n",
+    ")\n",
+    "\n",
+    "im2im"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "im2im.to_dict()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "@pytest.fixture\n",
+    "def im2im_class_labels_fixture():\n",
+    "    ! rm -rf ../data/projects/im2im1/results/annotation.json\n",
+    "\n",
+    "    proj_path = validate_project_path('../data/projects/im2im1')\n",
+    "    anno_file_path = construct_annotation_path(\n",
+    "        file_name='../data/projects/im2im1/results/annotation.json')\n",
+    "\n",
+    "    in_p = InputImage(image_dir='pics', image_width=300, image_height=300)\n",
+    "\n",
+    "    out_p = OutputLabel(class_labels=('horse', 'airplane', 'dog'))\n",
+    "\n",
+    "    im2im = Im2ImAnnotator(\n",
+    "        project_path=proj_path,\n",
+    "        input_item=in_p,\n",
+    "        output_item=out_p,\n",
+    "        annotation_file_path=anno_file_path,\n",
+    "        n_cols=2,\n",
+    "        question=\"Testing classes\"\n",
+    "    )\n",
+    "\n",
+    "    # force fixture to already load its children\n",
+    "    im2im.controller.idx_changed(0)\n",
+    "    assert len(im2im.view._grid_box.children) > 0\n",
+    "\n",
+    "    return im2im"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_doesnt_share_state_with_other_annotators(im2im_class_labels_fixture):\n",
+    "    other_im2im = Im2ImAnnotator(\n",
+    "        project_path=proj_path,\n",
+    "        input_item=in_p,\n",
+    "        output_item=out_p,\n",
+    "        annotation_file_path=anno_file_path,\n",
+    "        n_cols=2,\n",
+    "        question=\"Hello World\"\n",
+    "    )\n",
+    "    assert other_im2im.app_state.index == 0\n",
+    "    other_im2im.app_state.index = 1\n",
+    "    assert other_im2im.app_state.index != im2im_class_labels_fixture.app_state.index"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_activate_button_on_user_click(im2im_class_labels_fixture):\n",
+    "    im2im_class_labels_fixture.controller._update_state()\n",
+    "    buttons = im2im_class_labels_fixture.view._grid_box.children\n",
+    "    airplane_btn = buttons[0]\n",
+    "    airplane_btn.click()\n",
+    "    assert im2im_class_labels_fixture.im2im_state.annotations[airplane_btn.value] == {'answer': True}\n",
+    "    assert im2im_class_labels_fixture.view._grid_box.children[0].layout.border is not None\n",
+    "    for button in buttons[1:]:\n",
+    "        assert button.layout.border is None"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_disables_grid_menu_when_app_state_step_is_explore(im2im_class_labels_fixture):\n",
+    "    assert len(im2im_class_labels_fixture.view._grid_box.children) > 0\n",
+    "    im2im_class_labels_fixture.app_state.annotation_step = AnnotatorStep.EXPLORE\n",
+    "    assert len(im2im_class_labels_fixture.view._grid_box.children) == 3\n",
+    "    im2im_class_labels_fixture.view._navi._next_btn.click()\n",
+    "    assert len(im2im_class_labels_fixture.view._grid_box.children) == 3\n",
+    "    for button in im2im_class_labels_fixture.view._grid_box.children:\n",
+    "        assert button.disabled is True"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_loads_grid_menu_when_app_state_step_is_not_explore(im2im_class_labels_fixture):\n",
+    "    im2im_class_labels_fixture.app_state.annotation_step = AnnotatorStep.EXPLORE\n",
+    "    im2im_class_labels_fixture.app_state.annotation_step = AnnotatorStep.CREATE\n",
+    "    assert len(im2im_class_labels_fixture.view._grid_box.children) == 3"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

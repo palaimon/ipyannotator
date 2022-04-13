@@ -1,0 +1,60 @@
+Traceback (most recent call last):
+  File "/home/runner/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/home/runner/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/home/runner/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/home/runner/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/asyncio/base_events.py", line 616, in run_until_complete
+    return future.result()
+  File "/home/runner/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+%%ipytest
+def test_it_change_max_input_coord_value_on_image_scale_change(bbox_fixture):
+    size = [
+        bbox_fixture.view.right_menu._bbox_canvas_state.image_width,
+        bbox_fixture.view.right_menu._bbox_canvas_state.image_height
+    ]
+    new_scale = 0.1
+    bbox_fixture.view._image_box._state.image_scale = new_scale
+    scaled_width = size[0]//new_scale
+    scaled_height = size[1]//new_scale
+    new_max_coord = bbox_fixture.view.right_menu._bbox_list._max_coord_input_values
+
+    result = [int(size[i & 1]// new_scale) for i in range(4)]
+    assert new_max_coord == BboxCoordinate(*result)
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mError[0m                                     Traceback (most recent call last)
+Input [0;32mIn [35][0m, in [0;36m<module>[0;34m[0m
+[0;32m----> 1[0m [43mget_ipython[49m[43m([49m[43m)[49m[38;5;241;43m.[39;49m[43mrun_cell_magic[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mipytest[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[38;5;124;43m'[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[38;5;124;43m'[39;49m[38;5;124;43mdef test_it_change_max_input_coord_value_on_image_scale_change(bbox_fixture):[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m    size = [[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m        bbox_fixture.view.right_menu._bbox_canvas_state.image_width,[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m        bbox_fixture.view.right_menu._bbox_canvas_state.image_height[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m    ][39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m    new_scale = 0.1[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m    bbox_fixture.view._image_box._state.image_scale = new_scale[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m    scaled_width = size[0]//new_scale[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m    scaled_height = size[1]//new_scale[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m    new_max_coord = bbox_fixture.view.right_menu._bbox_list._max_coord_input_values[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m    result = [int(size[i & 1]// new_scale) for i in range(4)][39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m    assert new_max_coord == BboxCoordinate(*result)[39;49m[38;5;130;43;01m\n[39;49;00m[38;5;124;43m'[39;49m[43m)[49m
+
+File [0;32m~/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/IPython/core/interactiveshell.py:2257[0m, in [0;36mInteractiveShell.run_cell_magic[0;34m(self, magic_name, line, cell)[0m
+[1;32m   2255[0m [38;5;28;01mwith[39;00m [38;5;28mself[39m[38;5;241m.[39mbuiltin_trap:
+[1;32m   2256[0m     args [38;5;241m=[39m (magic_arg_s, cell)
+[0;32m-> 2257[0m     result [38;5;241m=[39m [43mfn[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
+[1;32m   2258[0m [38;5;28;01mreturn[39;00m result
+
+File [0;32m~/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/ipytest/_impl.py:87[0m, in [0;36mpytest_magic[0;34m(line, cell)[0m
+[1;32m     84[0m     [38;5;28;01melse[39;00m:
+[1;32m     85[0m         [38;5;28;01mraise[39;00m e
+[0;32m---> 87[0m [43mrun[49m[43m([49m[38;5;241;43m*[39;49m[43mshlex[49m[38;5;241;43m.[39;49m[43msplit[49m[43m([49m[43mline[49m[43m)[49m[43m)[49m
+
+File [0;32m~/.cache/pypoetry/virtualenvs/ipyannotator-Jrf2yDmH-py3.8/lib/python3.8/site-packages/ipytest/_impl.py:53[0m, in [0;36mrun[0;34m(module, plugins, *args)[0m
+[1;32m     50[0m ipytest[38;5;241m.[39mexit_code [38;5;241m=[39m exit_code
+[1;32m     52[0m [38;5;28;01mif[39;00m current_config[[38;5;124m"[39m[38;5;124mraise_on_error[39m[38;5;124m"[39m] [38;5;129;01mis[39;00m [38;5;28;01mTrue[39;00m [38;5;129;01mand[39;00m exit_code [38;5;241m!=[39m [38;5;241m0[39m:
+[0;32m---> 53[0m     [38;5;28;01mraise[39;00m Error(exit_code)
+[1;32m     55[0m [38;5;28;01mreturn[39;00m exit_code
+
+[0;31mError[0m: ipytest failed with exit_code 1
+Error: ipytest failed with exit_code 1
+

@@ -1,0 +1,1739 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp storage"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from nbdev import *\n",
+    "from fastcore.test import test_eq"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Storage"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "import warnings\n",
+    "import copy\n",
+    "import json\n",
+    "import os\n",
+    "from typing import List, Union, Iterable\n",
+    "from collections import defaultdict\n",
+    "from collections.abc import MutableMapping\n",
+    "from pathlib import Path"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Project Structure setup\n",
+    "\n",
+    "just to folders, first containing object (e.g images) to annotate and second folder\n",
+    "contains annotation data/results."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def group_files_by_class(annotations_dict):\n",
+    "    grouped = defaultdict(list)\n",
+    "    for file, labels in annotations_dict.items():\n",
+    "        for class_ in labels:\n",
+    "            grouped[class_].append(file)\n",
+    "    return grouped"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "def construct_annotation_path(project_path=None, file_name=None, results_dir=None):\n",
+    "    if file_name is not None:\n",
+    "        annotation_file_path = Path(file_name)\n",
+    "        results_dir = annotation_file_path.parent\n",
+    "    elif project_path is not None:\n",
+    "        results_dir = Path(\n",
+    "            project_path, 'results') if results_dir is None else Path(project_path, results_dir)\n",
+    "\n",
+    "        annotation_file_path = Path(results_dir, 'annotations.json')\n",
+    "        if annotation_file_path.is_file():\n",
+    "            warnings.warn(f\"Error: Annotations file already exists in {results_dir}!\"\n",
+    "                          \"\\n If you want to create annotations from scratch\"\n",
+    "                          \" - use empty dir!\")\n",
+    "    else:\n",
+    "        raise ValueError(\"You must define `project_path` or `file_name`!\")\n",
+    "\n",
+    "    results_dir.mkdir(parents=True, exist_ok=True)\n",
+    "    return annotation_file_path"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "(construct_annotation_path('../data/test_anno_path'),\n",
+    " construct_annotation_path(file_name='../results/annotations.json'),\n",
+    " construct_annotation_path(project_path='../test_anno_path', results_dir='outpi'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "from ipyannotator.base import validate_project_path\n",
+    "\n",
+    "\n",
+    "def setup_project_paths(project_path, file_name=None, image_dir='pics',\n",
+    "                        label_dir=None, results_dir=None):\n",
+    "    project_path = validate_project_path(project_path)\n",
+    "\n",
+    "    im_dir = project_path / image_dir\n",
+    "\n",
+    "    if file_name is not None:\n",
+    "        annotation_file_path = Path(file_name)\n",
+    "        results_dir = annotation_file_path.parent\n",
+    "        print(f\"WARNING: `results_dir` is deduced from `file_name` path: {results_dir}\")\n",
+    "    else:\n",
+    "        results_dir = Path(\n",
+    "            project_path, 'results') if results_dir is None else Path(project_path, results_dir)\n",
+    "\n",
+    "        annotation_file_path = Path(results_dir, 'annotations.json')\n",
+    "        if annotation_file_path.is_file():\n",
+    "            print(f\"WARNING: Annotations file already exists in {results_dir}\"\n",
+    "                  \"!\\n         If you want to create annotations from scratch\"\n",
+    "                  \" - use empty dir isntead.\")\n",
+    "\n",
+    "    results_dir.mkdir(parents=True, exist_ok=True)\n",
+    "\n",
+    "    project_paths = (im_dir, annotation_file_path)\n",
+    "\n",
+    "    if label_dir is not None:\n",
+    "        project_paths += (Path(project_path, label_dir),)\n",
+    "\n",
+    "    return project_paths"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "test_proj_path = Path('../data/test')\n",
+    "setup_project_paths(test_proj_path)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "test_proj_path = Path('../data/test')\n",
+    "setup_project_paths(test_proj_path, image_dir='ims', label_dir='labels')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "test_proj_path = Path('../data/test')\n",
+    "setup_project_paths(test_proj_path, image_dir='ims', label_dir='labels', results_dir='.')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "import glob\n",
+    "\n",
+    "\n",
+    "def get_image_list_from_folder(image_dir) -> Iterable[Path]:\n",
+    "    ''' Scans <image_dir> to construct list of existing images as <Path> objects\n",
+    "    '''\n",
+    "    # if no files in `image_dir` assume all images are under `class_name` directories\n",
+    "    if all([Path(image_dir, f).is_dir() for f in os.listdir(image_dir)]):\n",
+    "        path_list = [Path(p) for p in glob.glob(f'{image_dir}/*/*')]\n",
+    "    else:\n",
+    "        path_list = [Path(image_dir, f) for f in os.listdir(image_dir) if\n",
+    "                     os.path.isfile(os.path.join(image_dir, f))]\n",
+    "\n",
+    "    return path_list\n",
+    "\n",
+    "\n",
+    "def strip_path(paths: Iterable[Path]) -> Iterable[str]:\n",
+    "    return [p.name for p in paths]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "get_image_list_from_folder('../data/mock/pics')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "strip_path(get_image_list_from_folder('../data/mock/pics'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "#generate imdir/classdir/class.jpg structure\n",
+    "subfolders = ['one', 'two', 'three']\n",
+    "for subfolder in subfolders:\n",
+    "    directory = '../data/test_step_down'\n",
+    "    if not os.path.exists(directory):\n",
+    "        os.mkdir(directory)\n",
+    "\n",
+    "    directory = f'{directory}/{subfolder}'\n",
+    "    if not os.path.exists(directory):\n",
+    "        os.mkdir(directory)\n",
+    "\n",
+    "from PIL import Image\n",
+    "\n",
+    "for class_p in [Path(p) for p in glob.glob('../data/test_step_down/*')]:\n",
+    "    img_name = f'{class_p.stem}.jpg'\n",
+    "    img = Image.new('RGB', (50, 50))\n",
+    "    img.save(class_p / img_name)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "get_image_list_from_folder('../data/test_step_down')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Generic Storage for Annotations\n",
+    "\n",
+    "key values store\n",
+    "\n",
+    "- key, object_id / file_name\n",
+    "- value json blob containing annotation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "\n",
+    "class MapeableStorage(MutableMapping):\n",
+    "    def __init__(self):\n",
+    "        self.mapping = {}\n",
+    "\n",
+    "    def __getitem__(self, key):\n",
+    "        return self.mapping[key]\n",
+    "\n",
+    "    def __delitem__(self, key):\n",
+    "        if key in self:\n",
+    "            del self.mapping[key]\n",
+    "\n",
+    "    def __setitem__(self, key, value):\n",
+    "        self.mapping[key] = value\n",
+    "\n",
+    "    def __iter__(self):\n",
+    "        return iter(self.mapping)\n",
+    "\n",
+    "    def __len__(self):\n",
+    "        return len(self.mapping)\n",
+    "\n",
+    "    def to_dict(self, only_annotated=True):\n",
+    "        if only_annotated:\n",
+    "            return {k: copy.deepcopy(v) for k, v in self.mapping.items() if v}\n",
+    "        else:\n",
+    "            return copy.deepcopy(self.mapping)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "m = MapeableStorage()\n",
+    "m.update({'test': 1})\n",
+    "m['test']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "\n",
+    "class AnnotationStorage(MapeableStorage):\n",
+    "    \"\"\"\n",
+    "    Represents generic storage for annotations.\n",
+    "\n",
+    "    `key` is object_id / file_name and `value` - json blob containing annotation.\n",
+    "\n",
+    "    im_paths - list of existing images as <Path> objects\n",
+    "\n",
+    "    \"\"\"\n",
+    "\n",
+    "    def __init__(self, im_paths):\n",
+    "        super().__init__()\n",
+    "        self.update({str(p): None for p in im_paths})\n",
+    "\n",
+    "    def __repr__(self):\n",
+    "        return f\"{type(self).__name__}({self.mapping})\"\n",
+    "\n",
+    "    def save(self, file_name):\n",
+    "        with open(file_name, 'w', encoding='utf-8') as f:\n",
+    "            json.dump(self.mapping, f, ensure_ascii=False, sort_keys=True, indent=4)\n",
+    "\n",
+    "    def load(self, file_name):\n",
+    "        with open(file_name) as data_file:\n",
+    "            self.mapping = json.load(data_file)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "im_paths = [Path('some/path', f) for f in ['name1', 'name2', 'name3']]\n",
+    "storage = AnnotationStorage(im_paths)\n",
+    "storage"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "storage['some/path/name5'] = {'x': 5, 'y': 3, 'width': 7, 'height': 1}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "test_eq(storage['some/path/name5'], {'x': 5, 'y': 3, 'width': 7, 'height': 1})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "len_before = len(storage)\n",
+    "storage.pop('some/path/name1')\n",
+    "test_eq(len(storage), len_before - 1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "storage.to_dict()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "storage.to_dict(only_annotated=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "storage.save('/tmp/ttest.json')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "storage_from_file = AnnotationStorage([])\n",
+    "storage_from_file.load('/tmp/ttest.json')\n",
+    "test_eq(storage, storage_from_file)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "storage"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "test_eq(storage.get('name8', {'dict': 'obj'}), {'dict': 'obj'})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "storage.values()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "from ipyannotator.helpers import flatten, reconstruct_class_images\n",
+    "\n",
+    "\n",
+    "class JsonLabelStorage(AnnotationStorage):\n",
+    "    def __init__(self, im_dir: Path, label_dir: Union[Iterable[str], Path], annotation_file_path):\n",
+    "        self.annotation_file_path = annotation_file_path\n",
+    "        self.label_dir = label_dir\n",
+    "\n",
+    "        self.has_annotation_file = True if (annotation_file_path is not None and\n",
+    "                                            annotation_file_path.is_file()) else False\n",
+    "\n",
+    "        self.images = get_image_list_from_folder(im_dir)\n",
+    "\n",
+    "        if isinstance(label_dir, Path):\n",
+    "            # artificialy generate labels if no class images given (TODO: temorary workaround)\n",
+    "            if 'class_autogenerated_' in str(label_dir):\n",
+    "                label_dir.mkdir(parents=True, exist_ok=True)\n",
+    "\n",
+    "                if self.has_annotation_file:\n",
+    "                    reconstruct_class_images(label_dir, annotation_file_path, lbl_w=50, lbl_h=50)\n",
+    "                else:\n",
+    "                    warnings.warn(\"Annotation file should be provided\"\n",
+    "                                  \" to generate labels automatically!\")\n",
+    "\n",
+    "            self.labels = strip_path(get_image_list_from_folder(label_dir))\n",
+    "        elif isinstance(label_dir, Iterable):\n",
+    "            self.labels = label_dir\n",
+    "        else:\n",
+    "            raise ValueError(\"label_dir should have str or Path type\")\n",
+    "\n",
+    "        if self.has_annotation_file:  # init from json\n",
+    "            self.load()\n",
+    "        else:  # init storage from folder\n",
+    "            super().__init__(self.images)\n",
+    "            self.save()\n",
+    "\n",
+    "    def get_im_names(self, filter_files=None):\n",
+    "        keys = self.keys()\n",
+    "        images = sorted([k for k in self.images if str(k) in keys])\n",
+    "\n",
+    "        if not images:\n",
+    "            raise UserWarning(\"!! No Images to dipslay !!\")\n",
+    "\n",
+    "        if filter_files is not None:\n",
+    "            images = [p for p in images if str(p) in filter_files]\n",
+    "\n",
+    "        if not images:\n",
+    "            raise UserWarning(\"!! No image files to display. Check filter !!\")\n",
+    "        return images\n",
+    "\n",
+    "    def get_labels(self) -> List[Union[Path, str]]:\n",
+    "        if not self.labels:\n",
+    "            warnings.warn(\"!! No labels to display !!\")\n",
+    "            return []\n",
+    "\n",
+    "        if self.has_annotation_file and isinstance(self.label_dir, Path):\n",
+    "            values = set(flatten(self.values()))\n",
+    "            return sorted([v for v in self.labels if str(v) in values])\n",
+    "\n",
+    "        # create mod -> display all labels from folder, not json\n",
+    "        return sorted(self.labels)\n",
+    "\n",
+    "    def save(self):\n",
+    "        super().save(self.annotation_file_path)\n",
+    "\n",
+    "    def load(self):\n",
+    "        super().load(self.annotation_file_path)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "jas = JsonLabelStorage(\n",
+    "    Path('../data/projects/im2im1/pics'),\n",
+    "    Path('../data/projects/im2im1/class_images'),\n",
+    "    annotation_file_path=Path('../data/projects/im2im1/results/annotations_j.json'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "jas.get_labels(), jas.get_im_names()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class JsonCaptureStorage(AnnotationStorage):\n",
+    "    def __init__(self, im_dir: Path, annotation_file_path):\n",
+    "        self.im_dir = im_dir\n",
+    "        self.annotation_file_path = annotation_file_path\n",
+    "\n",
+    "        self.has_annotation_file = True if (annotation_file_path is not None and\n",
+    "                                            annotation_file_path.is_file()) else False\n",
+    "        self.images = sorted(get_image_list_from_folder(im_dir))\n",
+    "\n",
+    "        if self.has_annotation_file:  # init from json\n",
+    "            self.load()\n",
+    "        else:  # init storage from folder\n",
+    "            super().__init__(self.images)\n",
+    "            self.save()\n",
+    "\n",
+    "    def get_im_names(self, filter_files=None):\n",
+    "        images = sorted(k for k in self.images if str(k) in self.keys())\n",
+    "\n",
+    "        if not images:\n",
+    "            raise UserWarning(\"!! No Images to dipslay !!\")\n",
+    "\n",
+    "        if filter_files is not None:\n",
+    "            images = [p for p in images if str(p) in filter_files]\n",
+    "\n",
+    "        if not images:\n",
+    "            raise UserWarning(\"!! No image files to display. Check filter !!\")\n",
+    "        return images\n",
+    "\n",
+    "    def save(self):\n",
+    "        super().save(self.annotation_file_path)\n",
+    "\n",
+    "    def load(self):\n",
+    "        super().load(self.annotation_file_path)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# DB backed storage\n",
+    "\n",
+    "- Changes in annotation should be tracked in db.\n",
+    "- db\n",
+    "  - sqlite memory / disk, how to sync so that race conditons are avoided?\n",
+    "  - remote db (postgres, mysql etc.) with sqlalchemy layer\n",
+    "  \n",
+    "## write sqlite functions\n",
+    "\n",
+    "- init db\n",
+    "- write json + timestamp to db BUT only if json has changed!\n",
+    "- iterate over db\n",
+    "- iterate over values with latest timestamp\n",
+    "- get all history for key\n",
+    "- allow for metadata?\n",
+    "- check how sqlite write locks work"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# export\n",
+    "\n",
+    "import sqlite3"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def _list_tables(conn):\n",
+    "    query = \"\"\"\n",
+    "    SELECT\n",
+    "        name\n",
+    "    FROM\n",
+    "        sqlite_master\n",
+    "    WHERE\n",
+    "        type = 'table' AND\n",
+    "        name NOT LIKE 'sqlite_%';\n",
+    "    \"\"\"\n",
+    "    c = conn.cursor()\n",
+    "    return c.execute(query).fetchall()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "```sql\n",
+    "DROP TABLE suppliers;\n",
+    "\n",
+    "CREATE TABLE suppliers (\n",
+    "    supplier_id   INTEGER PRIMARY KEY,\n",
+    "    supplier_name TEXT    NOT NULL,\n",
+    "    group_id      INTEGER NOT NULL,\n",
+    "    FOREIGN KEY (group_id)\n",
+    "       REFERENCES supplier_groups (group_id) \n",
+    ");\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "\n",
+    "conn = sqlite3.connect(\":memory:\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def _create_tables(conn):\n",
+    "    c = conn.cursor()\n",
+    "    query = \"\"\"\n",
+    "CREATE TABLE IF NOT EXISTS data (objectID TEXT,\n",
+    "                                 timestamp DATETIME DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),\n",
+    "                                 data JSON,\n",
+    "                                 author TEXT,\n",
+    "                                 PRIMARY KEY (objectId, timestamp)\n",
+    "                                );\n",
+    "    \"\"\"\n",
+    "    c.execute(query)\n",
+    "    query = \"\"\"\n",
+    "    CREATE TABLE IF NOT EXISTS objects (objectID TEXT,\n",
+    "                                        orderID INTEGER PRIMARY KEY AUTOINCREMENT\n",
+    "\n",
+    "                                       )\n",
+    "    \"\"\"\n",
+    "    c.execute(query)\n",
+    "    conn.commit()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def _list_table(conn, table_name='data', latest=True):\n",
+    "    if latest:\n",
+    "        query = \"\"\"\n",
+    "        SELECT * from {}\n",
+    "\n",
+    "        GROUP BY objectID\n",
+    "        ORDER BY timestamp\n",
+    "        \"\"\".format(table_name)\n",
+    "    else:\n",
+    "        query = \"\"\"\n",
+    "        SELECT * from {}\n",
+    "        \"\"\".format(table_name)\n",
+    "    c = conn.cursor()\n",
+    "    return c.execute(query).fetchall()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_create_tables(conn)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_list_tables(conn)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## SQL helper functions\n",
+    "is needed for consistant iteration order"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def _get_order_id(conn, object_id, table_name='objects'):\n",
+    "    query = \"\"\"\n",
+    "    SELECT orderID from {}\n",
+    "    WHERE objectID = '{}'\n",
+    "    \"\"\".format(table_name, object_id)\n",
+    "    c = conn.cursor()\n",
+    "    res = c.execute(query).fetchone()\n",
+    "    if res is not None:\n",
+    "        return res[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_get_order_id(conn, 'doesnt exist')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def _create_order_id(conn, object_id, table_name='objects'):\n",
+    "    order_id = _get_order_id(conn, object_id, table_name=table_name)\n",
+    "    if order_id:\n",
+    "        return order_id\n",
+    "    query = \"\"\"\n",
+    "    INSERT INTO {}('objectID') VALUES('{}')\n",
+    "    \"\"\".format(table_name, object_id)\n",
+    "    c = conn.cursor()\n",
+    "    c.execute(query)\n",
+    "    return _get_order_id(conn, object_id, table_name=table_name)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_create_order_id(conn, 'lala')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_create_order_id(conn, 'lala')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_create_order_id(conn, 'lala2')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "query = \"\"\"\n",
+    "SELECT * from objects\n",
+    "\"\"\"\n",
+    "c = conn.cursor()\n",
+    "res = c.execute(query).fetchall()\n",
+    "res"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def _get(conn, object_id, table_name='data'):\n",
+    "    query = \"\"\"\n",
+    "    SELECT data FROM {}\n",
+    "    WHERE objectID = '{}'\n",
+    "\n",
+    "    GROUP BY objectID\n",
+    "    ORDER BY timestamp\n",
+    "    \"\"\".format(table_name, object_id)\n",
+    "    c = conn.cursor()\n",
+    "    res = c.execute(query).fetchone()\n",
+    "    if res is not None:\n",
+    "        return json.loads(res[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def _get_object_id_at_pos(conn, pos, table_name='objects'):\n",
+    "    query = \"\"\"\n",
+    "    SELECT objectID FROM {}\n",
+    "    ORDER BY orderID\n",
+    "    LIMIT {}, 1\n",
+    "    \"\"\".format(table_name, pos)\n",
+    "    c = conn.cursor()\n",
+    "    res = c.execute(query).fetchone()\n",
+    "    if res is not None:\n",
+    "        return res[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_get_object_id_at_pos(conn, 1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def _insert(conn, object_id, data: dict, table_name='data', author='author'):\n",
+    "    # insert if values have been changed\n",
+    "\n",
+    "    last = _get(conn, object_id)\n",
+    "\n",
+    "#     if last is None:\n",
+    "    _create_order_id(conn, object_id)\n",
+    "    if data == last:\n",
+    "        return\n",
+    "    c = conn.cursor()\n",
+    "    c.execute(\"insert into {}('objectID', 'author', 'data') values (?, ?, ?)\".format(table_name),\n",
+    "              [object_id, author, json.dumps(data)])\n",
+    "    conn.commit()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_insert(conn, 'lala3', {'crazy': 44})\n",
+    "_insert(conn, 'lala2', {'crazy': 40})\n",
+    "import time\n",
+    "time.sleep(0.1)\n",
+    "_insert(conn, 'lala3', {'crazy': 44 + 5})\n",
+    "_insert(conn, 'lala2', {'crazy': 40 + 5})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_list_table(conn, latest=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_list_table(conn)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "# insert existing is ignored\n",
+    "_insert(conn, 'lala2', {'crazy': 40 + 5})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_list_table(conn, latest=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_get(conn, _get_object_id_at_pos(conn, 2))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def _to_dict(conn, table_name='data'):\n",
+    "    query = \"\"\"\n",
+    "    SELECT objectID, data from {}\n",
+    "\n",
+    "    GROUP BY objectID\n",
+    "    ORDER BY timestamp\n",
+    "    \"\"\".format(table_name)\n",
+    "    c = conn.cursor()\n",
+    "    return {key: json.loads(value) for key, value in c.execute(query).fetchall()}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_to_dict(conn)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_get(conn, object_id=\"lala3\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def _row_count(conn, table_name='data'):\n",
+    "    query = \"\"\"\n",
+    "    SELECT COUNT(DISTINCT objectID) FROM {}\n",
+    "    \"\"\".format(table_name)\n",
+    "    c = conn.cursor()\n",
+    "    res = c.execute(query).fetchone()\n",
+    "    return res[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_row_count(conn)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def _delete_last(conn, object_id, table_name='data'):\n",
+    "    query = \"\"\"\n",
+    "    DELETE FROM {}\n",
+    "    WHERE objectId = '{}'\n",
+    "    ORDER BY timestamp\n",
+    "    LIMIT 1\n",
+    "    \"\"\".format(table_name, object_id)\n",
+    "    c = conn.cursor()\n",
+    "    c.execute(query)\n",
+    "    conn.commit()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def _delete_all(conn, object_id, table_name='data'):\n",
+    "    query = \"\"\"\n",
+    "    DELETE FROM {}\n",
+    "    WHERE objectId = '{}'\n",
+    "    \"\"\".format(table_name, object_id)\n",
+    "    c = conn.cursor()\n",
+    "    c.execute(query)\n",
+    "    conn.commit()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_list_table(conn, latest=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_delete_last(conn, 'lala3')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_list_table(conn, latest=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_delete_all(conn, 'lala2')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_list_table(conn, latest=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_row_count(conn)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Persistent Storage with history support"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "\n",
+    "class AnnotationStorageIterator:\n",
+    "    def __init__(self, annotator_storage):\n",
+    "        self.annotator_storage = annotator_storage\n",
+    "        self.index = 0\n",
+    "\n",
+    "    def __next__(self):\n",
+    "        try:\n",
+    "            result = self.annotator_storage.at(self.index)\n",
+    "            self.index += 1\n",
+    "        except IndexError:\n",
+    "            raise StopIteration\n",
+    "        return result\n",
+    "\n",
+    "    def next(self):\n",
+    "        return self.__next__()\n",
+    "\n",
+    "    def prev(self):\n",
+    "        self.index -= 1\n",
+    "        if self.index < 0:\n",
+    "            raise StopIteration\n",
+    "        return self.annotator_storage.at(self.index)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "\n",
+    "class AnnotationDBStorage(MutableMapping):\n",
+    "    def __init__(self, conn_string, im_paths=None):\n",
+    "        self.conn = sqlite3.connect(conn_string)\n",
+    "        _create_tables(self.conn)\n",
+    "        if im_paths:\n",
+    "            self.update({p.name: {} for p in im_paths})\n",
+    "\n",
+    "    def update(self, dict_):\n",
+    "        for k, v in dict_.items():\n",
+    "            _insert(self.conn, k, v)\n",
+    "\n",
+    "    def __getitem__(self, key):\n",
+    "        item = _get(self.conn, key)\n",
+    "        if item is None:\n",
+    "            raise IndexError\n",
+    "        return item\n",
+    "\n",
+    "    def get(self, key, default):\n",
+    "        if _get(self.conn, key) is None:\n",
+    "            return default\n",
+    "\n",
+    "    def __delitem__(self, key):\n",
+    "        _delete_last(self.conn, key)\n",
+    "\n",
+    "    def delete_all(self, key):\n",
+    "        _delete_all(self.conn, key)\n",
+    "\n",
+    "    def at(self, pos):\n",
+    "        # bug fix needed when combined with del operations\n",
+    "        object_id = _get_object_id_at_pos(self.conn, pos)\n",
+    "        if object_id is None or pos < 0:\n",
+    "            raise IndexError\n",
+    "        return _get(self.conn, object_id)\n",
+    "\n",
+    "    def __setitem__(self, key, value):\n",
+    "        _insert(self.conn, key, value)\n",
+    "\n",
+    "    def __iter__(self):\n",
+    "        return AnnotationStorageIterator(self)\n",
+    "\n",
+    "    def __len__(self):\n",
+    "        return _row_count(self.conn)\n",
+    "\n",
+    "    def __repr__(self):\n",
+    "        return f\"{type(self).__name__}({_list_table(self.conn)[:2] + [' ...']})\"\n",
+    "\n",
+    "    def to_dict(self):\n",
+    "        return _to_dict(self.conn)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "im_paths = [Path('some/path', f) for f in ['name1', 'name2', 'name3']]\n",
+    "_storage = AnnotationDBStorage(\":memory:\", im_paths)\n",
+    "_storage"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_storage['name5'] = {'x': 5, 'y': 3, 'width': 7, 'height': 1}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "test_eq(_storage.at(3), {'x': 5, 'y': 3, 'width': 7, 'height': 1})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "test_eq(len(_storage), 4)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "test_eq(_storage['name5'], {'x': 5, 'y': 3, 'width': 7, 'height': 1})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "myiter = iter(_storage)\n",
+    "for i in range(len(_storage)):\n",
+    "    print(i, _storage.at(i))\n",
+    "    test_eq(_storage.at(i), next(myiter))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "\n",
+    "myiter.prev()  # type: ignore"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "myiter.prev()  # type: ignore"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "myiter.next()  # type: ignore"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "for i in _storage:\n",
+    "    print(i)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "len_before = len(_storage)\n",
+    "_storage.pop('name1')\n",
+    "test_eq(len(_storage), len_before - 1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_storage.to_dict()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "for i in range(len(_storage)):\n",
+    "    print(i, _storage.at(i))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "# TODO delete objectID from object table if not anymore in data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_storage"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "test_eq(_storage.get('name8', {'dict': 'obj'}), {'dict': 'obj'})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "_storage.to_dict()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

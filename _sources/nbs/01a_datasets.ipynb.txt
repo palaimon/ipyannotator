@@ -1,0 +1,1011 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp datasets.generators"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from nbdev import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# exporti\n",
+    "import numpy as np\n",
+    "from pandas import DataFrame\n",
+    "from pathlib import Path\n",
+    "import json\n",
+    "from skimage.draw import random_shapes\n",
+    "from random import randint\n",
+    "import matplotlib.pyplot as plt\n",
+    "from skimage.draw import (ellipse)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "from skimage.draw import (rectangle, rectangle_perimeter, line)\n",
+    "from skimage.io import imsave"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Helpers for Dataset Generation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import tempfile\n",
+    "from typing import Tuple, List\n",
+    "tmp_dir = tempfile.TemporaryDirectory()\n",
+    "tmp_dir.name"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "f_path = Path(tmp_dir.name) / 'test.csv'\n",
+    "f_path"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "\n",
+    "import pandas as pd\n",
+    "\n",
+    "DataFrame({'a': [4], 'b': 5}).to_csv(f_path, index=False)\n",
+    "pd.read_csv(f_path)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Display image"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# export\n",
+    "def show_img(img):\n",
+    "    \"\"\"\n",
+    "    Display a numpy array as a image\n",
+    "    \"\"\"\n",
+    "    fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(3, 3))\n",
+    "    ax.imshow(img)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# export\n",
+    "def save_img(path, name, img):\n",
+    "    \"\"\"\n",
+    "    Save a numpy array as a image\n",
+    "    \"\"\"\n",
+    "    image = img.astype(np.uint8)\n",
+    "    filename = path / (name + \".jpg\")\n",
+    "\n",
+    "    imsave(filename, image, check_contrast=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# export\n",
+    "def save_img_annotations(path, annotations, name=\"annotations\"):\n",
+    "    \"\"\"\n",
+    "    Helper to save the annotations of a image into the desired file\n",
+    "    \"\"\"\n",
+    "    filename = path / (name + \".json\")\n",
+    "\n",
+    "    with open(filename, \"w\") as file:\n",
+    "        json.dump(annotations, file)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Create images"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from skimage.draw import (ellipse_perimeter)\n",
+    "\n",
+    "# change from zeros to ones to have a white bg.\n",
+    "img = np.zeros((300, 500, 3), dtype=np.double)\n",
+    "\n",
+    "fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(8, 8))\n",
+    "\n",
+    "# draw ellipse with perimeter\n",
+    "rr_ellipse, cc_ellipse = ellipse(150, 100, 100, 50)\n",
+    "rr_ellipse_p, cc_ellipse_p = ellipse_perimeter(150, 100, 100, 50)\n",
+    "img[rr_ellipse, cc_ellipse, :] = (1, 0, 0)\n",
+    "img[rr_ellipse_p, cc_ellipse_p, :] = (0, 0, 0)\n",
+    "\n",
+    "# draw square\n",
+    "rr_square, cc_square = rectangle(start=(100, 200), extent=(75, 75))\n",
+    "rr_square_p, cc_square_p = rectangle_perimeter(start=(100, 200), extent=(75, 75))\n",
+    "img[rr_square, cc_square, :] = (0, 0, 1)\n",
+    "img[rr_square_p, cc_square_p, :] = (1, 0, 0)\n",
+    "\n",
+    "# draw line\n",
+    "\n",
+    "rr_line, cc_line = line(70, 350, 200, 350)\n",
+    "img[rr_line, cc_line, :] = (1, 1, 0)\n",
+    "\n",
+    "# display img\n",
+    "ax.imshow(img)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# export\n",
+    "def draw_grid(im=None, size=(100, 100), n_hlines=10, n_vlines=10, black=True):\n",
+    "    \"\"\"\n",
+    "    Will draw the default background with a grid system.\n",
+    "\n",
+    "    im  np.array:\n",
+    "        Existing image, if None will create one\n",
+    "\n",
+    "    size  (int, int):\n",
+    "        Height and width, respectively\n",
+    "\n",
+    "    n_hlines  int:\n",
+    "        Number of horizontal lines\n",
+    "\n",
+    "    n_vlines  int:\n",
+    "        Number of vertial lines\n",
+    "\n",
+    "    black  bool:\n",
+    "        If true, the background will be black\n",
+    "\n",
+    "    \"\"\"\n",
+    "    height, width = size\n",
+    "    img = im\n",
+    "    color = (0, 0, 0)\n",
+    "    line_color = (1, 1, 1)\n",
+    "    if not black:\n",
+    "        color = (1, 1, 1)\n",
+    "        line_color = (0, 0, 0)\n",
+    "\n",
+    "    if im is None:\n",
+    "        img = np.full((height, width, 3), dtype=np.double, fill_value=color)\n",
+    "\n",
+    "    for lines in range(n_hlines):\n",
+    "        y = height * lines * (1 / n_hlines)\n",
+    "        y = int(y)\n",
+    "        rr_line, cc_line = line(0, y, width - 1, y)\n",
+    "        img[rr_line, cc_line, :] = line_color\n",
+    "\n",
+    "    for lines in range(n_vlines):\n",
+    "        x = width * lines * (1 / n_vlines)\n",
+    "        x = int(x)\n",
+    "        rr_line, cc_line = line(x, 0, x, height - 1)\n",
+    "        img[rr_line, cc_line, :] = line_color\n",
+    "\n",
+    "    return img"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "img = draw_grid(size=(200, 200), n_hlines=4, n_vlines=4)\n",
+    "show_img(img)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# export\n",
+    "\n",
+    "def draw_bbox(rect, rect_dimensions, im=None, black=True):\n",
+    "    \"\"\"\n",
+    "    Draw a Bounding Box\n",
+    "\n",
+    "    rect  (int, int):\n",
+    "        Begining point of the retangle\n",
+    "\n",
+    "    rect_dimensions  (int, int):\n",
+    "        Width and Height of the retangle\n",
+    "\n",
+    "    im  np.array:\n",
+    "        Image where bbox will be draw\n",
+    "\n",
+    "    black  bool:\n",
+    "        If true, the bbox will be black\n",
+    "\n",
+    "    \"\"\"\n",
+    "    init_x, init_y = rect\n",
+    "    height, width = rect_dimensions\n",
+    "    img = im\n",
+    "\n",
+    "    if im is None:\n",
+    "        img = np.ones((100, 200, 3), dtype=np.double)\n",
+    "\n",
+    "    color = (0, 0, 0)\n",
+    "    if not black:\n",
+    "        color = (255, 255, 255)\n",
+    "\n",
+    "    rr, cc = rectangle_perimeter(start=(init_x, init_y),\n",
+    "                                 extent=(height, width),\n",
+    "                                 shape=img.shape)\n",
+    "    img[rr, cc, :] = color\n",
+    "\n",
+    "    ex_height = height + 10\n",
+    "    ex_width = width + 10\n",
+    "    if (ex_height > len(img)):\n",
+    "        ex_height = len(img)\n",
+    "\n",
+    "    if (ex_width > len(im[0])):\n",
+    "        ex_width = len(img[0])\n",
+    "\n",
+    "    rr, cc = rectangle_perimeter(start=(init_x - 5, init_y - 5),\n",
+    "                                 extent=(ex_height, ex_width),\n",
+    "                                 shape=img.shape)\n",
+    "\n",
+    "    img[rr, cc, :] = color\n",
+    "\n",
+    "    return img"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#img = draw_grid(size=(3400, 400),n_hlines=2, n_vlines=10, black=False)\n",
+    "# draw_bbox((35, 50, 200, 250), im=img, black=False)\n",
+    "img = np.ones((300, 400, 3), dtype=np.double)\n",
+    "draw_bbox((215, 250), (15, 100), im=img, black=True)\n",
+    "\n",
+    "show_img(img)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "def xywh_to_xyxy(boxes):\n",
+    "    boxes = np.array(boxes)\n",
+    "    \"\"\"Convert [x y w h] box format to [x1 y1 x2 y2] format.\"\"\"\n",
+    "    return np.hstack((boxes[0:2], boxes[0:2] + boxes[2:4])).tolist()\n",
+    "\n",
+    "\n",
+    "def xyxy_to_xywh(boxes):\n",
+    "    boxes = np.array(boxes)\n",
+    "    \"\"\"Convert [x1 y1 x2 y2] box format to [x y w h] format.\"\"\"\n",
+    "    return np.hstack((boxes[0:2], boxes[2:4] - boxes[0:2])).tolist()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "xyxy_to_xywh([50, 50, 150, 150])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "xywh_to_xyxy([50, 50, 100, 100])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Overlap & Intersection over Union (IOU)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def bbox_intersection(b1_coords, b1_dimensions, b2_coords, b2_dimensions):\n",
+    "    \"\"\"\n",
+    "    determine the (x, y)-coordinates of the intersection rectangle\n",
+    "\n",
+    "    b1_coords  (int, int):\n",
+    "        The origin of the bbox one\n",
+    "\n",
+    "    b2_coords  (int, int):\n",
+    "        THe origin of the bbox two\n",
+    "\n",
+    "    b1_dimensions  (int, int):\n",
+    "        The width and heigh of bbox one\n",
+    "\n",
+    "    b2_dimensions  (int, int):\n",
+    "        The width and heigh of bbox two\n",
+    "    \"\"\"\n",
+    "    xA = max(b1_coords[0], b2_coords[0])\n",
+    "    yA = max(b1_coords[1], b2_coords[1])\n",
+    "\n",
+    "    b1_final_x = b1_dimensions[0] + b1_coords[0]\n",
+    "    b1_final_y = b1_dimensions[1] + b1_coords[1]\n",
+    "    b2_final_x = b2_dimensions[0] + b2_coords[0]\n",
+    "    b2_final_y = b2_dimensions[1] + b2_coords[1]\n",
+    "\n",
+    "    xB = min(b1_final_x, b2_final_x) - xA\n",
+    "    yB = min(b1_final_y, b2_final_y) - yA\n",
+    "\n",
+    "    # compute the area of intersection rectangle\n",
+    "    interArea = max(0, xB) * max(0, yB)\n",
+    "\n",
+    "    # compute the area of both the prediction and ground-truth\n",
+    "    # rectangles\n",
+    "    b1Area = b1_dimensions[0] * b1_dimensions[1]\n",
+    "    b2Area = b2_dimensions[0] * b2_dimensions[1]\n",
+    "\n",
+    "    return interArea, b1Area, b2Area, (xA, yA, xB, yB)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def overlap(boxA, boxA_dimensions, boxB, boxB_dimensions):\n",
+    "    \"\"\"\n",
+    "    Returns the max relative overlap between two bboxs.\n",
+    "    \"\"\"\n",
+    "    interArea, boxAArea, boxBArea, _ = bbox_intersection(boxA, boxA_dimensions,\n",
+    "                                                         boxB, boxB_dimensions)\n",
+    "\n",
+    "    return max(interArea / float(boxAArea), interArea / float(boxBArea))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "r1 = (10, 10)\n",
+    "r1_dimensions = (130, 130)\n",
+    "r2 = (50, 50)\n",
+    "r2_dimensions = (90, 90)\n",
+    "assert overlap(r1, r1_dimensions, r2, r2_dimensions) == 1\n",
+    "assert overlap(r2, r2_dimensions, r1, r1_dimensions) == 1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# export\n",
+    "def bb_intersection_over_union(boxA, boxA_dimensions, boxB, boxB_dimensions, verbose=False):\n",
+    "    interArea, boxAArea, boxBArea, _ = bbox_intersection(boxA, boxA_dimensions,\n",
+    "                                                         boxB, boxB_dimensions)\n",
+    "\n",
+    "    iou = interArea / float(boxAArea + boxBArea - interArea)\n",
+    "    if verbose:\n",
+    "        print(f\"iou: {iou: .2f}, interArea: {interArea: .2f}, \"\n",
+    "              f\"boxAArea {boxAArea: .2f}, box1Area {boxBArea: .2f}\")\n",
+    "    return iou"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "r1 = (10, 10)\n",
+    "r2 = (80, 80)\n",
+    "r1_dimensions = (100, 100)\n",
+    "r2_dimensions = (100, 100)\n",
+    "img = np.zeros((300, 200, 3), dtype=np.double)\n",
+    "draw_bbox(r1, r1_dimensions, im=img, black=False)\n",
+    "draw_bbox(r2, r2_dimensions, im=img, black=False)\n",
+    "\n",
+    "\n",
+    "iou = bb_intersection_over_union(r1, r1_dimensions, r2, r2_dimensions, True)\n",
+    "# iou = bb_intersection_over_union(r1, r2, verbose=True)\n",
+    "_, _, _, union = bbox_intersection(r1, r1_dimensions, r2, r2_dimensions)\n",
+    "\n",
+    "init_height, init_widht, final_height, final_widht = union\n",
+    "extent_height = final_height - init_height\n",
+    "extent_width = final_widht - init_widht\n",
+    "\n",
+    "rr, cc = rectangle(start=(init_height, init_widht), extent=(final_height, final_widht))\n",
+    "\n",
+    "img[rr, cc, :] = (1, 1, 1)\n",
+    "\n",
+    "show_img(img)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Sample Random bbox"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def sample_bbox(bboxs=(), canvas_size=(100, 100), diag=(0.3, 0.3), ratio=(1, 1),\n",
+    "                max_iou=0.0, max_overlap=0.0,\n",
+    "                max_tries=1000, random_seed=None):\n",
+    "    \"\"\"\n",
+    "    bboxs  [(x, y, x, y), ... ]:\n",
+    "        List of existing bboxs\n",
+    "\n",
+    "    canvas_size  (int, int):\n",
+    "        Width and height on which to position the new bbox.\n",
+    "\n",
+    "    max_iou  float [0, 1]:\n",
+    "        Maximum acceptable intersection over union between any two bboxs\n",
+    "\n",
+    "    max_overlap  float [0, 1]:\n",
+    "        Maximum overlap between any two bboxs\n",
+    "\n",
+    "    diag  (float, float) or float:\n",
+    "        Range of acceptable diagonal lenght relative to canvas diagonal\n",
+    "\n",
+    "    ratio  (float, float) or float:\n",
+    "        Range of acceptable width / heigh ratios of the new bbox\n",
+    "\n",
+    "    max_tries  int:\n",
+    "        Number of random tries to create a valid bbox\n",
+    "    \"\"\"\n",
+    "#     for v in [diag, ratio]: assert min(v) >= 0 and max(v) <= 1, f\"{v} is outside of (0, 1)\"\n",
+    "\n",
+    "    width, height = canvas_size\n",
+    "    canvas_diag = np.sqrt(width ** 2 + height**2)\n",
+    "\n",
+    "    for i in range(max_tries):\n",
+    "        s_diag = np.random.uniform(*diag) * canvas_diag\n",
+    "        s_ratio = np.random.uniform(*ratio)\n",
+    "\n",
+    "        # sample position fully inside canvas\n",
+    "        s_height = np.sqrt(s_diag ** 2 / (1. + s_ratio ** 2))\n",
+    "        s_width = s_ratio * s_height\n",
+    "\n",
+    "        cx = np.random.randint(s_width / 2, width - s_width / 2)\n",
+    "        cy = np.random.randint(s_height / 2, height - s_height / 2)\n",
+    "\n",
+    "        bbox_x = cx - s_width / 2\n",
+    "        bbox_y = cy - s_height / 2\n",
+    "        bbox_width = cx + s_width / 2 - bbox_x\n",
+    "        bbox_height = cy + s_height / 2 - bbox_y\n",
+    "\n",
+    "        bbox = (bbox_x, bbox_y, bbox_width, bbox_height)\n",
+    "        bbox = tuple(int(v) for v in bbox)\n",
+    "\n",
+    "        # check if valid iou then return\n",
+    "        if len(bboxs) == 0:\n",
+    "            return bbox\n",
+    "        violation = False\n",
+    "        for b in bboxs:\n",
+    "            b_x, b_y, b_width, b_heigh = b\n",
+    "            iou = bb_intersection_over_union((b_x, b_y), (b_width, b_heigh),\n",
+    "                                             (bbox_x, bbox_y), (bbox_width, bbox_height))\n",
+    "            b_overlap = overlap((b_x, b_y), (b_width, b_heigh),\n",
+    "                                (bbox_x, bbox_y), (bbox_width, bbox_height))\n",
+    "            if iou > max_iou or b_overlap > max_overlap:\n",
+    "                violation = True\n",
+    "        if not violation:\n",
+    "            return bbox\n",
+    "\n",
+    "    return None"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "img = np.zeros((300, 300, 3), dtype=np.double)\n",
+    "\n",
+    "bboxs: List[Tuple[int, int, int, int]] = []\n",
+    "for i in range(10):\n",
+    "    bbox: Tuple[int, int, int, int] = sample_bbox(\n",
+    "        bboxs=bboxs, canvas_size=(300, 300), diag=(0.1, 0.3), max_iou=0.3,\n",
+    "        max_overlap=0.5)\n",
+    "\n",
+    "    init_x, init_y, width, heigh = bbox\n",
+    "\n",
+    "    bboxs.append(bbox)\n",
+    "    draw_bbox((init_x, init_y), (width, heigh), im=img, black=False, )\n",
+    "\n",
+    "show_img(img)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Draw Objects inside bbox"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def draw_rectangle(im, start, dimensions, color):\n",
+    "    #draw = ImageDraw.Draw(im)\n",
+    "    #draw.rectangle(bbox, fill=color)\n",
+    "    rr, cc = rectangle(start=start, extent=dimensions)\n",
+    "    im[rr, cc, :] = color\n",
+    "    return im"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def draw_ellipse(im, start, dimensions, color):\n",
+    "    #draw = ImageDraw.Draw(im)\n",
+    "    #cx, cy = bbox[0] + bbox[2] / 2, bbox[1] + bbox[3]\n",
+    "    #draw.ellipse(bbox, fill=color)\n",
+    "    x, y = start\n",
+    "    v_radius, h_radius = dimensions\n",
+    "\n",
+    "    rr, cc = ellipse(x, y, v_radius, h_radius)\n",
+    "    im[rr, cc, :] = color\n",
+    "    return im"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "img = np.zeros((200, 200, 3), dtype=np.double)\n",
+    "\n",
+    "ractangle_init_point = (25, 25)\n",
+    "rectangle_dimensions = (75, 50)\n",
+    "img = draw_rectangle(img, ractangle_init_point, rectangle_dimensions, (0, 0, 1))\n",
+    "img = draw_bbox(im=img, rect=ractangle_init_point, black=False,\n",
+    "                rect_dimensions=rectangle_dimensions)\n",
+    "\n",
+    "ellipse_init_point = (150, 65)\n",
+    "ellipse_dimensions = (20, 54)\n",
+    "\n",
+    "ellipse_x, ellipse_y = ellipse_init_point\n",
+    "ellipse_v_radius, ellipse_h_radius = ellipse_dimensions\n",
+    "ellipse_bbox_start = (ellipse_x - ellipse_v_radius, ellipse_y - ellipse_h_radius)\n",
+    "ellipse_bbox_dimensions = (ellipse_v_radius * 2, ellipse_h_radius * 2)\n",
+    "\n",
+    "img = draw_ellipse(img, ellipse_init_point, ellipse_dimensions, (1, 0, 0))\n",
+    "img = draw_bbox(im=img, rect=ellipse_bbox_start, black=False,\n",
+    "                rect_dimensions=ellipse_bbox_dimensions)\n",
+    "show_img(img)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "image, shapes = random_shapes((500, 500), 50, multichannel=True)\n",
+    "rr_0, rr_1 = shapes[0][1][0]\n",
+    "cc_0, cc_1 = shapes[0][1][1]\n",
+    "\n",
+    "middle_x = int((rr_0 + rr_1) / 2)\n",
+    "middle_y = int((cc_0 + cc_1) / 2)\n",
+    "\n",
+    "# Picking up the middle value will guarantee we get the shape color\n",
+    "print(image[middle_x, middle_y])\n",
+    "\n",
+    "show_img(image)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Create Object Detection Dataset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Generic Dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# exporti\n",
+    "def create_simple_object_detection_dataset(path, n_samples=100, n_objects_max=3, n_objects_min=1,\n",
+    "                                           size=(150, 150), min_size=0.2):\n",
+    "    (path / 'images').mkdir(parents=True, exist_ok=True)\n",
+    "    (path / 'class_images').mkdir(parents=True, exist_ok=True)\n",
+    "\n",
+    "    min_dimension = size[0]\n",
+    "    if (size[1] < size[0]):\n",
+    "        min_dimension = size[1]\n",
+    "\n",
+    "    # create class labels\n",
+    "    cname = ['red', 'green', 'blue']\n",
+    "    color = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]\n",
+    "    for clr, name in zip(color, cname):\n",
+    "        img_name = f'{name}'\n",
+    "        img = np.ones((50, 50, 3), dtype=np.uint8)\n",
+    "        draw_rectangle(img, start=(0, 0), dimensions=(50, 50), color=clr)\n",
+    "        save_img(path / 'class_images', img_name, img)\n",
+    "\n",
+    "    type_shapes = ['rectangle', 'circle', 'ellipse']\n",
+    "    # create images + annotations\n",
+    "    annotations = {}\n",
+    "    images = {}\n",
+    "    for i in range(n_samples):\n",
+    "        labels = []\n",
+    "        bboxs = []\n",
+    "        img_name = f'img_{i}'\n",
+    "\n",
+    "        image, shapes = random_shapes(size, n_objects_max, multichannel=True,\n",
+    "                                      shape=type_shapes[randint(0, 2)],\n",
+    "                                      min_shapes=n_objects_min,\n",
+    "                                      min_size=min_size * min_dimension)\n",
+    "\n",
+    "        for shape in shapes:\n",
+    "            shape_name = shape[0]\n",
+    "            rr_0, rr_1 = shape[1][0]\n",
+    "            cc_0, cc_1 = shape[1][1]\n",
+    "            middle_x = int((rr_0 + rr_1) / 2)\n",
+    "            middle_y = int((cc_0 + cc_1) / 2)\n",
+    "\n",
+    "            label = (image[middle_x, middle_y].tolist(), shape_name)\n",
+    "            bbox = (int(cc_0), int(rr_0), int(cc_1), int(rr_1))\n",
+    "            labels.append(label)\n",
+    "            bboxs.append(bbox)\n",
+    "\n",
+    "        img_file = img_name + \".jpg\"\n",
+    "        images[img_file] = image\n",
+    "        save_img(path / 'images', img_name, image)\n",
+    "        annotations[img_file] = {'labels': labels, 'bboxs': bboxs}\n",
+    "\n",
+    "    save_img_annotations(path, annotations)\n",
+    "    return (images, annotations)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import tempfile\n",
+    "tmp_dir = tempfile.TemporaryDirectory()\n",
+    "path = Path(tmp_dir.name)\n",
+    "images, annotations = create_simple_object_detection_dataset(path=path, n_samples=5)\n",
+    "\n",
+    "show_img(images['img_0.jpg'])\n",
+    "print(annotations['img_0.jpg'])\n",
+    "print(pd.read_json(path / 'annotations.json').T)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Specific Tasks"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def create_color_classification(path, n_samples=10, size=(150, 150)):\n",
+    "    \"\"\"\n",
+    "    Helper function to color classification\n",
+    "    \"\"\"\n",
+    "\n",
+    "    images, annotations = create_simple_object_detection_dataset(path=path, n_samples=n_samples,\n",
+    "                                                                 size=size)\n",
+    "\n",
+    "    color_img = {}\n",
+    "    for img in annotations:\n",
+    "        color_arr = []\n",
+    "\n",
+    "        for shape in annotations[img]['labels']:\n",
+    "            color_arr.append(shape[0])\n",
+    "\n",
+    "        color_img[img] = {'label': color_arr}\n",
+    "\n",
+    "    save_img_annotations(path, color_img)\n",
+    "    return (images, color_img)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import tempfile\n",
+    "tmp_dir = tempfile.TemporaryDirectory()\n",
+    "path = Path(tmp_dir.name)\n",
+    "images, color_imgs = create_color_classification(path=path, size=(100, 100))\n",
+    "\n",
+    "show_img(images['img_0.jpg'])\n",
+    "print(annotations['img_0.jpg'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def create_shape_color_classification(path, n_samples=10, size=(150, 150)):\n",
+    "    \"\"\"\n",
+    "    Helper function to shape classification\n",
+    "    \"\"\"\n",
+    "    images, annotations = create_simple_object_detection_dataset(\n",
+    "        path, n_samples=n_samples, size=size)\n",
+    "\n",
+    "    label_img = {}\n",
+    "    for img in annotations:\n",
+    "        label_arr = []\n",
+    "\n",
+    "        for shape in annotations[img]['labels']:\n",
+    "            label_arr.append(shape)\n",
+    "\n",
+    "        label_img[img] = {'label': label_arr}\n",
+    "\n",
+    "    save_img_annotations(path, label_img)\n",
+    "    return (images, label_img)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import tempfile\n",
+    "tmp_dir = tempfile.TemporaryDirectory()\n",
+    "path = Path(tmp_dir.name)\n",
+    "images, color_imgs = create_shape_color_classification(path=path, size=(100, 100))\n",
+    "\n",
+    "show_img(images['img_0.jpg'])\n",
+    "print(annotations['img_0.jpg'])\n",
+    "print(pd.read_json(path / 'annotations.json').T)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def create_object_detection(path, n_samples=10, n_objects=1, size=(150, 150), multilabel=False):\n",
+    "    \"\"\"\n",
+    "    Helper function to object detection\n",
+    "    \"\"\"\n",
+    "    images, annotations = create_simple_object_detection_dataset(path=path, size=size,\n",
+    "                                                                 n_samples=n_samples,\n",
+    "                                                                 n_objects_max=n_objects)\n",
+    "\n",
+    "    coords_img = {}\n",
+    "    for img in annotations:\n",
+    "        coords_arr = []\n",
+    "\n",
+    "        for coord in annotations[img]['bboxs']:\n",
+    "            coords_arr.append(coord)\n",
+    "\n",
+    "        if not multilabel:\n",
+    "            coords_arr = coords_arr[0]\n",
+    "\n",
+    "        coords_img[img] = {'label': coords_arr}\n",
+    "\n",
+    "    save_img_annotations(path, coords_img)\n",
+    "    return (images, coords_img)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import tempfile\n",
+    "tmp_dir = tempfile.TemporaryDirectory()\n",
+    "path = Path(tmp_dir.name)\n",
+    "images, color_imgs = create_object_detection(path=path, n_samples=50, n_objects=1)\n",
+    "\n",
+    "show_img(images['img_0.jpg'])\n",
+    "# Label is wrong\n",
+    "print(color_imgs['img_0.jpg'])\n",
+    "print(pd.read_json(path / 'annotations.json').T)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

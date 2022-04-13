@@ -1,0 +1,850 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Bounding Box Annotator &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Image button" href="05_image_button.html" />
+    <link rel="prev" title="Storage" href="03_storage.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00a_annotator.html">
+   Annotator Factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="00b_mltypes.html">
+   Mltypes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_helpers.html">
+   Helpers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_download.html">
+   Dowload datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_factory.html">
+   Dataset factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b_dataset_video.html">
+   Generators for MOT data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_navi_widget.html">
+   Navi Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02a_right_menu_widget.html">
+   Right menu Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_storage.html">
+   Storage
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Bounding Box Annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_image_button.html">
+   Image button
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_capture_annotator.html">
+   Capture annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_im2im_annotator.html">
+   Image to image annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="12_debug_utils.html">
+   Debug tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="13_datasets_legacy.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="14_datasets_factory_legacy.html">
+   Datasets factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="15_coordinates_input.html">
+   Coordinates Input
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="16_custom_buttons.html">
+   Custom Buttons
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="17_annotator_explorer.html">
+   Annotator Explorer
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="18_bbox_trajectory.html">
+   Bounding Box Trajectory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="19_bbox_video_annotator.html">
+   Bbox video annotator
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#state">
+   State
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#view">
+   View
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#controller">
+   Controller
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp bbox_annotator</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">pubsub</span> <span class="kn">import</span> <span class="n">pub</span>
+<span class="kn">from</span> <span class="nn">attr</span> <span class="kn">import</span> <span class="n">asdict</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">AppLayout</span><span class="p">,</span> <span class="n">Button</span><span class="p">,</span> <span class="n">HBox</span><span class="p">,</span> <span class="n">VBox</span><span class="p">,</span> <span class="n">Layout</span>
+
+<span class="kn">from</span> <span class="nn">ipyannotator.mltypes</span> <span class="kn">import</span> <span class="n">BboxCoordinate</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.base</span> <span class="kn">import</span> <span class="n">BaseState</span><span class="p">,</span> <span class="n">AppWidgetState</span><span class="p">,</span> <span class="n">Annotator</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.mltypes</span> <span class="kn">import</span> <span class="n">InputImage</span><span class="p">,</span> <span class="n">OutputImageBbox</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.bbox_canvas</span> <span class="kn">import</span> <span class="n">BBoxCanvas</span><span class="p">,</span> <span class="n">BBoxCanvasState</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.navi_widget</span> <span class="kn">import</span> <span class="n">Navi</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.right_menu_widget</span> <span class="kn">import</span> <span class="n">BBoxList</span><span class="p">,</span> <span class="n">BBoxVideoItem</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.storage</span> <span class="kn">import</span> <span class="n">JsonCaptureStorage</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.custom_input.buttons</span> <span class="kn">import</span> <span class="n">ActionButton</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="bounding-box-annotator">
+<h1>Bounding Box Annotator<a class="headerlink" href="#bounding-box-annotator" title="Permalink to this headline">¶</a></h1>
+<p>Bounding Box Annotator allows users to freely draw on top of images.</p>
+<section id="state">
+<h2>State<a class="headerlink" href="#state" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+
+<span class="k">class</span> <span class="nc">BBoxState</span><span class="p">(</span><span class="n">BaseState</span><span class="p">):</span>
+    <span class="n">coords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">BboxCoordinate</span><span class="p">]]</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span>
+    <span class="n">classes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">drawing_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="view">
+<h2>View<a class="headerlink" href="#view" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+
+<span class="k">class</span> <span class="nc">BBoxCoordinates</span><span class="p">(</span><span class="n">VBox</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Connects the BBoxList and the states&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">app_state</span><span class="p">:</span> <span class="n">AppWidgetState</span><span class="p">,</span>
+        <span class="n">bbox_canvas_state</span><span class="p">:</span> <span class="n">BBoxCanvasState</span><span class="p">,</span>
+        <span class="n">bbox_state</span><span class="p">:</span> <span class="n">BBoxState</span><span class="p">,</span>
+        <span class="n">on_btn_select_clicked</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span> <span class="o">=</span> <span class="n">app_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span> <span class="o">=</span> <span class="n">bbox_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span> <span class="o">=</span> <span class="n">bbox_canvas_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_btn_select_clicked</span> <span class="o">=</span> <span class="n">on_btn_select_clicked</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_bbox_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">drawing_enabled</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">bbox_coords</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_list</span><span class="o">.</span><span class="n">render_btn_list</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">bbox_coords</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span>
+            <span class="p">)</span>
+
+        <span class="n">app_state</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_refresh_children</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">)</span>
+        <span class="n">bbox_state</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_bbox_list</span><span class="p">,</span> <span class="s1">&#39;drawing_enabled&#39;</span><span class="p">)</span>
+        <span class="n">bbox_canvas_state</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sync_labels</span><span class="p">,</span> <span class="s1">&#39;bbox_coords&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_update_max_coord_input</span><span class="p">,</span> <span class="s1">&#39;image_scale&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_max_coord_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">image_scale</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_list</span><span class="o">.</span><span class="n">children</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">Layout</span><span class="p">(</span>
+            <span class="n">max_height</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">px&#39;</span><span class="p">,</span>
+            <span class="n">display</span><span class="o">=</span><span class="s1">&#39;block&#39;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_init_bbox_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">drawing_enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_list</span> <span class="o">=</span> <span class="n">BBoxList</span><span class="p">(</span>
+            <span class="n">max_coord_input_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">on_coords_changed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_coords_change</span><span class="p">,</span>
+            <span class="n">on_label_changed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_label_change</span><span class="p">,</span>
+            <span class="n">on_btn_delete_clicked</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_btn_delete_clicked</span><span class="p">,</span>
+            <span class="n">on_btn_select_clicked</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_btn_select_clicked</span><span class="p">,</span>
+            <span class="n">classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span>
+            <span class="n">readonly</span><span class="o">=</span><span class="ow">not</span> <span class="n">drawing_enabled</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_children</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BBoxVideoItem</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_refresh_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_list</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_render</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">bbox_coords</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_sync_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox_coords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BboxCoordinate</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Every time a new coord is added to the annotator</span>
+<span class="sd">        it&#39;s added an empty label to the state&quot;&quot;&quot;</span>
+        <span class="n">num_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bbox_coords</span><span class="p">[</span><span class="n">num_classes</span><span class="p">:]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_render</span><span class="p">(</span><span class="n">bbox_coords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_coords_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">bbox_coords</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">pub</span><span class="o">.</span><span class="n">sendMessage</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">root_topic</span><span class="si">}</span><span class="s1">.coord_changed&#39;</span><span class="p">,</span>
+            <span class="n">bbox_coords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">bbox_coords</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox_coords</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_list</span><span class="o">.</span><span class="n">render_btn_list</span><span class="p">(</span><span class="n">bbox_coords</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_list</span><span class="o">.</span><span class="n">children</span>
+
+    <span class="k">def</span> <span class="nf">on_label_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;new&#39;</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="nf">remove_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">tmp_labels</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">tmp_labels</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">set_quietly</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="n">tmp_labels</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_btn_delete_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">bbox_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">bbox_coords</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">del</span> <span class="n">bbox_coords</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_label</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">bbox_coords</span> <span class="o">=</span> <span class="n">bbox_coords</span>
+
+    <span class="k">def</span> <span class="nf">_update_max_coord_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;CoordinateInput maximum values that a user</span>
+<span class="sd">        can change. &#39;x&#39; and &#39;y&#39; can be improved to avoid</span>
+<span class="sd">        bbox outside of the canvas area.&quot;&quot;&quot;</span>
+        <span class="n">im_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">image_width</span>
+        <span class="n">im_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_canvas_state</span><span class="o">.</span><span class="n">image_height</span>
+        <span class="k">if</span> <span class="n">im_height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">im_width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">im_width</span> <span class="o">//</span> <span class="n">image_scale</span><span class="p">,</span>
+                <span class="n">im_height</span> <span class="o">//</span> <span class="n">image_scale</span>
+            <span class="p">]</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="n">i</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_list</span><span class="o">.</span><span class="n">max_coord_input_values</span> <span class="o">=</span> <span class="n">BboxCoordinate</span><span class="p">(</span><span class="o">*</span><span class="n">coords</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">class</span> <span class="nc">BBoxAnnotatorGUI</span><span class="p">(</span><span class="n">AppLayout</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">app_state</span><span class="p">:</span> <span class="n">AppWidgetState</span><span class="p">,</span>
+        <span class="n">bbox_state</span><span class="p">:</span> <span class="n">BBoxState</span><span class="p">,</span>
+        <span class="n">fit_canvas</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">on_save_btn_clicked</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">has_border</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span> <span class="o">=</span> <span class="n">app_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span> <span class="o">=</span> <span class="n">bbox_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_on_save_btn_clicked</span> <span class="o">=</span> <span class="n">on_save_btn_clicked</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_label_history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_canvas</span> <span class="o">=</span> <span class="n">fit_canvas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_border</span> <span class="o">=</span> <span class="n">has_border</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_navi</span> <span class="o">=</span> <span class="n">Navi</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_save_btn</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save&quot;</span><span class="p">,</span>
+                                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_undo_btn</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Undo&quot;</span><span class="p">,</span>
+                                <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;undo&quot;</span><span class="p">,</span>
+                                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_redo_btn</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Redo&quot;</span><span class="p">,</span>
+                                <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;rotate-right&quot;</span><span class="p">,</span>
+                                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls_box</span> <span class="o">=</span> <span class="n">HBox</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_navi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save_btn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_undo_btn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redo_btn</span><span class="p">],</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span>
+                <span class="n">display</span><span class="o">=</span><span class="s1">&#39;flex&#39;</span><span class="p">,</span>
+                <span class="n">flex_flow</span><span class="o">=</span><span class="s1">&#39;row wrap&#39;</span><span class="p">,</span>
+                <span class="n">align_items</span><span class="o">=</span><span class="s1">&#39;center&#39;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_canvas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">drawing_enabled</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_menu</span> <span class="o">=</span> <span class="n">BBoxCoordinates</span><span class="p">(</span>
+            <span class="n">app_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span><span class="p">,</span>
+            <span class="n">bbox_canvas_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
+            <span class="n">bbox_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="p">,</span>
+            <span class="n">on_btn_select_clicked</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_highlight_bbox</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_annotator_box</span> <span class="o">=</span> <span class="n">HBox</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_menu</span><span class="p">],</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span>
+                <span class="n">display</span><span class="o">=</span><span class="s1">&#39;flex&#39;</span><span class="p">,</span>
+                <span class="n">flex_flow</span><span class="o">=</span><span class="s1">&#39;row&#39;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># set the values already instantiated on state</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span><span class="o">.</span><span class="n">max_im_number</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_max_im_number</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span><span class="o">.</span><span class="n">max_im_number</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">image</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_image_path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">image</span><span class="p">))</span>
+
+        <span class="c1"># set the GUI interactions as callables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_navi</span><span class="o">.</span><span class="n">on_navi_clicked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_idx_changed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_save_btn</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_save_clicked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_undo_btn</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_undo_clicked</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_redo_btn</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_redo_clicked</span><span class="p">)</span>
+
+        <span class="n">bbox_state</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_set_image_path</span><span class="p">,</span> <span class="s1">&#39;image&#39;</span><span class="p">)</span>
+        <span class="n">bbox_state</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_canvas</span><span class="p">,</span> <span class="s1">&#39;drawing_enabled&#39;</span><span class="p">)</span>
+        <span class="n">bbox_state</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_set_coords</span><span class="p">,</span> <span class="s1">&#39;coords&#39;</span><span class="p">)</span>
+        <span class="n">app_state</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_set_max_im_number</span><span class="p">,</span> <span class="s1">&#39;max_im_number&#39;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">left_sidebar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_annotator_box</span><span class="p">,</span>
+            <span class="n">right_sidebar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">footer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls_box</span><span class="p">,</span>
+            <span class="n">pane_widths</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">pane_heights</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_init_canvas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">drawing_enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span> <span class="o">=</span> <span class="n">BBoxCanvas</span><span class="p">(</span>
+            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">drawing_enabled</span><span class="o">=</span><span class="n">drawing_enabled</span><span class="p">,</span>
+            <span class="n">fit_canvas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_canvas</span><span class="p">,</span>
+            <span class="n">has_border</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">has_border</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_highlight_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">btn</span><span class="p">:</span> <span class="n">ActionButton</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">highlight</span> <span class="o">=</span> <span class="n">btn</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_redo_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">redo_bbox</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label_history</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label_history</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_menu</span><span class="o">.</span><span class="n">_refresh_children</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_undo_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_label_history</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">undo_bbox</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_menu</span><span class="o">.</span><span class="n">remove_label</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right_menu</span><span class="o">.</span><span class="n">_refresh_children</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_image_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="n">image</span>
+
+    <span class="k">def</span> <span class="nf">_set_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BboxCoordinate</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">coords</span><span class="p">:</span>
+            <span class="n">tmp_coords</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">bbox_coords</span><span class="p">)</span>
+            <span class="c1"># error: Argument 1 to &quot;append&quot; of &quot;list&quot; has incompatible</span>
+            <span class="c1"># type &quot;List[BboxCoordinate]&quot;; expected &quot;BboxCoordinate&quot;</span>
+            <span class="n">tmp_coords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">bbox_coords</span> <span class="o">=</span> <span class="n">coords</span>
+
+    <span class="k">def</span> <span class="nf">_set_max_im_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_im_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="c1"># sync the navi GUI with AppWidgetState</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_navi</span><span class="o">.</span><span class="n">max_im_num</span> <span class="o">=</span> <span class="n">max_im_number</span>
+
+    <span class="k">def</span> <span class="nf">_idx_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="c1"># store the last bbox drawn before index update</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">set_quietly</span><span class="p">(</span><span class="s1">&#39;coords&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">bbox_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+
+    <span class="k">def</span> <span class="nf">_save_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_save_btn_clicked</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_on_save_btn_clicked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">bbox_coords</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Save button click didn&#39;t triggered any event.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_client_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">observe_client_ready</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="controller">
+<h2>Controller<a class="headerlink" href="#controller" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">class</span> <span class="nc">BBoxAnnotatorController</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">app_state</span><span class="p">:</span> <span class="n">AppWidgetState</span><span class="p">,</span>
+        <span class="n">bbox_state</span><span class="p">:</span> <span class="n">BBoxState</span><span class="p">,</span>
+        <span class="n">storage</span><span class="p">:</span> <span class="n">JsonCaptureStorage</span><span class="p">,</span>
+        <span class="n">render_previous_coords</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span> <span class="o">=</span> <span class="n">app_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span> <span class="o">=</span> <span class="n">bbox_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span> <span class="o">=</span> <span class="n">storage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">app_state</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_idx_changed</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_im</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span><span class="o">.</span><span class="n">max_im_number</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">render_previous_coords</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save_current_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BboxCoordinate</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">set_quietly</span><span class="p">(</span><span class="s1">&#39;coords&#39;</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_save_annotations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_app_state</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_im</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_update_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># from annotations</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="p">[</span><span class="n">BboxCoordinate</span><span class="p">(</span><span class="o">**</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bbox&#39;</span><span class="p">,</span> <span class="p">[])]</span>
+
+    <span class="k">def</span> <span class="nf">_save_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># to disk</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="p">[</span><span class="n">image_path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="c1"># error: Item &quot;None&quot; of &quot;Optional[List[BboxCoordinate]]&quot; has</span>
+            <span class="c1"># no attribute &quot;__iter__&quot;</span>
+            <span class="s1">&#39;bbox&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">asdict</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span> <span class="k">for</span> <span class="n">bbox</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">coords</span><span class="p">],</span>  <span class="c1"># type: ignore</span>
+            <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bbox_state</span><span class="o">.</span><span class="n">labels</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_idx_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        On index change save an old state and update</span>
+<span class="sd">        current image path and bbox coordinates for</span>
+<span class="sd">        visualisation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_save_annotations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_im</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_coords</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_index</span> <span class="o">=</span> <span class="n">index</span>
+
+    <span class="k">def</span> <span class="nf">handle_client_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_idx_changed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We have annotation saved in dictionary lile: <code class="docutils literal notranslate"><span class="pre">{'path/to/imagename.jpg':</span> <span class="pre">{'x':0,</span> <span class="pre">'y':</span> <span class="pre">0,</span> <span class="pre">'width':</span> <span class="pre">100,</span> <span class="pre">'heigth':</span> <span class="pre">100}}</span></code></p>
+<p>Navi widget has <code class="docutils literal notranslate"><span class="pre">index</span></code> and prev/next buttons to iterate over <code class="docutils literal notranslate"><span class="pre">max_im_number</span></code> of images (todo: change name as we can iterate of any object).</p>
+<p>BBoxAnnotator has coupled <code class="docutils literal notranslate"><span class="pre">index</span></code> (with Navi one), and onchange event to update the current image path and label.</p>
+<p>On image_path change event BBoxCanvas rerenders new image and label</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+
+<span class="k">class</span> <span class="nc">BBoxAnnotator</span><span class="p">(</span><span class="n">Annotator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents bounding box annotator.</span>
+
+<span class="sd">    Gives an ability to itarate through image dataset,</span>
+<span class="sd">    draw 2D bounding box annotations for object detection and localization,</span>
+<span class="sd">    export final annotations in json format</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">project_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">input_item</span><span class="p">:</span> <span class="n">InputImage</span><span class="p">,</span>
+        <span class="n">output_item</span><span class="p">:</span> <span class="n">OutputImageBbox</span><span class="p">,</span>
+        <span class="n">annotation_file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">has_border</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="n">app_state</span> <span class="o">=</span> <span class="n">AppWidgetState</span><span class="p">(</span>
+            <span class="n">uuid</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)),</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">input_item</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">input_item</span><span class="o">.</span><span class="n">height</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">app_state</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_item</span> <span class="o">=</span> <span class="n">input_item</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_item</span> <span class="o">=</span> <span class="n">output_item</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bbox_state</span> <span class="o">=</span> <span class="n">BBoxState</span><span class="p">(</span>
+            <span class="n">uuid</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)),</span>
+            <span class="n">classes</span><span class="o">=</span><span class="n">output_item</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span>
+            <span class="n">drawing_enabled</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_output_item</span><span class="o">.</span><span class="n">drawing_enabled</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">JsonCaptureStorage</span><span class="p">(</span>
+            <span class="n">im_dir</span><span class="o">=</span><span class="n">project_path</span> <span class="o">/</span> <span class="n">input_item</span><span class="o">.</span><span class="n">dir</span><span class="p">,</span>
+            <span class="n">annotation_file_path</span><span class="o">=</span><span class="n">annotation_file_path</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">BBoxAnnotatorController</span><span class="p">(</span>
+            <span class="n">app_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">app_state</span><span class="p">,</span>
+            <span class="n">bbox_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_state</span><span class="p">,</span>
+            <span class="n">storage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">BBoxAnnotatorGUI</span><span class="p">(</span>
+            <span class="n">app_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">app_state</span><span class="p">,</span>
+            <span class="n">bbox_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_state</span><span class="p">,</span>
+            <span class="n">fit_canvas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_input_item</span><span class="o">.</span><span class="n">fit_canvas</span><span class="p">,</span>
+            <span class="n">on_save_btn_clicked</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">save_current_annotations</span><span class="p">,</span>
+            <span class="n">has_border</span><span class="o">=</span><span class="n">has_border</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">on_client_ready</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">handle_client_ready</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">display</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_annotated</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">only_annotated</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bb</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">debug_output</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"version_major": 2, "version_minor": 0, "model_id": "b0ce9c2ddbc84a12b74b3c37684e3884"}
+</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bb</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">_controller</span><span class="o">.</span><span class="n">debug_output</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"version_major": 2, "version_minor": 0, "model_id": "55379714bffc41d99b399dadc8676f61"}
+</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">bbox_fixture</span><span class="p">():</span>
+    <span class="n">bb</span> <span class="o">=</span> <span class="n">BBoxAnnotator</span><span class="p">(</span>
+        <span class="n">project_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">project_path</span><span class="p">),</span>
+        <span class="n">input_item</span><span class="o">=</span><span class="n">in_p</span><span class="p">,</span>
+        <span class="n">output_item</span><span class="o">=</span><span class="n">out_p</span><span class="p">,</span>
+        <span class="n">annotation_file_path</span><span class="o">=</span><span class="n">anno_file_path</span>
+    <span class="p">)</span>
+
+    <span class="n">bbox_sample</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span>
+    <span class="p">]</span>
+
+    <span class="n">bb</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">_image_box</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">bbox_coords</span> <span class="o">=</span> <span class="p">[</span><span class="n">BboxCoordinate</span><span class="p">(</span><span class="o">**</span><span class="n">bbox</span><span class="p">)</span> <span class="k">for</span> <span class="n">bbox</span> <span class="ow">in</span> <span class="n">bbox_sample</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">bb</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="03_storage.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Storage</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="05_image_button.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Image button</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

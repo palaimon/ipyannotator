@@ -1,0 +1,505 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Datasets factory &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coordinates Input" href="15_coordinates_input.html" />
+    <link rel="prev" title="Helpers for Dataset Generation" href="13_datasets_legacy.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00a_annotator.html">
+   Annotator Factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="00b_mltypes.html">
+   Mltypes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_helpers.html">
+   Helpers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_download.html">
+   Dowload datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_factory.html">
+   Dataset factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b_dataset_video.html">
+   Generators for MOT data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_navi_widget.html">
+   Navi Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02a_right_menu_widget.html">
+   Right menu Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_storage.html">
+   Storage
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_bbox_annotator.html">
+   Bounding Box Annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_image_button.html">
+   Image button
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_capture_annotator.html">
+   Capture annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_im2im_annotator.html">
+   Image to image annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="12_debug_utils.html">
+   Debug tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="13_datasets_legacy.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Datasets factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="15_coordinates_input.html">
+   Coordinates Input
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="16_custom_buttons.html">
+   Custom Buttons
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="17_annotator_explorer.html">
+   Annotator Explorer
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="18_bbox_trajectory.html">
+   Bounding Box Trajectory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="19_bbox_video_annotator.html">
+   Bbox video annotator
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp datasets.factory_legacy</span>
+
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+
+<span class="kn">from</span> <span class="nn">ipyannotator.base</span> <span class="kn">import</span> <span class="n">Settings</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.datasets.download</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_cifar10</span><span class="p">,</span>
+                                            <span class="n">get_cub_200_2011</span><span class="p">,</span>
+                                            <span class="n">get_oxford_102_flowers</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ipyannotator.datasets.generators_legacy</span> <span class="kn">import</span> <span class="n">create_color_classification</span>
+
+<span class="kn">from</span> <span class="nn">ipyannotator.datasets.generators</span> <span class="kn">import</span> <span class="n">create_object_detection</span><span class="p">,</span> <span class="n">xyxy_to_xywh</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="datasets-factory">
+<h1>Datasets factory<a class="headerlink" href="#datasets-factory" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">class</span> <span class="nc">DS</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">ARTIFICIAL_CLASSIFICATION</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">ARTIFICIAL_DETECTION</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">CIFAR10</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">CUB200</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">OXFORD102</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">get_settings</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">DS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle the necessary to dowload and save the datasets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dataset</span> <span class="o">==</span> <span class="n">DS</span><span class="o">.</span><span class="n">ARTIFICIAL_CLASSIFICATION</span><span class="p">:</span>
+        <span class="n">project_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/artificial_classification/&#39;</span><span class="p">)</span>
+        <span class="n">project_file</span> <span class="o">=</span> <span class="n">project_path</span> <span class="o">/</span> <span class="s1">&#39;annotations.json&#39;</span>
+        <span class="n">image_dir</span> <span class="o">=</span> <span class="s1">&#39;images&#39;</span>
+        <span class="n">create_color_classification</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">project_path</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">project_file</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">anno</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">project_path</span> <span class="o">/</span> <span class="n">image_dir</span> <span class="o">/</span> <span class="n">k</span><span class="p">):</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">.jpg&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">annotations</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">project_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">anno</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Settings</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="n">project_path</span><span class="p">,</span>
+                        <span class="n">project_file</span><span class="o">=</span><span class="n">project_file</span><span class="p">,</span>
+                        <span class="n">image_dir</span><span class="o">=</span><span class="n">image_dir</span><span class="p">,</span>
+                        <span class="n">label_dir</span><span class="o">=</span><span class="s1">&#39;class_images&#39;</span><span class="p">,</span>
+                        <span class="c1"># used on create step - should be empty!</span>
+                        <span class="n">result_dir</span><span class="o">=</span><span class="s1">&#39;create_results&#39;</span><span class="p">,</span>
+                        <span class="n">im_width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">im_height</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                        <span class="n">label_width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">label_height</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                        <span class="n">n_cols</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="n">DS</span><span class="o">.</span><span class="n">ARTIFICIAL_DETECTION</span><span class="p">:</span>
+        <span class="n">project_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/artificial_detection/&#39;</span><span class="p">)</span>
+        <span class="n">project_file</span> <span class="o">=</span> <span class="n">project_path</span> <span class="o">/</span> <span class="s1">&#39;annotations.json&#39;</span>
+        <span class="n">image_dir</span> <span class="o">=</span> <span class="s1">&#39;images&#39;</span>
+        <span class="n">label_dir</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">im_width</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="n">im_height</span> <span class="o">=</span> <span class="n">im_width</span>
+
+        <span class="n">create_object_detection</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">project_path</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">n_objects</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+        <span class="n">annotations</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">project_file</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="sd">&quot;&quot;&quot;Convert artifical dataset annotations to old bbox ipyannotator format</span>
+<span class="sd">        {&#39;imagename.jpg&#39;: {</span>
+<span class="sd">            &#39;bbox&#39;: [{&#39;x&#39;:0, &#39;y&#39;: 0, &#39;width&#39;: 100, &#39;heigth&#39;: 100}],</span>
+<span class="sd">            &#39;labels&#39;: [[]]</span>
+<span class="sd">        }}&quot;&quot;&quot;</span>
+        <span class="n">anno</span> <span class="o">=</span> <span class="n">annotations</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;records&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">annotation_on_explore</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">bbox_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">anno</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">image_dir</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">bbox_keys</span><span class="p">,</span> <span class="n">xyxy_to_xywh</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="n">annotation_on_explore</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bbox&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">value</span><span class="p">],</span> <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="p">[[]]}</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">project_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">annotation_on_explore</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Settings</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="n">project_path</span><span class="p">,</span>
+                        <span class="n">project_file</span><span class="o">=</span><span class="n">project_file</span><span class="p">,</span>
+                        <span class="n">image_dir</span><span class="o">=</span><span class="n">image_dir</span><span class="p">,</span>
+                        <span class="n">label_dir</span><span class="o">=</span><span class="n">label_dir</span><span class="p">,</span>
+                        <span class="n">result_dir</span><span class="o">=</span><span class="s1">&#39;create_results&#39;</span><span class="p">,</span>
+                        <span class="n">im_width</span><span class="o">=</span><span class="n">im_width</span><span class="p">,</span> <span class="n">im_height</span><span class="o">=</span><span class="n">im_height</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="n">DS</span><span class="o">.</span><span class="n">CIFAR10</span><span class="p">:</span>
+        <span class="n">cifar_train_p</span><span class="p">,</span> <span class="n">cifar_test_p</span> <span class="o">=</span> <span class="n">get_cifar10</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">Settings</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/cifar10/&#39;</span><span class="p">),</span>
+                        <span class="n">project_file</span><span class="o">=</span><span class="n">cifar_test_p</span><span class="p">,</span>
+                        <span class="n">image_dir</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span>
+                        <span class="n">label_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="c1"># used on create step - should be empty!</span>
+                        <span class="n">result_dir</span><span class="o">=</span><span class="s1">&#39;create_results&#39;</span><span class="p">,</span>
+                        <span class="n">im_width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">im_height</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                        <span class="n">label_width</span><span class="o">=</span><span class="mi">140</span><span class="p">,</span> <span class="n">label_height</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                        <span class="n">n_cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="n">DS</span><span class="o">.</span><span class="n">OXFORD102</span><span class="p">:</span>
+        <span class="n">flowers102_train_p</span><span class="p">,</span> <span class="n">flowers102_test_p</span> <span class="o">=</span> <span class="n">get_oxford_102_flowers</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">Settings</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/oxford-102-flowers&#39;</span><span class="p">),</span>
+                        <span class="n">project_file</span><span class="o">=</span><span class="n">flowers102_test_p</span><span class="p">,</span>
+                        <span class="n">image_dir</span><span class="o">=</span><span class="s1">&#39;jpg&#39;</span><span class="p">,</span>
+                        <span class="n">label_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="c1"># used on create step - should be empty!</span>
+                        <span class="n">result_dir</span><span class="o">=</span><span class="s1">&#39;create_results&#39;</span><span class="p">,</span>
+                        <span class="n">im_width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">im_height</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                        <span class="n">label_width</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">label_height</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                        <span class="n">n_cols</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="n">DS</span><span class="o">.</span><span class="n">CUB200</span><span class="p">:</span>
+        <span class="n">cub200_train_p</span><span class="p">,</span> <span class="n">cub200_test_p</span> <span class="o">=</span> <span class="n">get_cub_200_2011</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">Settings</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/CUB_200_2011&#39;</span><span class="p">),</span>
+                        <span class="n">project_file</span><span class="o">=</span><span class="n">cub200_test_p</span><span class="p">,</span>
+                        <span class="n">image_dir</span><span class="o">=</span><span class="s1">&#39;images&#39;</span><span class="p">,</span>
+                        <span class="n">label_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="c1"># used on create step - should be empty!</span>
+                        <span class="n">result_dir</span><span class="o">=</span><span class="s1">&#39;create_results&#39;</span><span class="p">,</span>
+                        <span class="n">im_width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">im_height</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                        <span class="n">label_width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">label_height</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                        <span class="n">n_cols</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset </span><span class="si">{</span><span class="n">dataset</span><span class="si">}</span><span class="s2"> is not supported!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">def</span> <span class="nf">_combine_train_test</span><span class="p">(</span><span class="n">project_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+    <span class="c1"># combine train/test in one json file.</span>
+    <span class="c1"># Used to generate all possible class labels</span>
+    <span class="n">all_annotations</span> <span class="o">=</span> <span class="n">project_path</span> <span class="o">/</span> <span class="s2">&quot;annotations.json&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">project_path</span> <span class="o">/</span> <span class="s2">&quot;annotations_train.json&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">train</span><span class="p">:</span>
+        <span class="n">tr</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">project_path</span> <span class="o">/</span> <span class="s2">&quot;annotations_test.json&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">test</span><span class="p">:</span>
+        <span class="n">te</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">all_annotations</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="o">**</span><span class="n">tr</span><span class="p">,</span> <span class="o">**</span><span class="n">te</span><span class="p">},</span> <span class="n">outfile</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">all_annotations</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="13_datasets_legacy.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Helpers for Dataset Generation</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="15_coordinates_input.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Coordinates Input</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

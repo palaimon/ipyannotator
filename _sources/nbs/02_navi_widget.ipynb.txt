@@ -1,0 +1,292 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from nbdev import *\n",
+    "# default_exp navi_widget"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Navi Widget"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "from ipywidgets import Button, IntSlider, HBox, Layout\n",
+    "import warnings\n",
+    "from typing import Callable"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class NaviGUI(HBox):\n",
+    "    def __init__(self, max_im_number: int = 0):\n",
+    "        self._im_number_slider = IntSlider(\n",
+    "            min=0,\n",
+    "            max=max_im_number,\n",
+    "            value=0,\n",
+    "            description='Image Nr.'\n",
+    "        )\n",
+    "\n",
+    "        self._prev_btn = Button(description='< Previous',\n",
+    "                                layout=Layout(width='auto'))\n",
+    "\n",
+    "        self._next_btn = Button(description='Next >',\n",
+    "                                layout=Layout(width='auto'))\n",
+    "\n",
+    "        super().__init__(children=[self._prev_btn, self._im_number_slider, self._next_btn],\n",
+    "                         layout=Layout(display='flex', flex_flow='row wrap', align_items='center'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class NaviLogic:\n",
+    "    \"\"\"\n",
+    "    Acts like an intermediator between GUI and its interactions\n",
+    "    \"\"\"\n",
+    "\n",
+    "    def __init__(self, gui: NaviGUI):\n",
+    "        self._gui = gui\n",
+    "\n",
+    "    def slider_updated(self, change: dict):\n",
+    "        self._gui._index = change['new']\n",
+    "        self.set_slider_value(change['new'])\n",
+    "\n",
+    "    def set_slider_value(self, index: int):\n",
+    "        self._gui._im_number_slider.value = index\n",
+    "\n",
+    "    def set_slider_max(self, max_im_number: int):\n",
+    "        self._gui._im_number_slider.max = max_im_number\n",
+    "\n",
+    "    def _increment_state_index(self, index: int):\n",
+    "        max_im_number = self._gui._max_im_num\n",
+    "        safe_index = (self._gui._index + index) % max_im_number\n",
+    "        self._gui._index = (safe_index + max_im_number) % max_im_number\n",
+    "        self.set_slider_value(self._gui._index)\n",
+    "\n",
+    "    def check_im_num(self, max_im_number: int):\n",
+    "        if not hasattr(self._gui, '_im_number_slider'):\n",
+    "            return\n",
+    "        self._gui._im_number_slider.max = max_im_number - 1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "\n",
+    "class Navi(NaviGUI):\n",
+    "    \"\"\"\n",
+    "    Represents simple navigation module with slider.\n",
+    "\n",
+    "    on_navi_clicked: callable\n",
+    "        A callback that runs after every navigation\n",
+    "        change. The callback should have, as a\n",
+    "        parameter the navi's index.\n",
+    "    \"\"\"\n",
+    "\n",
+    "    def __init__(self, max_im_num: int = 1, on_navi_clicked: Callable = None):\n",
+    "        super().__init__(max_im_num)\n",
+    "        self._max_im_num = max_im_num\n",
+    "        self.on_navi_clicked = on_navi_clicked\n",
+    "        self._index = 0\n",
+    "\n",
+    "        self.model = NaviLogic(gui=self)\n",
+    "\n",
+    "        self._listen_next_click()\n",
+    "        self._listen_prev_click()\n",
+    "        self._listen_slider_changes()\n",
+    "\n",
+    "    @property\n",
+    "    def index(self) -> int:\n",
+    "        return self._index\n",
+    "\n",
+    "    @index.setter\n",
+    "    def index(self, value: int):\n",
+    "        self.model.set_slider_value(value)\n",
+    "        self._index = value\n",
+    "        self._external_call()\n",
+    "\n",
+    "    @property\n",
+    "    def max_im_num(self) -> int:\n",
+    "        return self._max_im_num\n",
+    "\n",
+    "    @max_im_num.setter\n",
+    "    def max_im_num(self, value: int):\n",
+    "        self.model.set_slider_max(value - 1)\n",
+    "        self._max_im_num = value\n",
+    "\n",
+    "    def _next_clicked(self, *args):\n",
+    "        self.model._increment_state_index(1)\n",
+    "\n",
+    "    def _slider_updated(self, value: dict):\n",
+    "        self.model.slider_updated(value)\n",
+    "        self._external_call()\n",
+    "\n",
+    "    def _prev_clicked(self, *args):\n",
+    "        self.model._increment_state_index(-1)\n",
+    "\n",
+    "    def _listen_slider_changes(self):\n",
+    "        self._im_number_slider.observe(\n",
+    "            self._slider_updated, names='value'\n",
+    "        )\n",
+    "\n",
+    "    def _listen_next_click(self):\n",
+    "        self._next_btn.on_click(self._next_clicked)\n",
+    "\n",
+    "    def _listen_prev_click(self):\n",
+    "        self._prev_btn.on_click(self._prev_clicked)\n",
+    "\n",
+    "    def _external_call(self):\n",
+    "        if self.on_navi_clicked:\n",
+    "            self.on_navi_clicked(self._index)\n",
+    "        else:\n",
+    "            warnings.warn(\n",
+    "                \"Navi callable was not defined.\"\n",
+    "                \"The navigation will not trigger any action!\"\n",
+    "            )"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# it start navi with slider index at 0\n",
+    "\n",
+    "navi = Navi(6)\n",
+    "\n",
+    "assert navi._im_number_slider.value == 0\n",
+    "\n",
+    "# it changes state if slider.value changes\n",
+    "\n",
+    "navi._im_number_slider.value = 2\n",
+    "\n",
+    "assert navi._index == 2\n",
+    "\n",
+    "# it changes state and slider.value if button is clicked\n",
+    "\n",
+    "navi._next_btn.click()\n",
+    "\n",
+    "assert navi._index == 3\n",
+    "assert navi._im_number_slider.value == 3\n",
+    "\n",
+    "navi._prev_btn.click()\n",
+    "\n",
+    "assert navi._index == 2\n",
+    "assert navi._im_number_slider.value == 2\n",
+    "\n",
+    "# it changes slider.max if navi changes max im num\n",
+    "navi.max_im_num = 6\n",
+    "assert navi._im_number_slider.max == 5\n",
+    "\n",
+    "# it changes slider.index if navi changes its index\n",
+    "navi.index = 3\n",
+    "assert navi._im_number_slider.value == 3\n",
+    "\n",
+    "# testing callback\n",
+    "callback_index = 0\n",
+    "\n",
+    "\n",
+    "def increment_callback(index):\n",
+    "    global callback_index\n",
+    "    callback_index = index\n",
+    "\n",
+    "\n",
+    "navi.on_navi_clicked = increment_callback\n",
+    "\n",
+    "navi._next_btn.click()\n",
+    "assert callback_index == 4\n",
+    "\n",
+    "navi._prev_btn.click()\n",
+    "assert callback_index == 3\n",
+    "\n",
+    "navi.index = 2\n",
+    "assert callback_index == 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "navi"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

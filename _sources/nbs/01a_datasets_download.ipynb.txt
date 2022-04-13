@@ -1,0 +1,336 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp datasets.download"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "import pooch\n",
+    "import glob\n",
+    "import json\n",
+    "from pathlib import Path\n",
+    "import os\n",
+    "import tarfile\n",
+    "import zlib\n",
+    "from typing import Dict, List, Any"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "def _download_url(url: str, root: Path, filename: str, file_hash: str = None):\n",
+    "    \"\"\"Download a file from a url and place it in root.\n",
+    "    Args:\n",
+    "        url (str): URL to download file from\n",
+    "        root (str): Directory to place downloaded file in\n",
+    "        filename (str, optional): Name to save the file under. If None, use the basename of the URL\n",
+    "        file_hash (str, optional): Hash of the required file. If None, will always download the file\n",
+    "    \"\"\"\n",
+    "    root = Path(os.path.expanduser(root))\n",
+    "    if not filename:\n",
+    "        filename = os.path.basename(url)\n",
+    "    os.makedirs(root, exist_ok=True)\n",
+    "\n",
+    "    download_setup = pooch.create(\n",
+    "        path=root,\n",
+    "        base_url=url,\n",
+    "        registry={\n",
+    "            filename: file_hash,\n",
+    "        },\n",
+    "    )\n",
+    "    download_setup.fetch(filename)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def _extract_tar(tar_path: Path, output_dir: Path):\n",
+    "    try:\n",
+    "        print('Extracting...')\n",
+    "        with tarfile.open(tar_path) as tar:\n",
+    "            tar.extractall(output_dir)\n",
+    "    except (tarfile.TarError, IOError, zlib.error) as e:\n",
+    "        print('Failed to extract!', e)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Dowload datasets"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def get_cifar10(output_dir: Path):\n",
+    "    \"\"\"\n",
+    "    Download the cifar10 dataset.\n",
+    "    \"\"\"\n",
+    "\n",
+    "    output_dir = Path(output_dir)\n",
+    "    dataset_dir = output_dir / 'cifar10'\n",
+    "\n",
+    "    _download_url(url='https://s3.amazonaws.com/fast-ai-imageclas/',\n",
+    "                  root=output_dir, filename=\"cifar10.tgz\",\n",
+    "                  file_hash=(\"sha256:637c5814e11aefcb6ee76d5f\"\n",
+    "                             \"59c67ddc8de7f5b5077502a195b0833d1e3e4441\"))\n",
+    "\n",
+    "    if not dataset_dir.is_dir():\n",
+    "        _extract_tar(output_dir / 'cifar10.tgz', output_dir)\n",
+    "    else:\n",
+    "        print(f'Directory {dataset_dir} already exists, skip extraction.')\n",
+    "\n",
+    "    print('Generating train/test data..')\n",
+    "    imdir_train = dataset_dir / 'train'\n",
+    "    imdir_test = dataset_dir / 'test'\n",
+    "\n",
+    "    # split train/test\n",
+    "    train = [Path(p) for p in glob.glob(f'{imdir_train}/*/*')]\n",
+    "    test = [Path(p) for p in glob.glob(f'{imdir_test}/*/*')]\n",
+    "\n",
+    "    # generate data for annotations.json\n",
+    "    # {'image-file.jpg': ['label1.jpg']}\n",
+    "    annotations_train = dict((str(p), [f'{p.parts[-2]}.jpg']) for p in train)\n",
+    "    annotations_test = dict((str(p), [f'{p.parts[-2]}.jpg']) for p in test)\n",
+    "\n",
+    "    train_path = dataset_dir / 'annotations_train.json'\n",
+    "    test_path = dataset_dir / 'annotations_test.json'\n",
+    "\n",
+    "    with open(train_path, 'w') as f:\n",
+    "        json.dump(annotations_train, f)\n",
+    "\n",
+    "    with open(test_path, 'w') as f:\n",
+    "        json.dump(annotations_test, f)\n",
+    "    print(\"Done\")\n",
+    "    return train_path, test_path"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "cifar_train_p, cifar_test_p = get_cifar10(Path('data'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def get_oxford_102_flowers(output_dir: Path):\n",
+    "    \"\"\"\n",
+    "    Download the oxford flowers dataset.\n",
+    "    \"\"\"\n",
+    "    output_dir = Path(output_dir)\n",
+    "    dataset_dir = output_dir / 'oxford-102-flowers'\n",
+    "\n",
+    "    _download_url(url='https://s3.amazonaws.com/fast-ai-imageclas/',\n",
+    "                  root=output_dir, filename=\"oxford-102-flowers.tgz\",\n",
+    "                  file_hash=(\"sha256:680a253086535b2c800aada76a45fc1\"\n",
+    "                             \"89d3dcae4da6da8db36ce6a95f00bf4ad\"))\n",
+    "\n",
+    "    if not dataset_dir.is_dir():\n",
+    "        _extract_tar(output_dir / 'oxford-102-flowers.tgz', output_dir)\n",
+    "    else:\n",
+    "        print((f'Directory {dataset_dir} already'\n",
+    "               ' exists, skip extraction.'))\n",
+    "\n",
+    "    print('Generating train/test data..')\n",
+    "    with open(dataset_dir / 'train.txt', 'r') as f:\n",
+    "        # https://github.com/python/mypy/issues/7558\n",
+    "        _annotations_train: Dict[str, Any] = dict(tuple(\n",
+    "            line.split()) for line in f)  # type: ignore\n",
+    "\n",
+    "    annotations_train: Dict[str, List[str]] = {\n",
+    "        str(dataset_dir / k): [v + '.jpg'] for k, v in _annotations_train.items()\n",
+    "    }\n",
+    "\n",
+    "    with open(dataset_dir / 'test.txt', 'r') as f:\n",
+    "        _annotations_test: Dict[str, Any] = dict(tuple(\n",
+    "            line.split()) for line in f)  # type: ignore\n",
+    "\n",
+    "    annotations_test: Dict[str, List[str]] = {\n",
+    "        str(dataset_dir / k): [v + '.jpg'] for k, v in _annotations_test.items()\n",
+    "    }\n",
+    "\n",
+    "    train_path = dataset_dir / 'annotations_train.json'\n",
+    "    test_path = dataset_dir / 'annotations_test.json'\n",
+    "\n",
+    "    with open(train_path, 'w') as f:\n",
+    "        json.dump(annotations_train, f)\n",
+    "\n",
+    "    with open(test_path, 'w') as f:\n",
+    "        json.dump(annotations_test, f)\n",
+    "    print(\"Done\")\n",
+    "    return train_path, test_path"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "flowers102_train_p, flowers102_test_p = get_oxford_102_flowers(Path('data'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def get_cub_200_2011(output_dir: Path):\n",
+    "    \"\"\"\n",
+    "    Download the CUB 200 2001 dataset.\n",
+    "    \"\"\"\n",
+    "    output_dir = Path(output_dir)\n",
+    "    dataset_dir = output_dir / 'CUB_200_2011'\n",
+    "\n",
+    "    _download_url(url='https://s3.amazonaws.com/fast-ai-imageclas/',\n",
+    "                  root=output_dir, filename='CUB_200_2011.tgz',\n",
+    "                  file_hash=(\"sha256:0c685df5597a8b24909f6a7c9db6\"\n",
+    "                             \"d11e008733779a671760afef78feb49bf081\"))\n",
+    "\n",
+    "    if not dataset_dir.is_dir():\n",
+    "        _extract_tar(output_dir / 'CUB_200_2011.tgz', output_dir)\n",
+    "    else:\n",
+    "        print(f'Directory {dataset_dir} already exists, skip extraction.')\n",
+    "\n",
+    "    print('Generating train/test data..')\n",
+    "    with open(dataset_dir / 'images.txt', 'r') as f:\n",
+    "        image_id_map: Dict[str, Any] = dict(tuple(\n",
+    "            line.split()) for line in f)  # type: ignore\n",
+    "\n",
+    "    with open(dataset_dir / 'classes.txt', 'r') as f:\n",
+    "        class_id_map: Dict[str, Any] = dict(tuple(\n",
+    "            line.split()) for line in f)  # type: ignore\n",
+    "\n",
+    "    with open(dataset_dir / 'train_test_split.txt', 'r') as f:\n",
+    "        splitter: Dict[str, Any] = dict(tuple(\n",
+    "            line.split()) for line in f)  # type: ignore\n",
+    "\n",
+    "    # image ids for test/train\n",
+    "    train_k = [k for k, v in splitter.items() if v == '0']\n",
+    "    test_k = [k for k, v in splitter.items() if v == '1']\n",
+    "\n",
+    "    with open(dataset_dir / 'image_class_labels.txt', 'r') as f:\n",
+    "        anno_: Dict[str, Any] = dict(tuple(\n",
+    "            line.split()) for line in f)  # type: ignore\n",
+    "\n",
+    "    annotations_train = {\n",
+    "        str(dataset_dir / 'images' / image_id_map[k]):\n",
+    "        [class_id_map[v] + '.jpg'] for k, v in anno_.items() if k in train_k}\n",
+    "\n",
+    "    annotations_test = {\n",
+    "        str(dataset_dir / 'images' / image_id_map[k]):\n",
+    "        [class_id_map[v] + '.jpg'] for k, v in anno_.items() if k in test_k}\n",
+    "\n",
+    "    train_path = dataset_dir / 'annotations_train.json'\n",
+    "    test_path = dataset_dir / 'annotations_test.json'\n",
+    "\n",
+    "    with open(train_path, 'w') as f:\n",
+    "        json.dump(annotations_train, f)\n",
+    "\n",
+    "    with open(test_path, 'w') as f:\n",
+    "        json.dump(annotations_test, f)\n",
+    "    print(\"Done\")\n",
+    "    return train_path, test_path"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "cub200_train_p, cub200_test_p = get_cub_200_2011(Path('data'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

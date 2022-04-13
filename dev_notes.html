@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Env setup &#8212; Ipyannotator  documentation</title>
+    
+    <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-to-build-lib">
+   How To build lib:
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#folder-outline">
+   Folder Outline
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#deffered-poetry-whl-install-on-ci">
+   Deffered poetry whl install on CI:
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#possible-issues-and-workarounds">
+   Possible issues and workarounds:
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#linter">
+   Linter
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="env-setup">
+<h1>Env setup<a class="headerlink" href="#env-setup" title="Permalink to this headline">¶</a></h1>
+<p>To install lib and deps use:</p>
+<p><code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code></p>
+<p>if you want to use jupyterlab also install widget support either in lab
+using extension manager of with
+<code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">jupyter</span> <span class="pre">labextension</span> <span class="pre">install</span> <span class="pre">&#64;jupyter-widgets/jupyterlab-manager</span></code></p>
+<p>Make sure to setup nbstripout filters just after repo clone:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">nbstripout</span> <span class="o">--</span><span class="n">install</span>
+</pre></div>
+</div>
+<p>This will install git hook that automatically strips output from <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> files
+on-the-fly when commited. The output will remain in working copy.</p>
+<p>To modify local files inplace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nbstripout</span> <span class="n">FILE</span><span class="o">.</span><span class="n">ipynb</span> <span class="p">[</span><span class="n">FILE2</span><span class="o">.</span><span class="n">ipynb</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>To mark special cells so that the output is not stripped:</p>
+<p>Set the <code class="docutils literal notranslate"><span class="pre">keep_output</span></code> tag on the cell.
+To do this, enable the tags toolbar in jupyter notebook (<code class="docutils literal notranslate"><span class="pre">View</span> <span class="pre">&gt;</span> <span class="pre">Cell</span> <span class="pre">Toolbar</span> <span class="pre">&gt;</span> <span class="pre">Tags</span></code>) and then add the <code class="docutils literal notranslate"><span class="pre">keep_output</span></code> tag for each cell you would like to keep the output for.</p>
+<p>You can also keep output for an entire notebook.
+To do so, add the option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+ <span class="s2">&quot;keep_output&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>to the notebook metadata (<code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">&gt;</span> <span class="pre">Edit</span> <span class="pre">Notebook</span> <span class="pre">Metadata</span></code>)</p>
+<section id="how-to-build-lib">
+<h2>How To build lib:<a class="headerlink" href="#how-to-build-lib" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nbdev_build_lib</span>
+</pre></div>
+</div>
+<p>or add the last cell to ipynb file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nbdev.export</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">notebook2script</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="folder-outline">
+<h2>Folder Outline<a class="headerlink" href="#folder-outline" title="Permalink to this headline">¶</a></h2>
+<p>folders managed by git-annex</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
+├── data
+│   ├── converted <span class="c1"># normaelized data used for modeling and analysis</span>
+│   └── raw <span class="c1"># complete raw input data</span>
+├── materials
+│   ├── html_nbs <span class="c1"># html rendered nb including output</span>
+│   └── slides <span class="c1"># rendered slides</span>
+└── models
+    ├── dev <span class="c1"># models shared for dev</span>
+    └── release <span class="c1"># models deployed / externaly shared</span>
+</pre></div>
+</div>
+</section>
+<section id="deffered-poetry-whl-install-on-ci">
+<h2>Deffered poetry whl install on CI:<a class="headerlink" href="#deffered-poetry-whl-install-on-ci" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p>Do not install binary on docker build step:</p>
+<p>https://gitlab.palaimon.io/fastfm/benchmarks2/-/blob/dc8b855315751b35c34912848c8c3700365a15f9/Dockerfile#L73</p>
+</li>
+<li><p>Enable artifacts to share binary across jobs:</p>
+<p>https://gitlab.palaimon.io/devops/nbdev-template/-/blob/4eee3785f28c74d8966e623c3cb9c3cae229f0f2/.gitlab-ci.yml#L55</p>
+</li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> to fix missing dep on next ci jobs.</p></li>
+</ol>
+</section>
+<section id="possible-issues-and-workarounds">
+<h2>Possible issues and workarounds:<a class="headerlink" href="#possible-issues-and-workarounds" title="Permalink to this headline">¶</a></h2>
+<p><strong>Error:</strong>
+<code class="docutils literal notranslate"><span class="pre">NameError:</span> <span class="pre">name</span> <span class="pre">‘IN_NOTEBOOK’</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">defined:</span></code></p>
+<p><strong>Fix:</strong>
+<code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">nbdev</span> <span class="pre">--upgrade</span></code></p>
+<p><strong>Details:</strong> https://forums.fast.ai/t/nameerror-name-in-notebook-is-not-defined/78590/3</p>
+<HR>
+<p><strong>Error:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span><span class="p">:</span> <span class="n">No</span> <span class="n">module</span> <span class="n">named</span> <span class="n">ipykernel_launcher</span>
+<span class="p">[</span><span class="n">I</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mf">14.135</span> <span class="n">NotebookApp</span><span class="p">]</span> <span class="n">KernelRestarter</span><span class="p">:</span> <span class="n">restarting</span> <span class="n">kernel</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">5</span><span class="p">),</span> <span class="n">new</span> <span class="n">random</span> <span class="n">ports</span>
+<span class="o">.</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span><span class="p">:</span> <span class="n">No</span> <span class="n">module</span> <span class="n">named</span> <span class="n">ipykernel_launcher</span>
+<span class="p">[</span><span class="n">I</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mf">17.148</span> <span class="n">NotebookApp</span><span class="p">]</span> <span class="n">KernelRestarter</span><span class="p">:</span> <span class="n">restarting</span> <span class="n">kernel</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">5</span><span class="p">),</span> <span class="n">new</span> <span class="n">random</span> <span class="n">ports</span>
+<span class="o">.</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span><span class="p">:</span> <span class="n">No</span> <span class="n">module</span> <span class="n">named</span> <span class="n">ipykernel_launcher</span>
+<span class="p">[</span><span class="n">I</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mf">20.158</span> <span class="n">NotebookApp</span><span class="p">]</span> <span class="n">KernelRestarter</span><span class="p">:</span> <span class="n">restarting</span> <span class="n">kernel</span> <span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">5</span><span class="p">),</span> <span class="n">new</span> <span class="n">random</span> <span class="n">ports</span>
+<span class="o">.</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span><span class="p">:</span> <span class="n">No</span> <span class="n">module</span> <span class="n">named</span> <span class="n">ipykernel_launcher</span>
+
+</pre></div>
+</div>
+<p><strong>Fix:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">python</span> <span class="pre">-m</span> <span class="pre">ipykernel</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">--name</span> <span class="pre">&lt;kernel_name&gt;</span> <span class="pre">--display-name</span> <span class="pre">&quot;&lt;kernel_name&gt;&quot;</span></code></p>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;kernel_name&gt;</span></code> - name for a new jupyter kernel
+Once cerated, you can select it from jupyter notebook menu:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Kernel</span> <span class="pre">-&gt;</span> <span class="pre">Change</span> <span class="pre">Kernel</span> <span class="pre">-&gt;</span> <span class="pre">&lt;kernel_name&gt;</span></code></p>
+ <HR>
+<p><strong>Error:</strong>  ipy widget or canvas are not shown in jupyter lab</p>
+<p><strong>Fix:</strong></p>
+<p>Check existing extensions:</p>
+<p><code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">labextension</span> <span class="pre">list</span></code></p>
+<p>Working extension list gives at least:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">JupyterLab</span> <span class="n">v2</span><span class="mf">.2.8</span>
+<span class="n">Known</span> <span class="n">labextensions</span><span class="p">:</span>
+   <span class="n">app</span> <span class="nb">dir</span><span class="p">:</span> <span class="n">ipyannotator2</span><span class="o">/.</span><span class="n">venv</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">jupyter</span><span class="o">/</span><span class="n">lab</span>
+        <span class="nd">@jupyter</span><span class="o">-</span><span class="n">widgets</span><span class="o">/</span><span class="n">jupyterlab</span><span class="o">-</span><span class="n">manager</span> <span class="n">v2</span><span class="mf">.0.0</span>  <span class="n">enabled</span>  <span class="n">OK</span>
+        <span class="n">ipycanvas</span> <span class="n">v0</span><span class="mf">.5.1</span>  <span class="n">enabled</span>  <span class="n">OK</span>
+        <span class="n">ipyevents</span> <span class="n">v1</span><span class="mf">.8.0</span>  <span class="n">enabled</span>  <span class="n">OK</span>
+        <span class="n">nbdime</span><span class="o">-</span><span class="n">jupyterlab</span> <span class="n">v2</span><span class="mf">.0.0</span>  <span class="n">enabled</span>  <span class="n">OK</span>
+</pre></div>
+</div>
+<p>For clean (re)install:</p>
+<p><code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">lab</span> <span class="pre">clean</span></code> to remove the staging and static directories from the lab</p>
+<p><em>ipywidgets</em>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">labextension</span> <span class="pre">install</span> <span class="pre">&#64;jupyter-widgets/jupyterlab-manager</span></code></p>
+<p><em>ipycanvas</em>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">labextension</span> <span class="pre">install</span> <span class="pre">&#64;jupyter-widgets/jupyterlab-manager</span> <span class="pre">ipycanvas</span></code></p>
+<p><em>ipyevents</em>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">labextension</span> <span class="pre">install</span> <span class="pre">&#64;jupyter-widgets/jupyterlab-manager</span> <span class="pre">ipyevents</span></code></p>
+<p><em>nbdime</em>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">nbdime</span> <span class="pre">extensions</span> <span class="pre">--enable</span> <span class="pre">[--sys-prefix/--user/--system]</span></code></p>
+ <HR>
+<p>To automatically install <code class="docutils literal notranslate"><span class="pre">voila</span></code> together with <code class="docutils literal notranslate"><span class="pre">nbdev</span></code> an old revision can be used, however this is not included in current <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file to avoid a very time consuming <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code>, which slows down the poetry dependency resolution dramatically.</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">voila</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://github.com/voila-dashboards/voila.git&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;e23fcca926584a5aa837c3354804aa2d761edda3&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Manual workaround with viola app described in <code class="docutils literal notranslate"><span class="pre">README.md</span></code>.</p>
+</section>
+<section id="linter">
+<h2>Linter<a class="headerlink" href="#linter" title="Permalink to this headline">¶</a></h2>
+<p>Ipyannotator uses <code class="docutils literal notranslate"><span class="pre">flake8</span></code>, <code class="docutils literal notranslate"><span class="pre">mypy</span></code> and <code class="docutils literal notranslate"><span class="pre">pylint</span></code> to ensure code quality.</p>
+<p>One can use <code class="docutils literal notranslate"><span class="pre">autopep8</span></code> with <code class="docutils literal notranslate"><span class="pre">nbqa</span></code> to make the code <code class="docutils literal notranslate"><span class="pre">pep8</span></code> compliant.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nbqa autopep8 nbs --in-place 
+</pre></div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

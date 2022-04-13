@@ -1,0 +1,1107 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Helpers for Dataset Generation &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dowload datasets" href="01a_datasets_download.html" />
+    <link rel="prev" title="Helpers" href="01_helpers.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00a_annotator.html">
+   Annotator Factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="00b_mltypes.html">
+   Mltypes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_helpers.html">
+   Helpers
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_download.html">
+   Dowload datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_factory.html">
+   Dataset factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b_dataset_video.html">
+   Generators for MOT data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_navi_widget.html">
+   Navi Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02a_right_menu_widget.html">
+   Right menu Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_storage.html">
+   Storage
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_bbox_annotator.html">
+   Bounding Box Annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_image_button.html">
+   Image button
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_capture_annotator.html">
+   Capture annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_im2im_annotator.html">
+   Image to image annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="12_debug_utils.html">
+   Debug tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="13_datasets_legacy.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="14_datasets_factory_legacy.html">
+   Datasets factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="15_coordinates_input.html">
+   Coordinates Input
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="16_custom_buttons.html">
+   Custom Buttons
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="17_annotator_explorer.html">
+   Annotator Explorer
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="18_bbox_trajectory.html">
+   Bounding Box Trajectory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="19_bbox_video_annotator.html">
+   Bbox video annotator
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#display-image">
+   Display image
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-images">
+   Create images
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overlap-intersection-over-union-iou">
+   Overlap &amp; Intersection over Union (IOU)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sample-random-bbox">
+   Sample Random bbox
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#draw-objects-inside-bbox">
+   Draw Objects inside bbox
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-object-detection-dataset">
+   Create Object Detection Dataset
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#generic-dataset">
+     Generic Dataset
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#specific-tasks">
+   Specific Tasks
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp datasets.generators</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># exporti</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">skimage.draw</span> <span class="kn">import</span> <span class="n">random_shapes</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">skimage.draw</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ellipse</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">from</span> <span class="nn">skimage.draw</span> <span class="kn">import</span> <span class="p">(</span><span class="n">rectangle</span><span class="p">,</span> <span class="n">rectangle_perimeter</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">skimage.io</span> <span class="kn">import</span> <span class="n">imsave</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="helpers-for-dataset-generation">
+<h1>Helpers for Dataset Generation<a class="headerlink" href="#helpers-for-dataset-generation" title="Permalink to this headline">¶</a></h1>
+<section id="display-image">
+<h2>Display image<a class="headerlink" href="#display-image" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># export</span>
+<span class="k">def</span> <span class="nf">show_img</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display a numpy array as a image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># export</span>
+<span class="k">def</span> <span class="nf">save_img</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save a numpy array as a image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.jpg&quot;</span><span class="p">)</span>
+
+    <span class="n">imsave</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">check_contrast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># export</span>
+<span class="k">def</span> <span class="nf">save_img_annotations</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">annotations</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;annotations&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper to save the annotations of a image into the desired file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">annotations</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="create-images">
+<h2>Create images<a class="headerlink" href="#create-images" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skimage.draw</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ellipse_perimeter</span><span class="p">)</span>
+
+<span class="c1"># change from zeros to ones to have a white bg.</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">300</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="c1"># draw ellipse with perimeter</span>
+<span class="n">rr_ellipse</span><span class="p">,</span> <span class="n">cc_ellipse</span> <span class="o">=</span> <span class="n">ellipse</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">rr_ellipse_p</span><span class="p">,</span> <span class="n">cc_ellipse_p</span> <span class="o">=</span> <span class="n">ellipse_perimeter</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">img</span><span class="p">[</span><span class="n">rr_ellipse</span><span class="p">,</span> <span class="n">cc_ellipse</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">img</span><span class="p">[</span><span class="n">rr_ellipse_p</span><span class="p">,</span> <span class="n">cc_ellipse_p</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># draw square</span>
+<span class="n">rr_square</span><span class="p">,</span> <span class="n">cc_square</span> <span class="o">=</span> <span class="n">rectangle</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">))</span>
+<span class="n">rr_square_p</span><span class="p">,</span> <span class="n">cc_square_p</span> <span class="o">=</span> <span class="n">rectangle_perimeter</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">))</span>
+<span class="n">img</span><span class="p">[</span><span class="n">rr_square</span><span class="p">,</span> <span class="n">cc_square</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">img</span><span class="p">[</span><span class="n">rr_square_p</span><span class="p">,</span> <span class="n">cc_square_p</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># draw line</span>
+
+<span class="n">rr_line</span><span class="p">,</span> <span class="n">cc_line</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="mi">70</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">350</span><span class="p">)</span>
+<span class="n">img</span><span class="p">[</span><span class="n">rr_line</span><span class="p">,</span> <span class="n">cc_line</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># display img</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f973675adf0&gt;
+</pre></div>
+</div>
+<img alt="../_images/01a_datasets_14_1.png" src="../_images/01a_datasets_14_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># export</span>
+<span class="k">def</span> <span class="nf">draw_grid</span><span class="p">(</span><span class="n">im</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">n_hlines</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_vlines</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">black</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Will draw the default background with a grid system.</span>
+
+<span class="sd">    im  np.array:</span>
+<span class="sd">        Existing image, if None will create one</span>
+
+<span class="sd">    size  (int, int):</span>
+<span class="sd">        Height and width, respectively</span>
+
+<span class="sd">    n_hlines  int:</span>
+<span class="sd">        Number of horizontal lines</span>
+
+<span class="sd">    n_vlines  int:</span>
+<span class="sd">        Number of vertial lines</span>
+
+<span class="sd">    black  bool:</span>
+<span class="sd">        If true, the background will be black</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">size</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">im</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">line_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">black</span><span class="p">:</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">line_color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">im</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_hlines</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">lines</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">n_hlines</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">rr_line</span><span class="p">,</span> <span class="n">cc_line</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">img</span><span class="p">[</span><span class="n">rr_line</span><span class="p">,</span> <span class="n">cc_line</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">line_color</span>
+
+    <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_vlines</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">lines</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">n_vlines</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">rr_line</span><span class="p">,</span> <span class="n">cc_line</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">img</span><span class="p">[</span><span class="n">rr_line</span><span class="p">,</span> <span class="n">cc_line</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">line_color</span>
+
+    <span class="k">return</span> <span class="n">img</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">draw_grid</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="n">n_hlines</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_vlines</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">show_img</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/01a_datasets_16_0.png" src="../_images/01a_datasets_16_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># export</span>
+
+<span class="k">def</span> <span class="nf">draw_bbox</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">rect_dimensions</span><span class="p">,</span> <span class="n">im</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">black</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw a Bounding Box</span>
+
+<span class="sd">    rect  (int, int):</span>
+<span class="sd">        Begining point of the retangle</span>
+
+<span class="sd">    rect_dimensions  (int, int):</span>
+<span class="sd">        Width and Height of the retangle</span>
+
+<span class="sd">    im  np.array:</span>
+<span class="sd">        Image where bbox will be draw</span>
+
+<span class="sd">    black  bool:</span>
+<span class="sd">        If true, the bbox will be black</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">init_x</span><span class="p">,</span> <span class="n">init_y</span> <span class="o">=</span> <span class="n">rect</span>
+    <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">rect_dimensions</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">im</span>
+
+    <span class="k">if</span> <span class="n">im</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">black</span><span class="p">:</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+
+    <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">rectangle_perimeter</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="n">init_x</span><span class="p">,</span> <span class="n">init_y</span><span class="p">),</span>
+                                 <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span>
+                                 <span class="n">shape</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">img</span><span class="p">[</span><span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="n">ex_height</span> <span class="o">=</span> <span class="n">height</span> <span class="o">+</span> <span class="mi">10</span>
+    <span class="n">ex_width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">+</span> <span class="mi">10</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ex_height</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="p">)):</span>
+        <span class="n">ex_height</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ex_width</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+        <span class="n">ex_width</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">rectangle_perimeter</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="n">init_x</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="n">init_y</span> <span class="o">-</span> <span class="mi">5</span><span class="p">),</span>
+                                 <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">ex_height</span><span class="p">,</span> <span class="n">ex_width</span><span class="p">),</span>
+                                 <span class="n">shape</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">img</span><span class="p">[</span><span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="k">return</span> <span class="n">img</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#img = draw_grid(size=(3400, 400),n_hlines=2, n_vlines=10, black=False)</span>
+<span class="c1"># draw_bbox((35, 50, 200, 250), im=img, black=False)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+<span class="n">draw_bbox</span><span class="p">((</span><span class="mi">215</span><span class="p">,</span> <span class="mi">250</span><span class="p">),</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">im</span><span class="o">=</span><span class="n">img</span><span class="p">,</span> <span class="n">black</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">show_img</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/01a_datasets_18_0.png" src="../_images/01a_datasets_18_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+
+<span class="k">def</span> <span class="nf">xywh_to_xyxy</span><span class="p">(</span><span class="n">boxes</span><span class="p">):</span>
+    <span class="n">boxes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boxes</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Convert [x y w h] box format to [x1 y1 x2 y2] format.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">boxes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">boxes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">boxes</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">xyxy_to_xywh</span><span class="p">(</span><span class="n">boxes</span><span class="p">):</span>
+    <span class="n">boxes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boxes</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Convert [x1 y1 x2 y2] box format to [x y w h] format.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">boxes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">boxes</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="n">boxes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="overlap-intersection-over-union-iou">
+<h2>Overlap &amp; Intersection over Union (IOU)<a class="headerlink" href="#overlap-intersection-over-union-iou" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">def</span> <span class="nf">bbox_intersection</span><span class="p">(</span><span class="n">b1_coords</span><span class="p">,</span> <span class="n">b1_dimensions</span><span class="p">,</span> <span class="n">b2_coords</span><span class="p">,</span> <span class="n">b2_dimensions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    determine the (x, y)-coordinates of the intersection rectangle</span>
+
+<span class="sd">    b1_coords  (int, int):</span>
+<span class="sd">        The origin of the bbox one</span>
+
+<span class="sd">    b2_coords  (int, int):</span>
+<span class="sd">        THe origin of the bbox two</span>
+
+<span class="sd">    b1_dimensions  (int, int):</span>
+<span class="sd">        The width and heigh of bbox one</span>
+
+<span class="sd">    b2_dimensions  (int, int):</span>
+<span class="sd">        The width and heigh of bbox two</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xA</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">b1_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">b2_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">yA</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">b1_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b2_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">b1_final_x</span> <span class="o">=</span> <span class="n">b1_dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b1_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">b1_final_y</span> <span class="o">=</span> <span class="n">b1_dimensions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">b1_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">b2_final_x</span> <span class="o">=</span> <span class="n">b2_dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b2_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">b2_final_y</span> <span class="o">=</span> <span class="n">b2_dimensions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">b2_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">xB</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">b1_final_x</span><span class="p">,</span> <span class="n">b2_final_x</span><span class="p">)</span> <span class="o">-</span> <span class="n">xA</span>
+    <span class="n">yB</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">b1_final_y</span><span class="p">,</span> <span class="n">b2_final_y</span><span class="p">)</span> <span class="o">-</span> <span class="n">yA</span>
+
+    <span class="c1"># compute the area of intersection rectangle</span>
+    <span class="n">interArea</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xB</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">yB</span><span class="p">)</span>
+
+    <span class="c1"># compute the area of both the prediction and ground-truth</span>
+    <span class="c1"># rectangles</span>
+    <span class="n">b1Area</span> <span class="o">=</span> <span class="n">b1_dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">b1_dimensions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">b2Area</span> <span class="o">=</span> <span class="n">b2_dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">b2_dimensions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">interArea</span><span class="p">,</span> <span class="n">b1Area</span><span class="p">,</span> <span class="n">b2Area</span><span class="p">,</span> <span class="p">(</span><span class="n">xA</span><span class="p">,</span> <span class="n">yA</span><span class="p">,</span> <span class="n">xB</span><span class="p">,</span> <span class="n">yB</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="k">def</span> <span class="nf">overlap</span><span class="p">(</span><span class="n">boxA</span><span class="p">,</span> <span class="n">boxA_dimensions</span><span class="p">,</span> <span class="n">boxB</span><span class="p">,</span> <span class="n">boxB_dimensions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the max relative overlap between two bboxs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">interArea</span><span class="p">,</span> <span class="n">boxAArea</span><span class="p">,</span> <span class="n">boxBArea</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">bbox_intersection</span><span class="p">(</span><span class="n">boxA</span><span class="p">,</span> <span class="n">boxA_dimensions</span><span class="p">,</span>
+                                                         <span class="n">boxB</span><span class="p">,</span> <span class="n">boxB_dimensions</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">interArea</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">boxAArea</span><span class="p">),</span> <span class="n">interArea</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">boxBArea</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">r1_dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="mi">130</span><span class="p">,</span> <span class="mi">130</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">r2_dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">overlap</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r1_dimensions</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">r2_dimensions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">overlap</span><span class="p">(</span><span class="n">r2</span><span class="p">,</span> <span class="n">r2_dimensions</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">r1_dimensions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># export</span>
+<span class="k">def</span> <span class="nf">bb_intersection_over_union</span><span class="p">(</span><span class="n">boxA</span><span class="p">,</span> <span class="n">boxA_dimensions</span><span class="p">,</span> <span class="n">boxB</span><span class="p">,</span> <span class="n">boxB_dimensions</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">interArea</span><span class="p">,</span> <span class="n">boxAArea</span><span class="p">,</span> <span class="n">boxBArea</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">bbox_intersection</span><span class="p">(</span><span class="n">boxA</span><span class="p">,</span> <span class="n">boxA_dimensions</span><span class="p">,</span>
+                                                         <span class="n">boxB</span><span class="p">,</span> <span class="n">boxB_dimensions</span><span class="p">)</span>
+
+    <span class="n">iou</span> <span class="o">=</span> <span class="n">interArea</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">boxAArea</span> <span class="o">+</span> <span class="n">boxBArea</span> <span class="o">-</span> <span class="n">interArea</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;iou: </span><span class="si">{</span><span class="n">iou</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">, interArea: </span><span class="si">{</span><span class="n">interArea</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">, &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;boxAArea </span><span class="si">{</span><span class="n">boxAArea</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">, box1Area </span><span class="si">{</span><span class="n">boxBArea</span><span class="si">:</span><span class="s2"> .2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">iou</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+<span class="n">r1_dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">r2_dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">300</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+<span class="n">draw_bbox</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r1_dimensions</span><span class="p">,</span> <span class="n">im</span><span class="o">=</span><span class="n">img</span><span class="p">,</span> <span class="n">black</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">draw_bbox</span><span class="p">(</span><span class="n">r2</span><span class="p">,</span> <span class="n">r2_dimensions</span><span class="p">,</span> <span class="n">im</span><span class="o">=</span><span class="n">img</span><span class="p">,</span> <span class="n">black</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="n">iou</span> <span class="o">=</span> <span class="n">bb_intersection_over_union</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r1_dimensions</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">r2_dimensions</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="c1"># iou = bb_intersection_over_union(r1, r2, verbose=True)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">union</span> <span class="o">=</span> <span class="n">bbox_intersection</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r1_dimensions</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">r2_dimensions</span><span class="p">)</span>
+
+<span class="n">init_height</span><span class="p">,</span> <span class="n">init_widht</span><span class="p">,</span> <span class="n">final_height</span><span class="p">,</span> <span class="n">final_widht</span> <span class="o">=</span> <span class="n">union</span>
+<span class="n">extent_height</span> <span class="o">=</span> <span class="n">final_height</span> <span class="o">-</span> <span class="n">init_height</span>
+<span class="n">extent_width</span> <span class="o">=</span> <span class="n">final_widht</span> <span class="o">-</span> <span class="n">init_widht</span>
+
+<span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">rectangle</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="n">init_height</span><span class="p">,</span> <span class="n">init_widht</span><span class="p">),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">final_height</span><span class="p">,</span> <span class="n">final_widht</span><span class="p">))</span>
+
+<span class="n">img</span><span class="p">[</span><span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">show_img</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>iou:  0.05, interArea:  900.00, boxAArea  10000.00, box1Area  10000.00
+</pre></div>
+</div>
+<img alt="../_images/01a_datasets_27_2.png" src="../_images/01a_datasets_27_2.png" />
+</div>
+</div>
+</section>
+<section id="sample-random-bbox">
+<h2>Sample Random bbox<a class="headerlink" href="#sample-random-bbox" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">sample_bbox</span><span class="p">(</span><span class="n">bboxs</span><span class="o">=</span><span class="p">(),</span> <span class="n">canvas_size</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">diag</span><span class="o">=</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span> <span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">max_iou</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_overlap</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                <span class="n">max_tries</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    bboxs  [(x, y, x, y), ... ]:</span>
+<span class="sd">        List of existing bboxs</span>
+
+<span class="sd">    canvas_size  (int, int):</span>
+<span class="sd">        Width and height on which to position the new bbox.</span>
+
+<span class="sd">    max_iou  float [0, 1]:</span>
+<span class="sd">        Maximum acceptable intersection over union between any two bboxs</span>
+
+<span class="sd">    max_overlap  float [0, 1]:</span>
+<span class="sd">        Maximum overlap between any two bboxs</span>
+
+<span class="sd">    diag  (float, float) or float:</span>
+<span class="sd">        Range of acceptable diagonal lenght relative to canvas diagonal</span>
+
+<span class="sd">    ratio  (float, float) or float:</span>
+<span class="sd">        Range of acceptable width / heigh ratios of the new bbox</span>
+
+<span class="sd">    max_tries  int:</span>
+<span class="sd">        Number of random tries to create a valid bbox</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="c1">#     for v in [diag, ratio]: assert min(v) &gt;= 0 and max(v) &lt;= 1, f&quot;{v} is outside of (0, 1)&quot;</span>
+
+    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">canvas_size</span>
+    <span class="n">canvas_diag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">width</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">height</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_tries</span><span class="p">):</span>
+        <span class="n">s_diag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">*</span><span class="n">diag</span><span class="p">)</span> <span class="o">*</span> <span class="n">canvas_diag</span>
+        <span class="n">s_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">*</span><span class="n">ratio</span><span class="p">)</span>
+
+        <span class="c1"># sample position fully inside canvas</span>
+        <span class="n">s_height</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s_diag</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">s_ratio</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">s_width</span> <span class="o">=</span> <span class="n">s_ratio</span> <span class="o">*</span> <span class="n">s_height</span>
+
+        <span class="n">cx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">s_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">width</span> <span class="o">-</span> <span class="n">s_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">cy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">s_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">s_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">bbox_x</span> <span class="o">=</span> <span class="n">cx</span> <span class="o">-</span> <span class="n">s_width</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">bbox_y</span> <span class="o">=</span> <span class="n">cy</span> <span class="o">-</span> <span class="n">s_height</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">bbox_width</span> <span class="o">=</span> <span class="n">cx</span> <span class="o">+</span> <span class="n">s_width</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">bbox_x</span>
+        <span class="n">bbox_height</span> <span class="o">=</span> <span class="n">cy</span> <span class="o">+</span> <span class="n">s_height</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">bbox_y</span>
+
+        <span class="n">bbox</span> <span class="o">=</span> <span class="p">(</span><span class="n">bbox_x</span><span class="p">,</span> <span class="n">bbox_y</span><span class="p">,</span> <span class="n">bbox_width</span><span class="p">,</span> <span class="n">bbox_height</span><span class="p">)</span>
+        <span class="n">bbox</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bbox</span><span class="p">)</span>
+
+        <span class="c1"># check if valid iou then return</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bboxs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">bbox</span>
+        <span class="n">violation</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bboxs</span><span class="p">:</span>
+            <span class="n">b_x</span><span class="p">,</span> <span class="n">b_y</span><span class="p">,</span> <span class="n">b_width</span><span class="p">,</span> <span class="n">b_heigh</span> <span class="o">=</span> <span class="n">b</span>
+            <span class="n">iou</span> <span class="o">=</span> <span class="n">bb_intersection_over_union</span><span class="p">((</span><span class="n">b_x</span><span class="p">,</span> <span class="n">b_y</span><span class="p">),</span> <span class="p">(</span><span class="n">b_width</span><span class="p">,</span> <span class="n">b_heigh</span><span class="p">),</span>
+                                             <span class="p">(</span><span class="n">bbox_x</span><span class="p">,</span> <span class="n">bbox_y</span><span class="p">),</span> <span class="p">(</span><span class="n">bbox_width</span><span class="p">,</span> <span class="n">bbox_height</span><span class="p">))</span>
+            <span class="n">b_overlap</span> <span class="o">=</span> <span class="n">overlap</span><span class="p">((</span><span class="n">b_x</span><span class="p">,</span> <span class="n">b_y</span><span class="p">),</span> <span class="p">(</span><span class="n">b_width</span><span class="p">,</span> <span class="n">b_heigh</span><span class="p">),</span>
+                                <span class="p">(</span><span class="n">bbox_x</span><span class="p">,</span> <span class="n">bbox_y</span><span class="p">),</span> <span class="p">(</span><span class="n">bbox_width</span><span class="p">,</span> <span class="n">bbox_height</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">iou</span> <span class="o">&gt;</span> <span class="n">max_iou</span> <span class="ow">or</span> <span class="n">b_overlap</span> <span class="o">&gt;</span> <span class="n">max_overlap</span><span class="p">:</span>
+                <span class="n">violation</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">violation</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">bbox</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+
+<span class="n">bboxs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">bbox</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_bbox</span><span class="p">(</span>
+        <span class="n">bboxs</span><span class="o">=</span><span class="n">bboxs</span><span class="p">,</span> <span class="n">canvas_size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="n">diag</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span> <span class="n">max_iou</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">max_overlap</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="n">init_x</span><span class="p">,</span> <span class="n">init_y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">heigh</span> <span class="o">=</span> <span class="n">bbox</span>
+
+    <span class="n">bboxs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
+    <span class="n">draw_bbox</span><span class="p">((</span><span class="n">init_x</span><span class="p">,</span> <span class="n">init_y</span><span class="p">),</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">heigh</span><span class="p">),</span> <span class="n">im</span><span class="o">=</span><span class="n">img</span><span class="p">,</span> <span class="n">black</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="p">)</span>
+
+<span class="n">show_img</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+</pre></div>
+</div>
+<img alt="../_images/01a_datasets_30_1.png" src="../_images/01a_datasets_30_1.png" />
+</div>
+</div>
+</section>
+<section id="draw-objects-inside-bbox">
+<h2>Draw Objects inside bbox<a class="headerlink" href="#draw-objects-inside-bbox" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">draw_rectangle</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+    <span class="c1">#draw = ImageDraw.Draw(im)</span>
+    <span class="c1">#draw.rectangle(bbox, fill=color)</span>
+    <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">rectangle</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">dimensions</span><span class="p">)</span>
+    <span class="n">im</span><span class="p">[</span><span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">color</span>
+    <span class="k">return</span> <span class="n">im</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">draw_ellipse</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+    <span class="c1">#draw = ImageDraw.Draw(im)</span>
+    <span class="c1">#cx, cy = bbox[0] + bbox[2] / 2, bbox[1] + bbox[3]</span>
+    <span class="c1">#draw.ellipse(bbox, fill=color)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">start</span>
+    <span class="n">v_radius</span><span class="p">,</span> <span class="n">h_radius</span> <span class="o">=</span> <span class="n">dimensions</span>
+
+    <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">ellipse</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">v_radius</span><span class="p">,</span> <span class="n">h_radius</span><span class="p">)</span>
+    <span class="n">im</span><span class="p">[</span><span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">color</span>
+    <span class="k">return</span> <span class="n">im</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+
+<span class="n">ractangle_init_point</span> <span class="o">=</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+<span class="n">rectangle_dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">draw_rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">ractangle_init_point</span><span class="p">,</span> <span class="n">rectangle_dimensions</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">draw_bbox</span><span class="p">(</span><span class="n">im</span><span class="o">=</span><span class="n">img</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="n">ractangle_init_point</span><span class="p">,</span> <span class="n">black</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">rect_dimensions</span><span class="o">=</span><span class="n">rectangle_dimensions</span><span class="p">)</span>
+
+<span class="n">ellipse_init_point</span> <span class="o">=</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">65</span><span class="p">)</span>
+<span class="n">ellipse_dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">54</span><span class="p">)</span>
+
+<span class="n">ellipse_x</span><span class="p">,</span> <span class="n">ellipse_y</span> <span class="o">=</span> <span class="n">ellipse_init_point</span>
+<span class="n">ellipse_v_radius</span><span class="p">,</span> <span class="n">ellipse_h_radius</span> <span class="o">=</span> <span class="n">ellipse_dimensions</span>
+<span class="n">ellipse_bbox_start</span> <span class="o">=</span> <span class="p">(</span><span class="n">ellipse_x</span> <span class="o">-</span> <span class="n">ellipse_v_radius</span><span class="p">,</span> <span class="n">ellipse_y</span> <span class="o">-</span> <span class="n">ellipse_h_radius</span><span class="p">)</span>
+<span class="n">ellipse_bbox_dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="n">ellipse_v_radius</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ellipse_h_radius</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">draw_ellipse</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">ellipse_init_point</span><span class="p">,</span> <span class="n">ellipse_dimensions</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">draw_bbox</span><span class="p">(</span><span class="n">im</span><span class="o">=</span><span class="n">img</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="n">ellipse_bbox_start</span><span class="p">,</span> <span class="n">black</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">rect_dimensions</span><span class="o">=</span><span class="n">ellipse_bbox_dimensions</span><span class="p">)</span>
+<span class="n">show_img</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+</pre></div>
+</div>
+<img alt="../_images/01a_datasets_34_1.png" src="../_images/01a_datasets_34_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image</span><span class="p">,</span> <span class="n">shapes</span> <span class="o">=</span> <span class="n">random_shapes</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="mi">50</span><span class="p">,</span> <span class="n">multichannel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">rr_0</span><span class="p">,</span> <span class="n">rr_1</span> <span class="o">=</span> <span class="n">shapes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">cc_0</span><span class="p">,</span> <span class="n">cc_1</span> <span class="o">=</span> <span class="n">shapes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">middle_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">rr_0</span> <span class="o">+</span> <span class="n">rr_1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">middle_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cc_0</span> <span class="o">+</span> <span class="n">cc_1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Picking up the middle value will guarantee we get the shape color</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">middle_x</span><span class="p">,</span> <span class="n">middle_y</span><span class="p">])</span>
+
+<span class="n">show_img</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[117  94 198]
+</pre></div>
+</div>
+<img alt="../_images/01a_datasets_35_1.png" src="../_images/01a_datasets_35_1.png" />
+</div>
+</div>
+</section>
+<section id="create-object-detection-dataset">
+<h2>Create Object Detection Dataset<a class="headerlink" href="#create-object-detection-dataset" title="Permalink to this headline">¶</a></h2>
+<section id="generic-dataset">
+<h3>Generic Dataset<a class="headerlink" href="#generic-dataset" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># exporti</span>
+<span class="k">def</span> <span class="nf">create_simple_object_detection_dataset</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_objects_max</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_objects_min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                           <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span> <span class="n">min_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">&#39;images&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">&#39;class_images&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">min_dimension</span> <span class="o">=</span> <span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">min_dimension</span> <span class="o">=</span> <span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># create class labels</span>
+    <span class="n">cname</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">]</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">clr</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">cname</span><span class="p">):</span>
+        <span class="n">img_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">draw_rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">dimensions</span><span class="o">=</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">clr</span><span class="p">)</span>
+        <span class="n">save_img</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">&#39;class_images&#39;</span><span class="p">,</span> <span class="n">img_name</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+
+    <span class="n">type_shapes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rectangle&#39;</span><span class="p">,</span> <span class="s1">&#39;circle&#39;</span><span class="p">,</span> <span class="s1">&#39;ellipse&#39;</span><span class="p">]</span>
+    <span class="c1"># create images + annotations</span>
+    <span class="n">annotations</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">bboxs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">img_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;img_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="n">image</span><span class="p">,</span> <span class="n">shapes</span> <span class="o">=</span> <span class="n">random_shapes</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">n_objects_max</span><span class="p">,</span> <span class="n">multichannel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">shape</span><span class="o">=</span><span class="n">type_shapes</span><span class="p">[</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span>
+                                      <span class="n">min_shapes</span><span class="o">=</span><span class="n">n_objects_min</span><span class="p">,</span>
+                                      <span class="n">min_size</span><span class="o">=</span><span class="n">min_size</span> <span class="o">*</span> <span class="n">min_dimension</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">shapes</span><span class="p">:</span>
+            <span class="n">shape_name</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">rr_0</span><span class="p">,</span> <span class="n">rr_1</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">cc_0</span><span class="p">,</span> <span class="n">cc_1</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">middle_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">rr_0</span> <span class="o">+</span> <span class="n">rr_1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">middle_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cc_0</span> <span class="o">+</span> <span class="n">cc_1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">label</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">middle_x</span><span class="p">,</span> <span class="n">middle_y</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">shape_name</span><span class="p">)</span>
+            <span class="n">bbox</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cc_0</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">rr_0</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">cc_1</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">rr_1</span><span class="p">))</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">bboxs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
+
+        <span class="n">img_file</span> <span class="o">=</span> <span class="n">img_name</span> <span class="o">+</span> <span class="s2">&quot;.jpg&quot;</span>
+        <span class="n">images</span><span class="p">[</span><span class="n">img_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span>
+        <span class="n">save_img</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="n">img_name</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+        <span class="n">annotations</span><span class="p">[</span><span class="n">img_file</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="n">labels</span><span class="p">,</span> <span class="s1">&#39;bboxs&#39;</span><span class="p">:</span> <span class="n">bboxs</span><span class="p">}</span>
+
+    <span class="n">save_img_annotations</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">annotations</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">annotations</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="specific-tasks">
+<h2>Specific Tasks<a class="headerlink" href="#specific-tasks" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">create_color_classification</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to color classification</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">images</span><span class="p">,</span> <span class="n">annotations</span> <span class="o">=</span> <span class="n">create_simple_object_detection_dataset</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+                                                                 <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="n">color_img</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+        <span class="n">color_arr</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">[</span><span class="n">img</span><span class="p">][</span><span class="s1">&#39;labels&#39;</span><span class="p">]:</span>
+            <span class="n">color_arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">color_img</span><span class="p">[</span><span class="n">img</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">color_arr</span><span class="p">}</span>
+
+    <span class="n">save_img_annotations</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">color_img</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">color_img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">create_shape_color_classification</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to shape classification</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">images</span><span class="p">,</span> <span class="n">annotations</span> <span class="o">=</span> <span class="n">create_simple_object_detection_dataset</span><span class="p">(</span>
+        <span class="n">path</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="n">label_img</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+        <span class="n">label_arr</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">[</span><span class="n">img</span><span class="p">][</span><span class="s1">&#39;labels&#39;</span><span class="p">]:</span>
+            <span class="n">label_arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">label_img</span><span class="p">[</span><span class="n">img</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">label_arr</span><span class="p">}</span>
+
+    <span class="n">save_img_annotations</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">label_img</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">label_img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+<span class="k">def</span> <span class="nf">create_object_detection</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_objects</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">),</span> <span class="n">multilabel</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to object detection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">images</span><span class="p">,</span> <span class="n">annotations</span> <span class="o">=</span> <span class="n">create_simple_object_detection_dataset</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+                                                                 <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+                                                                 <span class="n">n_objects_max</span><span class="o">=</span><span class="n">n_objects</span><span class="p">)</span>
+
+    <span class="n">coords_img</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+        <span class="n">coords_arr</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">[</span><span class="n">img</span><span class="p">][</span><span class="s1">&#39;bboxs&#39;</span><span class="p">]:</span>
+            <span class="n">coords_arr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coord</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">multilabel</span><span class="p">:</span>
+            <span class="n">coords_arr</span> <span class="o">=</span> <span class="n">coords_arr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">coords_img</span><span class="p">[</span><span class="n">img</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">coords_arr</span><span class="p">}</span>
+
+    <span class="n">save_img_annotations</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">coords_img</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">coords_img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="01_helpers.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Helpers</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="01a_datasets_download.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Dowload datasets</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

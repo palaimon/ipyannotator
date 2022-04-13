@@ -1,0 +1,1719 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp bbox_canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from nbdev import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# exporti\n",
+    "import io\n",
+    "import attr\n",
+    "from math import log\n",
+    "from pubsub import pub\n",
+    "from attr import asdict\n",
+    "from pathlib import Path\n",
+    "from copy import deepcopy\n",
+    "from enum import IntEnum\n",
+    "from typing import Dict, Optional, List, Any, Tuple\n",
+    "\n",
+    "from abc import ABC, abstractmethod\n",
+    "from pydantic import root_validator\n",
+    "from ipyannotator.base import BaseState\n",
+    "from ipyannotator.doc_utils import is_building_docs\n",
+    "from ipyannotator.mltypes import BboxCoordinate, BboxVideoCoordinate\n",
+    "from ipycanvas import MultiCanvas as IMultiCanvas, Canvas, hold_canvas\n",
+    "from ipywidgets import Image, Label, Layout, HBox, VBox, Output\n",
+    "from PIL import Image as PILImage"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Bounding Box Canvas\n",
+    "\n",
+    "This notebook develops a drawnable canvas where users can draw bounding boxes."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The next cell will override the ipywidget's MultiCanvas when the docs is built, otherwise the original MultiCanvas will be used.\n",
+    "\n",
+    "This is a plug in replacement for ipycanvas that can be used to build docs. The difference is that the replacement holds the image state so that it can be included into the docs. Even through the replacement is feature equivalent it lacks mouse events and it's much slower, which consequently doesn't allow its use in lived annotation settings."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "if not is_building_docs():\n",
+    "    class MultiCanvas(IMultiCanvas):\n",
+    "        pass\n",
+    "else:\n",
+    "    class MultiCanvas(Image):  # type: ignore\n",
+    "        def __init__(self, *args, **kwargs):\n",
+    "            super().__init__(**kwargs)\n",
+    "            image = PILImage.new('RGB', (100, 100), (255, 255, 255))\n",
+    "            b = io.BytesIO()\n",
+    "            image.save(b, format='PNG')\n",
+    "            self.value = b.getvalue()\n",
+    "\n",
+    "        def __getitem__(self, key):\n",
+    "            return self\n",
+    "\n",
+    "        def draw_image(self, image, x=0, y=0, width=None, height=None):\n",
+    "            self.value = image.value\n",
+    "            self.width = width\n",
+    "            self.height = height\n",
+    "\n",
+    "        def __getattr__(self, name):\n",
+    "            ignored = [\n",
+    "                'flush',\n",
+    "                'fill_rect',\n",
+    "                'stroke_rect',\n",
+    "                'stroke_rects',\n",
+    "                'on_mouse_move',\n",
+    "                'on_mouse_down',\n",
+    "                'on_mouse_up',\n",
+    "                'clear',\n",
+    "                'on_client_ready',\n",
+    "                'stroke_styled_line_segments'\n",
+    "            ]\n",
+    "\n",
+    "            if name in ignored:\n",
+    "                def wrapper(*args, **kwargs):\n",
+    "                    return self._ignored(*args, **kwargs)\n",
+    "                return wrapper\n",
+    "            return object.__getattr__(self, name)\n",
+    "\n",
+    "        @property\n",
+    "        def caching(self):\n",
+    "            return False\n",
+    "\n",
+    "        @caching.setter\n",
+    "        def caching(self, value):\n",
+    "            pass\n",
+    "\n",
+    "        @property\n",
+    "        def size(self):\n",
+    "            return (self.width, self.height)\n",
+    "\n",
+    "        def _ignored(self, *args, **kwargs):\n",
+    "            pass"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Draw Box in Canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "sprite2 = Image.from_file(\"../data/projects/bbox/pics/red400x640.png\")\n",
+    "# Create a multi-layer canvas with 4 layers\n",
+    "multi_canvas = MultiCanvas(4, width=200, height=200)\n",
+    "multi_canvas[0]  # Access first layer (background)\n",
+    "multi_canvas[3]  # Access last layer\n",
+    "multi_canvas[3].draw_image(sprite2, 100, 100, width=40, height=40)\n",
+    "multi_canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "# dynamic update of canvas size\n",
+    "multi_canvas.width = 30\n",
+    "multi_canvas.height = 60"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "`ipyannotator` use `ipycanvas` to draw the Canvas. `ipycanvas` uses the following grid system:\n",
+    "\n",
+    "![grid illustration](https://ipycanvas.readthedocs.io/en/latest/_images/grid.png)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def draw_bg(canvas, color='rgb(236,240,241)'):\n",
+    "    with hold_canvas(canvas):\n",
+    "        canvas.fill_style = color\n",
+    "        canvas.fill_rect(0, 0, canvas.size[0], canvas.size[1])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "canvas = Canvas(width=300, height=20)\n",
+    "draw_bg(canvas)\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "canvas = Canvas(width=200, height=200)\n",
+    "canvas.fill_rect(25, 25, 100, 100)\n",
+    "canvas.clear_rect(45, 45, 60, 60)\n",
+    "canvas.stroke_rect(50, 50, 50, 50)\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "def draw_bounding_box(canvas, coord: BboxCoordinate, color='white', line_width=1,\n",
+    "                      border_ratio=2, clear=False, stroke_color='black'):\n",
+    "    with hold_canvas(canvas):\n",
+    "        if clear:\n",
+    "            canvas.clear()\n",
+    "\n",
+    "        line_width = line_width or log(canvas.height) / 5\n",
+    "\n",
+    "        gap = line_width * border_ratio\n",
+    "\n",
+    "        # paint and draw the middle stroked rectangle\n",
+    "        canvas.line_width = gap\n",
+    "        canvas.stroke_style = color\n",
+    "        canvas.stroke_rect(coord.x + gap / 2, coord.y + gap / 2,\n",
+    "                           coord.width - gap, coord.height - gap)\n",
+    "\n",
+    "        # paint and draw the external stroked rectangle\n",
+    "        canvas.line_width = line_width\n",
+    "        canvas.stroke_style = stroke_color\n",
+    "        canvas.stroke_rect(coord.x, coord.y, coord.width, coord.height)\n",
+    "\n",
+    "        # paint and draw the internal stroked rectangle\n",
+    "        canvas.line_width = line_width\n",
+    "        canvas.stroke_style = stroke_color\n",
+    "        canvas.stroke_rect(coord.x + gap, coord.y + gap,\n",
+    "                           coord.width - 2 * gap, coord.height - 2 * gap)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import numpy as np\n",
+    "\n",
+    "canvas = Canvas(width=100, height=100)\n",
+    "draw_bg(canvas)\n",
+    "draw_bounding_box(canvas, BboxCoordinate(*[0, 0, 80, 100]))\n",
+    "draw_bounding_box(canvas, BboxCoordinate(*[5, 20, 40, 50]),\n",
+    "                  color='red', border_ratio=4, line_width=1.5)\n",
+    "\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "canvas = MultiCanvas(2, width=200, height=200)\n",
+    "draw_bg(canvas[0])\n",
+    "draw_bounding_box(canvas[1], BboxCoordinate(*[10, 40, 80, 100]))\n",
+    "draw_bounding_box(canvas[1], BboxCoordinate(*[5, 20, 40, 50]), color='red', border_ratio=4)\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "class BoundingBox:\n",
+    "    def __init__(self):\n",
+    "        self.color = 'white'\n",
+    "        self.line_width = 1\n",
+    "        self.border_ratio = 2\n",
+    "        self.stroke_color = 'black'\n",
+    "\n",
+    "    def _empty_bbox(self) -> Dict[str, List[int]]:\n",
+    "        return {'x': [], 'y': [], 'width': [], 'height': []}\n",
+    "\n",
+    "    def _stroke_rects(self, canvas: Canvas, bbox: Dict[str, List[int]],\n",
+    "                      line_width: float, color: str):\n",
+    "        canvas.line_width = line_width\n",
+    "        canvas.stroke_style = color\n",
+    "        canvas.stroke_rects(bbox['x'], bbox['y'], bbox['width'], bbox['height'])\n",
+    "\n",
+    "    def draw(self, canvas: Canvas, coords: List[BboxCoordinate], clear: bool = False):\n",
+    "        with hold_canvas(canvas):\n",
+    "            if clear:\n",
+    "                canvas.clear()\n",
+    "\n",
+    "            mid_rect = self._empty_bbox()\n",
+    "            inter_rect = self._empty_bbox()\n",
+    "            ext_rect = self._empty_bbox()\n",
+    "\n",
+    "            line_width = self.line_width or log(canvas.height) / 5\n",
+    "\n",
+    "            gap = line_width * self.border_ratio\n",
+    "\n",
+    "            for coord in coords:\n",
+    "                mid_rect['x'].append(coord.x + gap / 2)\n",
+    "                mid_rect['y'].append(coord.y + gap / 2)\n",
+    "                mid_rect['width'].append(coord.width - gap)\n",
+    "                mid_rect['height'].append(coord.height - gap)\n",
+    "\n",
+    "                ext_rect['x'].append(coord.x)\n",
+    "                ext_rect['y'].append(coord.y)\n",
+    "                ext_rect['width'].append(coord.width)\n",
+    "                ext_rect['height'].append(coord.height)\n",
+    "\n",
+    "                inter_rect['x'].append(coord.x + gap)\n",
+    "                inter_rect['y'].append(coord.y + gap)\n",
+    "                inter_rect['width'].append(coord.width - 2 * gap)\n",
+    "                inter_rect['height'].append(coord.height - 2 * gap)\n",
+    "\n",
+    "            # paint and draw the middle stroked rectangle\n",
+    "            self._stroke_rects(canvas, mid_rect, gap, self.color)\n",
+    "\n",
+    "            # paint and draw the external stroked rectangle\n",
+    "            self._stroke_rects(canvas, ext_rect, line_width, self.stroke_color)\n",
+    "\n",
+    "            # paint and draw the internal stroked rectangle\n",
+    "            self._stroke_rects(canvas, inter_rect, line_width, self.stroke_color)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "canvas = MultiCanvas(2, width=200, height=200)\n",
+    "draw_bg(canvas[0])\n",
+    "_coords = [[160, 160, 40, 40], [20, 50, 70, 80], [10, 10, 10, 10]]\n",
+    "coords = list(map(lambda x: BboxCoordinate(*x), _coords))\n",
+    "bbox = BoundingBox()\n",
+    "bbox.draw(canvas[1], coords)\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Draw Image\n",
+    "\n",
+    "`ipycanvas` can be used to draw images on the Canvas itself. This way, we can use `ipycanvas` with `ipywidgets` as the following to draw images."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "sprite1 = Image.from_file(\"../data/projects/bbox/pics/test200x200.png\")\n",
+    "sprite2 = Image.from_file(\"../data/projects/bbox/pics/red400x640.png\")\n",
+    "\n",
+    "canvas = Canvas(width=300, height=300)\n",
+    "\n",
+    "canvas.fill_style = '#a9cafc'\n",
+    "canvas.fill_rect(0, 0, 300, 300)\n",
+    "\n",
+    "canvas.draw_image(sprite1, 50, 50)\n",
+    "canvas.draw_image(sprite2, 100, 100, width=40, height=40)\n",
+    "\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "\n",
+    "# You can draw from another Canvas widget. This is the fastest way of drawing an image\n",
+    "# on the canvas.\n",
+    "\n",
+    "canvas2 = Canvas(width=600, height=300)\n",
+    "# Here ``canvas`` is the canvas from the previous example\n",
+    "canvas2.draw_image(canvas, 0, 0)\n",
+    "canvas2.draw_image(canvas, 300, 0)\n",
+    "canvas2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "from PIL import Image as pilImage\n",
+    "\n",
+    "\n",
+    "# can we do this without reading image?\n",
+    "def get_image_size(path):\n",
+    "    pil_im = pilImage.open(path)\n",
+    "    return pil_im.width, pil_im.height"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "get_image_size(\"../data/projects/bbox/pics/red400x640.png\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Draw Image\n",
+    "\n",
+    "This section will develop how a image is drawn over a canvas.\n",
+    "\n",
+    "The next cell will define how the data behave on top of a canvas. This representation uses the `Image` abstraction from `ipywidgets` in the `image_widget` property, this will allow us to draw on top of the canvas. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "@attr.define\n",
+    "class ImageCanvas:\n",
+    "    image_widget: Image\n",
+    "    x: int\n",
+    "    y: int\n",
+    "    width: int\n",
+    "    height: int\n",
+    "    scale: float"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "A simple strategy pattern will be develop in the next cells to switch the algorithm used to calculate the image."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "class ImageCanvasPrototype(ABC):\n",
+    "    @abstractmethod\n",
+    "    def prepare_canvas(self, canvas: Canvas, file: str) -> ImageCanvas:\n",
+    "        pass"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "One of the strategies used by `ipyannotator` will resize the image so it fits inside the Canvas. Over the process, the dimensions ratio will mantain constants.\n",
+    "\n",
+    "The next cells will develop:\n",
+    "- A mixin to calculate the image scale based on the canvas and images size\n",
+    "- A concrete strategy application that resizes the image on the canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "class CanvasScaleMixin:\n",
+    "    def _calc_scale(\n",
+    "        self,\n",
+    "        width_canvas: int,\n",
+    "        height_canvas: int,\n",
+    "        width_img: float,\n",
+    "        height_img: float\n",
+    "    ) -> float:\n",
+    "        ratio_canvas = float(width_canvas) / height_canvas\n",
+    "        ratio_img = float(width_img) / height_img\n",
+    "\n",
+    "        if ratio_img > ratio_canvas:\n",
+    "            # wider then canvas, scale to canvas width\n",
+    "            return width_canvas / width_img\n",
+    "\n",
+    "        # taller then canvas, scale to canvas height\n",
+    "        return height_canvas / height_img"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "class ScaledImage(ImageCanvasPrototype, CanvasScaleMixin):\n",
+    "    def prepare_canvas(self, canvas: Canvas, file: str) -> ImageCanvas:\n",
+    "        image = Image.from_file(file)\n",
+    "        width_img, height_img = get_image_size(file)\n",
+    "\n",
+    "        scale = self._calc_scale(\n",
+    "            int(canvas.width),\n",
+    "            int(canvas.height),\n",
+    "            width_img,\n",
+    "            height_img\n",
+    "        )\n",
+    "\n",
+    "        image_width = width_img * min(1, scale)\n",
+    "        image_height = height_img * min(1, scale)\n",
+    "\n",
+    "        return ImageCanvas(\n",
+    "            image_widget=image,\n",
+    "            x=0,\n",
+    "            y=0,\n",
+    "            width=image_width,\n",
+    "            height=image_height,\n",
+    "            scale=scale\n",
+    "        )"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The other concrete strategy will force the image to have the same size as the canvas and it's developed in the following cell."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "class FitImage(ImageCanvasPrototype):\n",
+    "    def prepare_canvas(self, canvas: Canvas, file: str) -> ImageCanvas:\n",
+    "        image = Image.from_file(file)\n",
+    "\n",
+    "        return ImageCanvas(\n",
+    "            image_widget=image,\n",
+    "            x=0,\n",
+    "            y=0,\n",
+    "            width=canvas.width,\n",
+    "            height=canvas.height,\n",
+    "            scale=1\n",
+    "        )"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The draw image on canvas can be done in two ways. The default one resizes the image to fit the canvas, the second one forces the image to have the same size as the canvas. You can calibrate the strategy using the `fit_canvas` property.\n",
+    "\n",
+    "If `fit_canvas = True` then it will use the `FitImage` strategy, otherwise `ScaledImage` it will be used. The default behavior is to use the `CanvasScaleMixin`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "class ImageRenderer:\n",
+    "    def __init__(\n",
+    "        self,\n",
+    "        clear: bool = False,\n",
+    "        has_border: bool = False,\n",
+    "        fit_canvas: bool = False\n",
+    "    ):\n",
+    "        self.clear = clear\n",
+    "        self.has_border = has_border\n",
+    "        self.fit_canvas = fit_canvas\n",
+    "        if fit_canvas:\n",
+    "            self._strategy = FitImage()  # type: ImageCanvasPrototype\n",
+    "        else:\n",
+    "            self._strategy = ScaledImage()\n",
+    "\n",
+    "    def render(self, canvas: Canvas, file: str) -> Tuple[int, int, float]:\n",
+    "        with hold_canvas(canvas):\n",
+    "            if self.clear:\n",
+    "                canvas.clear()\n",
+    "\n",
+    "            image_canvas = self._strategy.prepare_canvas(canvas, file)\n",
+    "\n",
+    "            if self.has_border:\n",
+    "                canvas.stroke_rect(x=0, y=0, width=image_canvas.width, height=image_canvas.height)\n",
+    "                image_canvas.width -= 2\n",
+    "                image_canvas.height -= 2\n",
+    "                image_canvas.x, image_canvas.y = 1, 1\n",
+    "\n",
+    "            canvas.draw_image(\n",
+    "                image_canvas.image_widget,\n",
+    "                image_canvas.x,\n",
+    "                image_canvas.y,\n",
+    "                image_canvas.width,\n",
+    "                image_canvas.height\n",
+    "            )\n",
+    "\n",
+    "            return image_canvas.width, image_canvas.height, image_canvas.scale"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The next example will show how the `DrawImage` behave without forcing the image to fit on canvas."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "file = \"../data/projects/bbox/pics/red400x640.png\"\n",
+    "canvas = Canvas(width=300, height=300)\n",
+    "draw_bg(canvas)\n",
+    "_, _, scale = ImageRenderer().render(canvas, file)\n",
+    "print(scale)\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The following example will be the same as before, but forcing the image to fit the canvas size"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "file = \"../data/projects/bbox/pics/red400x640.png\"\n",
+    "canvas = Canvas(width=300, height=300)\n",
+    "draw_bg(canvas)\n",
+    "_, _, scale = ImageRenderer(fit_canvas=True).render(canvas, file)\n",
+    "print(scale)\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "file = \"../data/projects/bbox/pics/green640x400.png\"\n",
+    "canvas = Canvas(width=300, height=300)\n",
+    "draw_bg(canvas)\n",
+    "_, _, scale = ImageRenderer().render(canvas, file)\n",
+    "print(scale)\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Catch Drawing Events\n",
+    "\n",
+    "drawing sequence:\n",
+    "\n",
+    "- mouse press\n",
+    "- mouse move\n",
+    "- mouse release\n",
+    "\n",
+    "The event only happens inside the area covered by the image"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "file = \"../data/projects/bbox/pics/green640x400.png\"\n",
+    "canvas = Canvas(width=300, height=300)\n",
+    "draw_bg(canvas)\n",
+    "_, _, scale = ImageRenderer().render(canvas, file)\n",
+    "print(scale)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "debug_view = Output(layout={'border': '1px solid black'})\n",
+    "\n",
+    "state = {'active': False}\n",
+    "\n",
+    "\n",
+    "@debug_view.capture(clear_output=True)\n",
+    "def show_state():\n",
+    "    print(state)\n",
+    "\n",
+    "\n",
+    "@debug_view.capture(clear_output=True)\n",
+    "def update_start(x, y):\n",
+    "    print('start')\n",
+    "    state['active'] = True\n",
+    "    state['start'] = (x, y)\n",
+    "    # reset end\n",
+    "    state['end'] = state['start']\n",
+    "    show_state()\n",
+    "\n",
+    "\n",
+    "@debug_view.capture(clear_output=True)\n",
+    "def update_state(x, y):\n",
+    "    if state['active']:\n",
+    "        state['end'] = (x, y)\n",
+    "        show_state()\n",
+    "\n",
+    "\n",
+    "@debug_view.capture(clear_output=True)\n",
+    "def update_end(x, y):\n",
+    "    state['active'] = False\n",
+    "    state['end'] = (x, y)\n",
+    "    show_state()\n",
+    "\n",
+    "\n",
+    "canvas.on_mouse_down(update_start)\n",
+    "canvas.on_mouse_move(update_state)\n",
+    "canvas.on_mouse_up(update_end)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "debug_view"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "a = Image.from_file(\"../data/projects/bbox/pics/test200x200.png\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "\n",
+    "def points2bbox_coords(start_x, start_y, end_x, end_y) -> Dict[str, float]:\n",
+    "    min_x, max_x = sorted((start_x, end_x))\n",
+    "    min_y, max_y = sorted((start_y, end_y))\n",
+    "    return {'x': min_x, 'y': min_y, 'width': max_x - min_x, 'height': max_y - min_y}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "def coords_scaled(bbox_coords: List[float], image_scale: float):\n",
+    "    return [value * image_scale for value in bbox_coords]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class BBoxLayer(IntEnum):\n",
+    "    bg = 0\n",
+    "    image = 1\n",
+    "    box = 2\n",
+    "    highlight = 3\n",
+    "    drawing = 4"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class BBoxCanvasState(BaseState):\n",
+    "    image_path: Optional[str]\n",
+    "    bbox_coords: List[BboxCoordinate] = []\n",
+    "    image_scale: float = 1\n",
+    "    image_height: Optional[int] = None\n",
+    "    image_width: Optional[int] = None\n",
+    "    bbox_selected: Optional[int]\n",
+    "    height: Optional[int]\n",
+    "    width: Optional[int]\n",
+    "    fit_canvas: bool = False\n",
+    "\n",
+    "    @root_validator\n",
+    "    def set_height(cls, values):\n",
+    "        if not values.get('image_height'):\n",
+    "            values['image_height'] = values.get('height')\n",
+    "\n",
+    "        if not values.get('image_width'):\n",
+    "            values['image_width'] = values.get('width')\n",
+    "\n",
+    "        return values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class BBoxCanvasGUI(HBox):\n",
+    "    debug_output = Output(layout={'border': '1px solid black'})\n",
+    "\n",
+    "    def __init__(\n",
+    "        self,\n",
+    "        state: BBoxCanvasState,\n",
+    "        has_border: bool = False,\n",
+    "        drawing_enabled: bool = True\n",
+    "    ):\n",
+    "        super().__init__()\n",
+    "\n",
+    "        self._state = state\n",
+    "        self._start_point = ()\n",
+    "        self.is_drawing = False\n",
+    "        self.has_border = has_border\n",
+    "        self.canvas_bbox_coords: Dict[str, Any] = {}\n",
+    "        self.drawing_enabled = drawing_enabled\n",
+    "\n",
+    "        # do not stick bbox to borders\n",
+    "        self.padding = 2\n",
+    "\n",
+    "        # Define each of the children...\n",
+    "        self._image = Image(layout=Layout(display='flex',\n",
+    "                                          justify_content='center',\n",
+    "                                          align_items='center',\n",
+    "                                          align_content='center',\n",
+    "                                          overflow='hidden'))\n",
+    "\n",
+    "        if not drawing_enabled:\n",
+    "            self.multi_canvas = MultiCanvas(\n",
+    "                len(BBoxLayer),\n",
+    "                width=self._state.width,\n",
+    "                height=self._state.height\n",
+    "            )\n",
+    "            self.children = [VBox([self.multi_canvas])]\n",
+    "        else:\n",
+    "            self.multi_canvas = MultiCanvas(\n",
+    "                len(BBoxLayer),\n",
+    "                width=self._state.width,\n",
+    "                height=self._state.height\n",
+    "            )\n",
+    "\n",
+    "            self.im_name_box = Label()\n",
+    "\n",
+    "            children = [VBox([self.multi_canvas, self.im_name_box])]\n",
+    "            self.children = children\n",
+    "            draw_bg(self.multi_canvas[BBoxLayer.bg])\n",
+    "\n",
+    "            # link drawing events\n",
+    "            self.multi_canvas[BBoxLayer.drawing].on_mouse_move(self._update_pos)\n",
+    "            self.multi_canvas[BBoxLayer.drawing].on_mouse_down(self._start_drawing)\n",
+    "            self.multi_canvas[BBoxLayer.drawing].on_mouse_up(self._stop_drawing)\n",
+    "\n",
+    "    @property\n",
+    "    def highlight(self) -> BboxCoordinate:\n",
+    "        return self._state.bbox_coords[self.bbox_selected]\n",
+    "\n",
+    "    @highlight.setter\n",
+    "    def highlight(self, index: int):\n",
+    "        self.clear_layer(BBoxLayer.highlight)\n",
+    "\n",
+    "        # unhighlight when double click\n",
+    "        if self._state.bbox_coords and self._state.bbox_selected == index:\n",
+    "            self._state.set_quietly('bbox_selected', None)\n",
+    "            return\n",
+    "        _bbox_coords = list(asdict(self._state.bbox_coords[index]).values())\n",
+    "        _bbox_coords_scaled = coords_scaled(_bbox_coords,\n",
+    "                                            self._state.image_scale)\n",
+    "        bbox_coords = BboxCoordinate(*_bbox_coords_scaled)\n",
+    "\n",
+    "        draw_bounding_box(\n",
+    "            self.multi_canvas[BBoxLayer.highlight],\n",
+    "            bbox_coords,\n",
+    "            stroke_color='black',\n",
+    "            border_ratio=3,\n",
+    "            color='yellow'\n",
+    "        )\n",
+    "\n",
+    "        self._state.set_quietly('bbox_selected', index)\n",
+    "\n",
+    "    @debug_output.capture(clear_output=True)\n",
+    "    def _update_pos(self, x, y):\n",
+    "        # print(f\"-> BBoxCanvasGUI::_update_post({x}, {y})\")\n",
+    "        if self.is_drawing:\n",
+    "            self.canvas_bbox_coords = points2bbox_coords(*self._start_point, x, y)\n",
+    "            self.draw_bbox(self.canvas_bbox_coords)\n",
+    "            # bbox should not cross the canvas border:\n",
+    "            if self._invalid_coords(x, y):\n",
+    "                print(' !! Out of canvas border !!')\n",
+    "                self._stop_drawing(x, y)\n",
+    "        # print(f\"<- BBoxCanvasGUI::_update_post({x}, {y})\")\n",
+    "\n",
+    "    def _invalid_coords(self, x, y) -> bool:\n",
+    "        return (\n",
+    "            self.canvas_bbox_coords[\"x\"] + self.canvas_bbox_coords[\"width\"] >\n",
+    "            self.multi_canvas.width - self.padding or\n",
+    "            self.canvas_bbox_coords[\"y\"] + self.canvas_bbox_coords[\"height\"] >\n",
+    "            self.multi_canvas.height - self.padding or\n",
+    "            self.canvas_bbox_coords[\"x\"] < self.padding or\n",
+    "            self.canvas_bbox_coords[\"y\"] < self.padding)\n",
+    "\n",
+    "    @debug_output.capture(clear_output=True)\n",
+    "    def _stop_drawing(self, x, y):\n",
+    "        # print(f\"-> BBoxCanvasGUI::_stop_drawing({x}, {y})\")\n",
+    "        self.is_drawing = False\n",
+    "\n",
+    "        # if something is drawn\n",
+    "        if self.canvas_bbox_coords:\n",
+    "            # if bbox is not human visible, clean:\n",
+    "            if (self.canvas_bbox_coords['width'] < 10 or\n",
+    "                    self.canvas_bbox_coords['height'] < 10):\n",
+    "                self.clear_layer(BBoxLayer.drawing)\n",
+    "                print(\" !! too small bbox drawn !!\")\n",
+    "            else:  # otherwise, save bbox values to backend\n",
+    "                tmp_bbox_coords = deepcopy(self._state.bbox_coords)\n",
+    "                tmp_bbox_coords.append(\n",
+    "                    BboxCoordinate(\n",
+    "                        **{k: v / self._state.image_scale for k, v in self.canvas_bbox_coords.items()}  # noqa: E501\n",
+    "                    )\n",
+    "                )\n",
+    "                self._state.bbox_coords = tmp_bbox_coords\n",
+    "            self.canvas_bbox_coords = {}\n",
+    "        # print(f\"<- BBoxCanvasGUI::_stop_drawing({x}, {y})\")\n",
+    "\n",
+    "    def draw_bbox(self, canvas_bbox_coords: dict, color='white'):\n",
+    "        # print('-> Observe canvas_coords: ', canvas_bbox_coords)\n",
+    "        if not canvas_bbox_coords:\n",
+    "            self.clear_layer(BBoxLayer.box)\n",
+    "            self._state.bbox_coords = []\n",
+    "            return\n",
+    "\n",
+    "        coords = BboxCoordinate(*canvas_bbox_coords.values())\n",
+    "\n",
+    "        draw_bounding_box(\n",
+    "            self.multi_canvas[BBoxLayer.drawing],\n",
+    "            coords,\n",
+    "            color='white',\n",
+    "            border_ratio=2,\n",
+    "            clear=True\n",
+    "        )\n",
+    "        # print('<- Observe canvas_coords')\n",
+    "\n",
+    "    def clear_layer(self, layer: int):\n",
+    "        self.multi_canvas[layer].clear()\n",
+    "\n",
+    "    @debug_output.capture(clear_output=True)\n",
+    "    def _start_drawing(self, x, y):\n",
+    "        # print(f\"-> BBoxCanvasGUI::_start_drawing({x}, {y})\")\n",
+    "        self._start_point = (x, y)\n",
+    "        self.is_drawing = True\n",
+    "        # print(f\"<- BBoxCanvasGUI::_start_drawing({x}, {y})\")\n",
+    "\n",
+    "    # needed to support voila\n",
+    "    # https://ipycanvas.readthedocs.io/en/latest/advanced.html#ipycanvas-in-voila\n",
+    "    def observe_client_ready(self, cb=None):\n",
+    "        self.multi_canvas.on_client_ready(cb)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# it can highlight\n",
+    "\n",
+    "bbox_canvas_state = BBoxCanvasState(\n",
+    "    **{  # type: ignore\n",
+    "        'width': 100,\n",
+    "        'height': 100,\n",
+    "        'bbox_coords': [BboxCoordinate(**{'x': 10, 'y': 20, 'width': 50, 'height': 50})]\n",
+    "    }\n",
+    ")\n",
+    "\n",
+    "gui = BBoxCanvasGUI(bbox_canvas_state)\n",
+    "gui.highlight = 0  # type: ignore\n",
+    "gui"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class BBoxVideoCanvasGUI(BBoxCanvasGUI):\n",
+    "    debug_output = Output(layout={'border': '1px solid black'})\n",
+    "\n",
+    "    def __init__(\n",
+    "        self,\n",
+    "        state: BBoxCanvasState,\n",
+    "        has_border: bool = False,\n",
+    "        drawing_enabled: bool = True\n",
+    "    ):\n",
+    "        super().__init__(state, has_border, drawing_enabled)\n",
+    "\n",
+    "    @property\n",
+    "    def highlight(self) -> BboxCoordinate:\n",
+    "        return self._state.bbox_coords[self.bbox_selected]\n",
+    "\n",
+    "    @highlight.setter\n",
+    "    def highlight(self, index: int):\n",
+    "        self.clear_layer(BBoxLayer.highlight)\n",
+    "\n",
+    "        # unhighlight when double click\n",
+    "        if self._state.bbox_coords and self._state.bbox_selected == index:\n",
+    "            self._state.set_quietly('bbox_selected', None)\n",
+    "            return\n",
+    "\n",
+    "        _bbox_coords = list(asdict(self._state.bbox_coords[index]).values())\n",
+    "        _bbox_coords_scaled = coords_scaled(\n",
+    "            _bbox_coords[:4], self._state.image_scale)\n",
+    "        bbox_coords = BboxCoordinate(*_bbox_coords_scaled)\n",
+    "\n",
+    "        draw_bounding_box(\n",
+    "            self.multi_canvas[BBoxLayer.highlight],\n",
+    "            bbox_coords,\n",
+    "            stroke_color='black',\n",
+    "            border_ratio=3,\n",
+    "            color='yellow'\n",
+    "        )\n",
+    "\n",
+    "        self._state.set_quietly('bbox_selected', index)\n",
+    "\n",
+    "    @debug_output.capture(clear_output=False)\n",
+    "    def _stop_drawing(self, x, y):\n",
+    "        #print(f\"-> BBoxVideoCanvasGUI::_stop_drawing({x}, {y})\")\n",
+    "        self.is_drawing = False\n",
+    "\n",
+    "        # if something is drawn\n",
+    "        if self.canvas_bbox_coords:\n",
+    "            # if bbox is not human visible, clean:\n",
+    "            if (self.canvas_bbox_coords['width'] < 10 or\n",
+    "                    self.canvas_bbox_coords['height'] < 10):\n",
+    "                self.clear_layer(BBoxLayer.drawing)\n",
+    "                print(\" !! too small bbox drawn !!\")\n",
+    "            else:  # otherwise, save bbox values to backend\n",
+    "                tmp_bbox_coords = deepcopy(self._state.bbox_coords)\n",
+    "                tmp_bbox_coords.append(\n",
+    "                    BboxVideoCoordinate(**{\n",
+    "                        **{k: v / self._state.image_scale for k, v in self.canvas_bbox_coords.items()},  # noqa: E501\n",
+    "                        **{'id': str(len(self._state.bbox_coords))}  # TODO::improve id generation\n",
+    "                    })\n",
+    "                )\n",
+    "                self._state.bbox_coords = tmp_bbox_coords\n",
+    "            self.canvas_bbox_coords = {}\n",
+    "        # print(f\"<- BBoxVideoCanvasGUI::_stop_drawing({x}, {y})\")\n",
+    "\n",
+    "    @debug_output.capture(clear_output=False)\n",
+    "    def draw_bbox(self, canvas_bbox_coords: dict, color='white'):\n",
+    "        # print('-> Observe canvas_coords: ', canvas_bbox_coords)\n",
+    "        if not canvas_bbox_coords:\n",
+    "            self.clear_layer(BBoxLayer.box)\n",
+    "            self._state.set_quietly('bbox_coords', [])\n",
+    "            return\n",
+    "\n",
+    "        coords = BboxCoordinate(*list(canvas_bbox_coords.values())[:4])\n",
+    "\n",
+    "        draw_bounding_box(\n",
+    "            self.multi_canvas[BBoxLayer.drawing],\n",
+    "            coords,\n",
+    "            color='white',\n",
+    "            border_ratio=2,\n",
+    "            clear=True\n",
+    "        )"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# it can highlight\n",
+    "\n",
+    "bbox_canvas_state = BBoxCanvasState(\n",
+    "    **{  # type: ignore\n",
+    "        'width': 100,\n",
+    "        'height': 100,\n",
+    "        'bbox_coords': [\n",
+    "            BboxVideoCoordinate(\n",
+    "                **{'x': 10, 'y': 20, 'width': 50,  # type: ignore\n",
+    "                   'height': 50, 'id': 'object 01'})\n",
+    "        ]\n",
+    "    }\n",
+    ")\n",
+    "\n",
+    "gui = BBoxVideoCanvasGUI(bbox_canvas_state)\n",
+    "gui.highlight = 0  # type: ignore\n",
+    "gui"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class BBoxCanvasController:\n",
+    "    \"\"\"\n",
+    "    Handle the GUI and state communication\n",
+    "    \"\"\"\n",
+    "    debug_output = Output(layout={'border': '1px solid black'})\n",
+    "\n",
+    "    def __init__(self, gui: BBoxCanvasGUI, state: BBoxCanvasState):\n",
+    "        self._state = state\n",
+    "        self._gui = gui\n",
+    "\n",
+    "        state.subscribe(self._draw_all_bbox, 'bbox_coords')\n",
+    "        state.subscribe(self._draw_image, 'image_path')\n",
+    "        pub.subscribe(self._draw_all_bbox, f'{state.root_topic}.coord_changed')\n",
+    "        self.bbox = BoundingBox()\n",
+    "\n",
+    "    @debug_output.capture(clear_output=True)\n",
+    "    def _draw_all_bbox(self, bbox_coords: List[BboxCoordinate]):\n",
+    "        # print(f\"-> BBoxCanvasController::_draw_all_bbox: {bbox_coords}\")\n",
+    "        self._gui.clear_layer(BBoxLayer.box)\n",
+    "        self._gui.clear_layer(BBoxLayer.highlight)\n",
+    "        self._gui.clear_layer(BBoxLayer.drawing)\n",
+    "\n",
+    "        all_bbox = []\n",
+    "        for bbox_coord in bbox_coords:\n",
+    "            coord = list(asdict(bbox_coord).values())\n",
+    "            coord = coords_scaled(coord, self._state.image_scale)\n",
+    "            all_bbox.append(BboxCoordinate(*coord))\n",
+    "\n",
+    "        self.bbox.draw(\n",
+    "            canvas=self._gui.multi_canvas[BBoxLayer.box],\n",
+    "            coords=all_bbox,\n",
+    "            clear=False\n",
+    "        )\n",
+    "        # print(f\"<- BBoxCanvasController::_draw_all_bbox\")\n",
+    "\n",
+    "    def clear_all_bbox(self):\n",
+    "        self._gui.clear_layer(BBoxLayer.box)\n",
+    "        self._gui.clear_layer(BBoxLayer.highlight)\n",
+    "        self._gui.clear_layer(BBoxLayer.drawing)\n",
+    "        self._state.set_quietly('bbox_coords', [])\n",
+    "\n",
+    "    @debug_output.capture(clear_output=True)\n",
+    "    def _draw_image(self, image_path: str):\n",
+    "        print(f\"-> _draw_image {image_path}\")\n",
+    "        self.clear_all_bbox()\n",
+    "\n",
+    "        img_renderer_service = ImageRenderer(\n",
+    "            clear=True,\n",
+    "            has_border=self._gui.has_border,\n",
+    "            fit_canvas=self._state.fit_canvas\n",
+    "        )\n",
+    "\n",
+    "        image_width, image_height, scale = img_renderer_service.render(\n",
+    "            self._gui.multi_canvas[BBoxLayer.image],\n",
+    "            image_path\n",
+    "        )\n",
+    "\n",
+    "        self._state.set_quietly('image_width', image_width)\n",
+    "        self._state.set_quietly('image_height', image_height)\n",
+    "        self._state.image_scale = scale\n",
+    "        self._gui.im_name_box.value = Path(image_path).name\n",
+    "        # print(f\"<- _draw_image {image_path}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "\n",
+    "class BBoxVideoCanvasController(BBoxCanvasController):\n",
+    "    debug_output = Output(layout={'border': '1px solid black'})\n",
+    "\n",
+    "    def __init__(self, gui: BBoxCanvasGUI, state: BBoxCanvasState):\n",
+    "        super().__init__(gui, state)\n",
+    "\n",
+    "    @debug_output.capture(clear_output=True)\n",
+    "    def _draw_all_bbox(self, bbox_coords: List[BboxVideoCoordinate]):\n",
+    "        #print(f\"-> BBoxVideoCanvasController::_draw_all_bbox: {bbox_coords}\")\n",
+    "        self._gui.clear_layer(BBoxLayer.box)\n",
+    "        self._gui.clear_layer(BBoxLayer.highlight)\n",
+    "        self._gui.clear_layer(BBoxLayer.drawing)\n",
+    "\n",
+    "        all_bbox = []\n",
+    "        for bbox_coord in bbox_coords:\n",
+    "            coord = list(asdict(bbox_coord).values())[:4]\n",
+    "            coord = coords_scaled(coord, self._state.image_scale)\n",
+    "            all_bbox.append(BboxCoordinate(*coord))\n",
+    "\n",
+    "        self.bbox.draw(\n",
+    "            canvas=self._gui.multi_canvas[BBoxLayer.box],\n",
+    "            coords=all_bbox,\n",
+    "            clear=False\n",
+    "        )"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "\n",
+    "class BBoxCanvas(BBoxCanvasGUI):\n",
+    "    \"\"\"\n",
+    "    Represents canvas holding image and bbox ontop.\n",
+    "    Gives user an ability to draw a bbox with mouse.\n",
+    "    \"\"\"\n",
+    "\n",
+    "    def __init__(\n",
+    "        self,\n",
+    "        width,\n",
+    "        height,\n",
+    "        has_border: bool = False,\n",
+    "        fit_canvas: bool = False,\n",
+    "        drawing_enabled: bool = True\n",
+    "    ):\n",
+    "        self.state = BBoxCanvasState(\n",
+    "            uuid=str(id(self)),\n",
+    "            **{'width': width, 'height': height, 'fit_canvas': fit_canvas}\n",
+    "        )\n",
+    "        super().__init__(\n",
+    "            state=self.state,\n",
+    "            has_border=has_border,\n",
+    "            drawing_enabled=drawing_enabled\n",
+    "        )\n",
+    "        self._controller = BBoxCanvasController(gui=self, state=self.state)\n",
+    "        self._bbox_history: List[Any] = []\n",
+    "\n",
+    "    def undo_bbox(self):\n",
+    "        if self.state.bbox_coords:\n",
+    "            tmp_bbox_coords = deepcopy(self.state.bbox_coords)\n",
+    "            removed_bbox = tmp_bbox_coords.pop()\n",
+    "            self._bbox_history = [removed_bbox]\n",
+    "            self.state.bbox_coords = tmp_bbox_coords\n",
+    "\n",
+    "    def redo_bbox(self):\n",
+    "        if self._bbox_history:\n",
+    "            tmp_bbox_coords = deepcopy(self.state.bbox_coords)\n",
+    "            tmp_bbox_coords.append(self._bbox_history.pop())\n",
+    "            self.state.bbox_coords = tmp_bbox_coords\n",
+    "\n",
+    "    def clear_all_bbox(self):\n",
+    "        self._controller.clear_all_bbox()\n",
+    "\n",
+    "    def observe_client_ready(self, cb=None):\n",
+    "        self.multi_canvas.on_client_ready(cb)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "![](http://www.plantuml.com/plantuml/png/bP5DQiCm48NtEiL0DmdK5yWY1DehT2t6qZWnbJL6FtPo-rfIxQIj25JWXVK-FTwyEVc0BiJ125I17NnuSl0oN_f0Gh4DZWsyePtG2o6Is1pBxm46Zfv0ysp5sN4SuTtXtDkpA41pxDnYG5OVWAtCjCpqUlz8o9n3wcyBmpn2nmu8rGL6xXVCmS0J2LXEBSWcbcjeZd2ttrrVuRRFCfe0FYf5tdVHW4AVdfLJInP73MtBLwcOdVOLTisHmcSqCsGy0SS0t85AnD-dMyQr0Xwt1ZQBc3QIfErvRVfubv_KNwZ_PR1QfAzMpOIcrnW8P1bGFlPKx_bvRtdWYTmD_836mCwoRQRUzwsXVK7g5ieGMlWLj4NrkQuG0_tOucaHuc2-0000)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "\n",
+    "class BBoxVideoCanvas(BBoxVideoCanvasGUI):\n",
+    "    def __init__(self, width, height, has_border: bool = False, drawing_enabled: bool = True):\n",
+    "        self.state = BBoxCanvasState(\n",
+    "            uuid=str(id(self)),\n",
+    "            **{'width': width, 'height': height}\n",
+    "        )\n",
+    "        self.drawing_enabled = drawing_enabled\n",
+    "        super().__init__(state=self.state, has_border=has_border, drawing_enabled=drawing_enabled)\n",
+    "\n",
+    "        self._controller = BBoxVideoCanvasController(gui=self, state=self.state)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "gui = BBoxCanvas(width=100, height=100, has_border=True)\n",
+    "gui"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You can't draw on the following canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "BBoxCanvas(width=100, height=100, has_border=True, drawing_enabled=False)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You can't draw on the following canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "video = BBoxVideoCanvas(width=100, height=100, has_border=True, drawing_enabled=False)\n",
+    "video"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "video.state"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "gui.state"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "gui.debug_output"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "gui._controller.debug_output"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "gui._state.bbox_coords"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "# gui._state.image_path = \"../data/projects/bbox/pics/red400x640.png\"\n",
+    "gui._state.image_path = '../data/projects/im2im1/class_images/blocks_1.png'\n",
+    "gui._controller._draw_image('../data/projects/im2im1/class_images/blocks_1.png')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "\n",
+    "tpm_bbox_coords = gui._state.bbox_coords\n",
+    "# tpm_bbox_coords[0] = {'x':5, 'y': 10, 'width': 5, 'height': 5}\n",
+    "tpm_bbox_coords.append(BboxCoordinate(*[5, 10, 20, 30]))\n",
+    "gui._state.bbox_coords = tpm_bbox_coords"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "gui._state.image_scale"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "\n",
+    "tpm_bbox_coords = gui._state.bbox_coords\n",
+    "tpm_bbox_coords.append(BboxCoordinate(**{'x': 10, 'y': 10, 'width': 20, 'height': 30}))\n",
+    "gui._state.bbox_coords = tpm_bbox_coords"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "gui._state.bbox_coords"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# it can undo bbox_coords\n",
+    "\n",
+    "assert len(gui._state.bbox_coords) == 2\n",
+    "gui.undo_bbox()\n",
+    "assert len(gui._state.bbox_coords) == 1\n",
+    "gui.undo_bbox()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# it can redo the last undo\n",
+    "\n",
+    "assert len(gui._state.bbox_coords) == 0\n",
+    "gui.redo_bbox()\n",
+    "assert len(gui._state.bbox_coords) == 1\n",
+    "gui.redo_bbox()\n",
+    "assert len(gui._state.bbox_coords) == 1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def scaled(coords):\n",
+    "    return {k: (v / gui._state.image_scale) for k, v in coords.items()}\n",
+    "\n",
+    "\n",
+    "# it cant draw small bbox\n",
+    "small_coord = {'height': 5, 'width': 5, 'x': 5, 'y': 5}\n",
+    "gui.canvas_bbox_coords = small_coord\n",
+    "\n",
+    "gui._stop_drawing(small_coord['x'], small_coord['y'])  # mouse up\n",
+    "\n",
+    "assert scaled(small_coord) not in gui._state.bbox_coords\n",
+    "\n",
+    "# it can draw bbox\n",
+    "bigger_coord = {'height': 11, 'width': 11, 'x': 11, 'y': 11}\n",
+    "gui.canvas_bbox_coords = bigger_coord\n",
+    "\n",
+    "gui._stop_drawing(bigger_coord['x'], bigger_coord['y'])  # mouse up\n",
+    "assert BboxCoordinate(**scaled(bigger_coord)) in gui._state.bbox_coords"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "gui._state"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "gui.clear_all_bbox()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

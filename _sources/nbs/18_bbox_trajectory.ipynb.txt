@@ -1,0 +1,273 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "393ed94f",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "169c9136",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp services.bbox_trajectory"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "034a096e",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from nbdev import *\n",
+    "from typing import Any, Dict"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "003058ef",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "from ipycanvas import Canvas\n",
+    "from typing import List\n",
+    "from ipyannotator.ipytyping.annotations import AnnotationStore\n",
+    "from ipyannotator.mltypes import BboxCoordinate"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a907db61",
+   "metadata": {},
+   "source": [
+    "# Bounding Box Trajectory\n",
+    "\n",
+    "The current notebook develop the data type and algorithms to store and process trajectories."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c54a17ae",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "class TrajectoryStore(AnnotationStore):\n",
+    "    def __getitem__(self, key: str):\n",
+    "        assert isinstance(key, str)\n",
+    "        return self._annotations[key]\n",
+    "\n",
+    "    def __delitem__(self, key: str):\n",
+    "        assert isinstance(key, str)\n",
+    "        if key in self:\n",
+    "            del self._annotations[key]\n",
+    "\n",
+    "    def __setitem__(self, key: str, value: List[BboxCoordinate]):\n",
+    "        assert isinstance(key, str)\n",
+    "        assert isinstance(value, list)\n",
+    "        self._annotations[key] = value"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "75a0c8fa",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "class BBoxTrajectory:\n",
+    "    @staticmethod\n",
+    "    def draw_trajectory(canvas: Canvas, coords: List[BboxCoordinate], scale: float = 1.0):\n",
+    "        # iterate the coords two by two\n",
+    "        i, k = None, None\n",
+    "        c = iter(coords)\n",
+    "        lines = []\n",
+    "        while True:\n",
+    "            if i is None:\n",
+    "                i = next(c, None)\n",
+    "            k = next(c, None)\n",
+    "            if k and i:\n",
+    "                lines.append([(i.x * scale, (i.y + i.height) * scale),\n",
+    "                              (k.x * scale, (k.y + k.height) * scale)])\n",
+    "            else:\n",
+    "                break\n",
+    "            i = k\n",
+    "\n",
+    "        canvas.stroke_styled_line_segments(lines, color=[50, 205, 50])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7cbbef13",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from ipyannotator.bbox_canvas import draw_bounding_box, draw_bg"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ac5e8d3d",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "\n",
+    "# it can draw point in the middle of the circle\n",
+    "\n",
+    "canvas = Canvas(width=100, height=100)\n",
+    "bbox_trajectory = BBoxTrajectory()\n",
+    "bbox_coords = [\n",
+    "    BboxCoordinate(*[0, 0, 50, 50]),\n",
+    "    BboxCoordinate(*[10, 20, 50, 50])\n",
+    "]\n",
+    "\n",
+    "draw_bg(canvas)\n",
+    "draw_bounding_box(canvas, bbox_coords[0])\n",
+    "draw_bounding_box(canvas, bbox_coords[1])\n",
+    "bbox_trajectory.draw_trajectory(canvas=canvas, coords=bbox_coords)\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "994e0ce9",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "\n",
+    "from attr import asdict\n",
+    "from ipyannotator.mltypes import BboxVideoCoordinate\n",
+    "from itertools import groupby\n",
+    "from collections import defaultdict\n",
+    "\n",
+    "canvas = Canvas(width=500, height=500)\n",
+    "draw_bg(canvas)\n",
+    "\n",
+    "storage = {\n",
+    "    'path1': {\n",
+    "        \"bboxes\": [\n",
+    "            BboxVideoCoordinate(10, 10, 103, 241, 'pedestrian1'),\n",
+    "            BboxVideoCoordinate(100, 350, 100, 100, 'pedestrian2'),\n",
+    "            BboxVideoCoordinate(300, 100, 155, 156, 'pedestrian3')\n",
+    "        ],\n",
+    "        'labels': [[], [], []]\n",
+    "    },\n",
+    "    'path2': {\n",
+    "        'bboxes': [\n",
+    "            BboxVideoCoordinate(30, 30, 102, 241, 'pedestrian1')\n",
+    "        ],\n",
+    "        'labels': [[]]\n",
+    "    }\n",
+    "}\n",
+    "\n",
+    "trajectory: Dict[Any, Any] = defaultdict(list)\n",
+    "\n",
+    "\n",
+    "def key_fun(k):\n",
+    "    return k.id\n",
+    "\n",
+    "\n",
+    "for k, v in storage.items():\n",
+    "    # error: No overload variant of \"sorted\" matches argument types\n",
+    "    # \"object\", \"Callable[[Any], Any]\"\n",
+    "    for kk, vv in groupby(sorted(v['bboxes'], key=key_fun), key_fun):  # type: ignore\n",
+    "        value = list(vv)\n",
+    "        path = []\n",
+    "        for i in value:\n",
+    "            bbox_coordinate = asdict(i)\n",
+    "            bbox_coordinate.pop('id')\n",
+    "            path.append(BboxCoordinate(**bbox_coordinate))\n",
+    "\n",
+    "        trajectory[kk] += path"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "db143df9",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "\n",
+    "for k, v in trajectory.items():\n",
+    "    for bbox in v:\n",
+    "        draw_bounding_box(canvas, bbox)  # type: ignore\n",
+    "    if len(v) > 1:\n",
+    "        bbox_trajectory.draw_trajectory(canvas, v)  # type: ignore\n",
+    "\n",
+    "canvas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ed8fc13d",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

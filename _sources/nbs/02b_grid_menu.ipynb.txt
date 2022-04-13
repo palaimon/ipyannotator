@@ -1,0 +1,479 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ef1feeff",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp custom_widgets.grid_menu"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8ed8645d",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cc299383",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "from nbdev import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1d7bd480",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "from math import ceil\n",
+    "from functools import partial\n",
+    "from typing import Callable, Iterable, Optional, Tuple\n",
+    "import warnings\n",
+    "import attr\n",
+    "from ipywidgets import GridBox, Output, Layout"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6ac14bff",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "import pytest\n",
+    "import ipytest\n",
+    "ipytest.autoconfig(raise_on_error=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4def5438",
+   "metadata": {},
+   "source": [
+    "## Grid Menu\n",
+    "\n",
+    "The current notebook develop a grid menu widget that allows clickable widgets to be displayed as grid. The next cell will design the `Grid` class that contain the settings for the `GridMenu` component."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "de01fde1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "@attr.define(slots=False)\n",
+    "class Grid:\n",
+    "    width: int\n",
+    "    height: int\n",
+    "    n_rows: Optional[int] = 3\n",
+    "    n_cols: Optional[int] = 3\n",
+    "    disp_number: int = 9\n",
+    "    display_label: bool = False\n",
+    "\n",
+    "    @property\n",
+    "    def num_items(self) -> int:\n",
+    "        row, col = self.area_adjusted(self.disp_number)\n",
+    "        return row * col\n",
+    "\n",
+    "    def area_adjusted(self, n_total: int) -> Tuple[int, int]:\n",
+    "        \"\"\"Returns the row and col automatic arranged\"\"\"\n",
+    "        if self.n_cols is None:\n",
+    "            if self.n_rows is None:  # automatic arrange\n",
+    "                label_cols = 3\n",
+    "                label_rows = ceil(n_total / label_cols)\n",
+    "            else:  # calc cols to show all labels\n",
+    "                label_rows = self.n_rows\n",
+    "                label_cols = ceil(n_total / label_rows)\n",
+    "        else:\n",
+    "            if self.n_rows is None:  # calc rows to show all labels\n",
+    "                label_cols = self.n_cols\n",
+    "                label_rows = ceil(n_total / label_cols)\n",
+    "            else:  # user defined\n",
+    "                label_cols = self.n_cols\n",
+    "                label_rows = self.n_rows\n",
+    "\n",
+    "        return label_rows, label_cols"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8060b3de",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "@pytest.fixture\n",
+    "def grid_fixture() -> Grid:\n",
+    "    return Grid(width=300, height=300)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2e7e4f3b",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_return_num_items(grid_fixture):\n",
+    "    assert grid_fixture.num_items == 9"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "075e7b8c",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_adjusts_area_missing_args(grid_fixture):\n",
+    "    grid_fixture.n_rows = None\n",
+    "    assert grid_fixture.area_adjusted(12) == (4, 3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ec5b5eb9",
+   "metadata": {},
+   "source": [
+    "The `GridMenu` doesn't have a `on_click` event listener, but grid elements itself should implement `on_click(ev)`, `reset_callbacks()` and `update(other: SameWidgetType)` methods to register/reset onclick callback function and update its internal values, respectively. Also grid element shoudl have a field name in order user can destinguish between grid children."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0e7a34da",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#export\n",
+    "class GridMenu(GridBox):\n",
+    "    debug_output = Output(layout={'border': '1px solid black'})\n",
+    "\n",
+    "    def __init__(\n",
+    "        self,\n",
+    "        grid: Grid,\n",
+    "        widgets: Optional[Iterable] = None,\n",
+    "    ):\n",
+    "        self.callback = None\n",
+    "        self.gap = 40 if grid.display_label else 15\n",
+    "        self.grid = grid\n",
+    "\n",
+    "        n_row, n_col = grid.area_adjusted(grid.disp_number)\n",
+    "        column = grid.width + self.gap\n",
+    "        row = grid.height + self.gap\n",
+    "        centered_settings = {\n",
+    "            'grid_template_columns': \" \".join([f'{(column)}px' for _\n",
+    "                                               in range(n_col)]),\n",
+    "            'grid_template_rows': \" \".join([f'{row}px' for _\n",
+    "                                            in range(n_row)]),\n",
+    "            'justify_content': 'center',\n",
+    "            'align_content': 'space-around'\n",
+    "        }\n",
+    "\n",
+    "        super().__init__(\n",
+    "            layout=Layout(**centered_settings)\n",
+    "        )\n",
+    "\n",
+    "        if widgets:\n",
+    "            self.load(widgets)\n",
+    "        self.widgets = widgets\n",
+    "\n",
+    "    def _fill_widgets(self, widgets: Iterable):\n",
+    "        if self.widgets is None:\n",
+    "            self.widgets = widgets\n",
+    "\n",
+    "            self.children = self.widgets\n",
+    "\n",
+    "            if self.callback:\n",
+    "                self.register_on_click()\n",
+    "        else:\n",
+    "            iter_state = iter(widgets)\n",
+    "\n",
+    "            for widget in self.widgets:\n",
+    "                i_widget = next(iter_state, None)\n",
+    "                if i_widget:\n",
+    "                    widget.update(i_widget)\n",
+    "                else:\n",
+    "                    widget.clear()\n",
+    "\n",
+    "    def _filter_widgets(self, widgets: Iterable) -> Iterable:\n",
+    "        \"\"\"Limit the number of widgets to be rendered\n",
+    "        according to the grid's area\"\"\"\n",
+    "        widgets_list = list(widgets)  # Iterable don't have len()\n",
+    "        num_widgets = len(widgets_list)\n",
+    "        row, col = self.grid.area_adjusted(num_widgets)\n",
+    "        num_items = row * col\n",
+    "\n",
+    "        if num_widgets > num_items:\n",
+    "            warnings.warn(\"!! Not all labels shown. Check n_cols, n_rows args !!\")\n",
+    "            return widgets_list[:num_items]\n",
+    "\n",
+    "        return widgets\n",
+    "\n",
+    "    @debug_output.capture(clear_output=False)\n",
+    "    def load(self, widgets: Iterable, callback: Optional[Callable] = None):\n",
+    "        widgets_filtered = self._filter_widgets(widgets)\n",
+    "        self._fill_widgets(widgets_filtered)\n",
+    "\n",
+    "        if callback:\n",
+    "            self.on_click(callback)\n",
+    "\n",
+    "    @debug_output.capture(clear_output=False)\n",
+    "    def on_click(self, callback: Callable):\n",
+    "        setattr(self, 'callback', callback)\n",
+    "        self.register_on_click()\n",
+    "\n",
+    "    @debug_output.capture(clear_output=False)\n",
+    "    def register_on_click(self):\n",
+    "        if self.widgets:\n",
+    "            for widget in self.widgets:\n",
+    "                widget.reset_callbacks()\n",
+    "\n",
+    "                widget.on_click(\n",
+    "                    partial(\n",
+    "                        self.callback,\n",
+    "                        value=widget.value\n",
+    "                    )\n",
+    "                )\n",
+    "\n",
+    "    def clear(self):\n",
+    "        self.widgets = None\n",
+    "        self.children = tuple()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7bd92bce",
+   "metadata": {},
+   "source": [
+    "We now can instantiate the grid menu and load widgets on it. For this example we're using the custom widget `ImageButton` to be displayed using the load function. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "bf7b8b0b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from ipyannotator.custom_input.buttons import ImageButton, ImageButtonSetting\n",
+    "from ipywidgets import HTML\n",
+    "from IPython.display import display"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "23cee979",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grid = Grid(width=50, height=75, n_cols=2, n_rows=2)\n",
+    "grid_menu = GridMenu(grid)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "521c486f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "widgets = []\n",
+    "setting = ImageButtonSetting(im_path='../data/projects/capture1/pics/pink25x25.png')\n",
+    "for i in range(4):\n",
+    "    widgets.append(ImageButton(setting))\n",
+    "grid_menu.load(widgets)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "389902c1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "grid_menu"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "04f89101",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "widgets = []\n",
+    "setting = ImageButtonSetting(im_path='../data/projects/capture1/pics/teal50x50_5.png')\n",
+    "for i in range(2):\n",
+    "    widgets.append(ImageButton(setting))\n",
+    "grid_menu.load(widgets)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9562916f",
+   "metadata": {},
+   "source": [
+    "\n",
+    "While ipyevents implementation lacks `sender` or `source` in callback args, `functools.partial` used to back element `name` into return value. You can see example of on_click event handler `test_handler` below. \n",
+    "name of the button is printed out on click."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3c34d5db",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# hide\n",
+    "h = HTML('Event info')\n",
+    "display(h)\n",
+    "\n",
+    "\n",
+    "def test_handler(event, value=None):\n",
+    "    event.update({'label_name': value})\n",
+    "    h.value = event['label_name']\n",
+    "\n",
+    "\n",
+    "grid_menu.on_click(test_handler)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ebd98ab4",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from ipyannotator.custom_input.buttons import ActionButton"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "35a4ee8e",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_doesnt_load_more_widgets_than_the_grid_area():\n",
+    "    with warnings.catch_warnings(record=True) as w:\n",
+    "        grid = Grid(width=50, height=75, n_cols=1, n_rows=1)\n",
+    "        grid_menu = GridMenu(grid)\n",
+    "        widgets = [ActionButton() for _ in range(2)]\n",
+    "        grid_menu.load(widgets)\n",
+    "        assert len(grid_menu.widgets) == 1\n",
+    "    assert bool(w) is True"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c1fdd429",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "%%ipytest\n",
+    "def test_it_doesnt_throw_warning_if_number_of_widgets_is_small():\n",
+    "    with warnings.catch_warnings(record=True) as w:\n",
+    "        grid = Grid(width=100, height=100, n_rows=2, n_cols=2)\n",
+    "        grid_menu = GridMenu(grid)\n",
+    "        grid_menu._filter_widgets([1])\n",
+    "    assert bool(w) is False"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a935f0d4",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "25e3af36",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

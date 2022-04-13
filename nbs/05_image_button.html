@@ -1,0 +1,513 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Image button &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Capture annotator" href="06_capture_annotator.html" />
+    <link rel="prev" title="Bounding Box Annotator" href="04_bbox_annotator.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00a_annotator.html">
+   Annotator Factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="00b_mltypes.html">
+   Mltypes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_helpers.html">
+   Helpers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_download.html">
+   Dowload datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01a_datasets_factory.html">
+   Dataset factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01b_dataset_video.html">
+   Generators for MOT data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_navi_widget.html">
+   Navi Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02a_right_menu_widget.html">
+   Right menu Widget
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_storage.html">
+   Storage
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_bbox_annotator.html">
+   Bounding Box Annotator
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Image button
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_capture_annotator.html">
+   Capture annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_im2im_annotator.html">
+   Image to image annotator
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="12_debug_utils.html">
+   Debug tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="13_datasets_legacy.html">
+   Helpers for Dataset Generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="14_datasets_factory_legacy.html">
+   Datasets factory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="15_coordinates_input.html">
+   Coordinates Input
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="16_custom_buttons.html">
+   Custom Buttons
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="17_annotator_explorer.html">
+   Annotator Explorer
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="18_bbox_trajectory.html">
+   Bounding Box Trajectory
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="19_bbox_video_annotator.html">
+   Bbox video annotator
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp custom_input.buttons</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">attr</span>
+<span class="kn">from</span> <span class="nn">ipyevents</span> <span class="kn">import</span> <span class="n">Event</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">VBox</span><span class="p">,</span> <span class="n">Layout</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">traitlets</span> <span class="kn">import</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Unicode</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">observe</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="image-button">
+<h1>Image button<a class="headerlink" href="#image-button" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
+<span class="nd">@attr</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ImageButtonSetting</span><span class="p">:</span>
+    <span class="n">im_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">label</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">HTML</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">im_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">im_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">display_label</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">image_width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;50px&#39;</span>
+    <span class="n">image_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
+
+<span class="k">class</span> <span class="nc">ImageButton</span><span class="p">(</span><span class="n">VBox</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents simple image with label and toggle button functionality.</span>
+
+<span class="sd">    # Class methods</span>
+
+<span class="sd">    - clear(): Clear image infos</span>
+
+<span class="sd">    - on_click(p_function): Handle click events</span>
+
+<span class="sd">    # Class methods</span>
+
+<span class="sd">    - clear(): Clear image infos</span>
+
+<span class="sd">    - on_click(p_function): Handle click events</span>
+
+<span class="sd">    - reset_callbacks(): Reset event callbacks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">debug_output</span> <span class="o">=</span> <span class="n">Output</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;1px solid black&#39;</span><span class="p">})</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">()</span>
+    <span class="n">image_path</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">()</span>
+    <span class="n">label_value</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setting</span><span class="p">:</span> <span class="n">ImageButtonSetting</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setting</span> <span class="o">=</span> <span class="n">setting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="s1">&#39;flex&#39;</span><span class="p">,</span>
+                          <span class="n">justify_content</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                          <span class="n">align_items</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                          <span class="n">align_content</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                          <span class="n">width</span><span class="o">=</span><span class="n">setting</span><span class="o">.</span><span class="n">image_width</span><span class="p">,</span>
+                          <span class="n">margin</span><span class="o">=</span><span class="s1">&#39;0 0 0 0&#39;</span><span class="p">,</span>
+                          <span class="n">height</span><span class="o">=</span><span class="n">setting</span><span class="o">.</span><span class="n">image_height</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">display_label</span><span class="p">:</span>  <span class="c1"># both image and label</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">HTML</span><span class="p">(</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="s1">&#39;flex&#39;</span><span class="p">,</span>
+                              <span class="n">justify_content</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                              <span class="n">align_items</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                              <span class="n">align_content</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># no label (capture image case)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">im_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">im_name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">im_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">im_index</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;solid 1px gray&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">object_fit</span> <span class="o">=</span> <span class="s1">&#39;contain&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">margin</span> <span class="o">=</span> <span class="s1">&#39;0 0 0 0&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">overflow</span> <span class="o">=</span> <span class="s1">&#39;hidden&#39;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">align_items</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                                       <span class="n">margin</span><span class="o">=</span><span class="s1">&#39;3px&#39;</span><span class="p">,</span>
+                                       <span class="n">overflow</span><span class="o">=</span><span class="s1">&#39;hidden&#39;</span><span class="p">,</span>
+                                       <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;2px&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">setting</span><span class="o">.</span><span class="n">im_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">watched_events</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;click&#39;</span><span class="p">])</span>
+
+    <span class="nd">@observe</span><span class="p">(</span><span class="s1">&#39;image_path&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_read_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">new_path</span> <span class="o">=</span> <span class="n">change</span><span class="p">[</span><span class="s1">&#39;new&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">new_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">display_label</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">+=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">label</span><span class="p">,)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#do not display image widget</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+
+    <span class="nd">@observe</span><span class="p">(</span><span class="s1">&#39;label_value&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_read_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">new_label</span> <span class="o">=</span> <span class="n">change</span><span class="p">[</span><span class="s1">&#39;new&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">HTML</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">new_label</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">new_label</span>
+
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">HTML</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@observe</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">mark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ev</span><span class="p">):</span>
+        <span class="c1"># pad to compensate self size with border</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">display_label</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;solid 2px #1B8CF3&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="s1">&#39;0px&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;solid 3px #1B8CF3&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="s1">&#39;0px&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setting</span><span class="o">.</span><span class="n">display_label</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="s1">&#39;2px&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="s1">&#39;solid 1px gray&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">equals</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">image_path</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span><span class="p">,</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">label_value</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_value</span><span class="p">,</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">active</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">equals</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="o">!=</span> <span class="n">other</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">image_path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label_value</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">label_value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">active</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="nd">@debug_output</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">clear_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">.</span><span class="n">on_dom_event</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reset_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">.</span><span class="n">reset_callbacks</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"0912c4d909094f18aa76fe32e2814665": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": "1px solid black", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "aeda5e497dfe4d488057b314d57e7977": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_0912c4d909094f18aa76fe32e2814665", "msg_id": "", "outputs": []}}, "e74a84ebfad64aad85a77a13d8a5a5e3": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3f23d0262cf34e8da0f15ea709fc256b": {"model_name": "ImageModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ImageModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ImageView", "format": "png", "height": "", "layout": "IPY_MODEL_e74a84ebfad64aad85a77a13d8a5a5e3", "width": ""}, "buffers": [{"data": "iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEOoAABDqAYLTCpgAAAaRSURBVHhe7d3RVeM6GEVh6qIg6qEamqEYRrZkx4li2GdwgrzW/l5GKCH+R+dcyNyH+OVL2MuLx0V5UgGLxQ16UmNGaLE4ixWwWJzFCjgVZ7ECTsVZrMBPU32+v768vL5/ti/r17O3j72d3ysv1lYjsViBb6f6eCud+nh/XYs1lajWZ36o7PY7R9if6qbo5aKLZfMRRa/OUqynHsqecqm22lNm2oy3ZlrX/U5d/9LOVF3Ry87NJcsQPxV9Pfft5G1rOfZ+p7gz093nPVm5eFs1/3Moh+um6pSpllk2y7bud+r6l76b6uoyt2f48zyf7291szxcT3tdrMfe78y6mXae92Q/Fmt7ENv1Q52+WOWps7qXzNPK0H/L3ovczrT3vCcrf/m2an5zKIcpV2+rPZtR+gkfNPN3U92/zG5L6vqO5eH+W/Ze5CzFWuWHcpyoWNOa/db4pbxY0+XLHDfD7g90ebD/lr0XOV2x0kM50rfFKnNdrPWp1vH6nd8rr9ZWvbtHUzaTom8f64+936nrsxWrzJQcyrG+i/Dv7Ey1dnhS/1NsX2z+VfZT0dfjXvTHvhNEN9NfBNYrf9W2mv3XoRyvXKutRvLAqdYjntVz7o/9bhB3Znp+YL1y9bYaiVNxI85UGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghNzgxdp8sMjyYSCXz3hZP+HlWco122okTsVtinXz4TJ/+nlGRsidrFilV+vGdv0cRsgNX6wy4Kx2yGL1nIrrZ2q/+CxWz6m4NlMZTjpSLdZF+elUfxlOC9+8X3Eqrs00tWjxh58euyoXbauROBU34kyFEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFypyjWfIeKzY0oLnesWO5X0e88Qnn5thqJU3HbmeZ75nxc3/Xr5nY6/c5jGCE3frFmpTpLYTbLtu536vpwRshZrIARchYrYIScxQoYITd0scpw0pFqsWbrjS8n67/9qvWHU7/zCOX122okTsWNOFNhhJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIXeKYn1e32F1cxOUZXN+xsw7rI5h0Knan5P5pqnbO6yWnZs75ky18g6rYxm/WLOru8XdFmv74NUTj2aE3DmLVaae1T2L1VYjGXSq9ufqfl/aLz6L1VYjOXWxpmaV91YWq61GMm6xymTSwWq/Zpd3VEX9+dS+2Py/hfVJj/txVZTXb6uROBU34kyFEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghNw5itV/StHlw4yWjzLqdw5XXrutRuJU3PVMn+9vtU9Td+bWrIvl0yLv7DyAEXJnKNZFK01p0fZHV1n3O3V9LCPkTlWspTIWa8upuLszXQpjsbacirsz0/atk8XaciruZqZSles35NOGb94bp+KuZypV2aitWffWEvU7hysv3lYjcSpuxJkKI+QsVsAIOYsVMELOYgWMkLNYASPkLFbACDmLFTBCzmIFjJCzWAEj5CxWwAjP7evrH+59EyPBzAjTAAAAAElFTkSuQmCC", "encoding": "base64", "path": ["value"]}]}, "0e5babac01dd4740980954c938679736": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": "center", "align_items": "center", "align_self": null, "border": null, "bottom": null, "display": "flex", "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": "center", "justify_items": null, "left": null, "margin": "0 0 0 0", "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "50px"}}, "ae86ec9ef1af416f85d9c1f832c30bf1": {"model_name": "ImageModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ImageModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ImageView", "format": "png", "height": "", "layout": "IPY_MODEL_0e5babac01dd4740980954c938679736", "width": ""}, "buffers": [{"data": "iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEOoAABDqAYLTCpgAAAaRSURBVHhe7d3RVeM6GEVh6qIg6qEamqEYRrZkx4li2GdwgrzW/l5GKCH+R+dcyNyH+OVL2MuLx0V5UgGLxQ16UmNGaLE4ixWwWJzFCjgVZ7ECTsVZrMBPU32+v768vL5/ti/r17O3j72d3ysv1lYjsViBb6f6eCud+nh/XYs1lajWZ36o7PY7R9if6qbo5aKLZfMRRa/OUqynHsqecqm22lNm2oy3ZlrX/U5d/9LOVF3Ry87NJcsQPxV9Pfft5G1rOfZ+p7gz093nPVm5eFs1/3Moh+um6pSpllk2y7bud+r6l76b6uoyt2f48zyf7291szxcT3tdrMfe78y6mXae92Q/Fmt7ENv1Q52+WOWps7qXzNPK0H/L3ovczrT3vCcrf/m2an5zKIcpV2+rPZtR+gkfNPN3U92/zG5L6vqO5eH+W/Ze5CzFWuWHcpyoWNOa/db4pbxY0+XLHDfD7g90ebD/lr0XOV2x0kM50rfFKnNdrPWp1vH6nd8rr9ZWvbtHUzaTom8f64+936nrsxWrzJQcyrG+i/Dv7Ey1dnhS/1NsX2z+VfZT0dfjXvTHvhNEN9NfBNYrf9W2mv3XoRyvXKutRvLAqdYjntVz7o/9bhB3Znp+YL1y9bYaiVNxI85UGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghNzgxdp8sMjyYSCXz3hZP+HlWco122okTsVtinXz4TJ/+nlGRsidrFilV+vGdv0cRsgNX6wy4Kx2yGL1nIrrZ2q/+CxWz6m4NlMZTjpSLdZF+elUfxlOC9+8X3Eqrs00tWjxh58euyoXbauROBU34kyFEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFypyjWfIeKzY0oLnesWO5X0e88Qnn5thqJU3HbmeZ75nxc3/Xr5nY6/c5jGCE3frFmpTpLYTbLtu536vpwRshZrIARchYrYIScxQoYITd0scpw0pFqsWbrjS8n67/9qvWHU7/zCOX122okTsWNOFNhhJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIXeKYn1e32F1cxOUZXN+xsw7rI5h0Knan5P5pqnbO6yWnZs75ky18g6rYxm/WLOru8XdFmv74NUTj2aE3DmLVaae1T2L1VYjGXSq9ufqfl/aLz6L1VYjOXWxpmaV91YWq61GMm6xymTSwWq/Zpd3VEX9+dS+2Py/hfVJj/txVZTXb6uROBU34kyFEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghJzFChghZ7ECRshZrIARchYrYIScxQoYIWexAkbIWayAEXIWK2CEnMUKGCFnsQJGyFmsgBFyFitghNw5itV/StHlw4yWjzLqdw5XXrutRuJU3PVMn+9vtU9Td+bWrIvl0yLv7DyAEXJnKNZFK01p0fZHV1n3O3V9LCPkTlWspTIWa8upuLszXQpjsbacirsz0/atk8XaciruZqZSles35NOGb94bp+KuZypV2aitWffWEvU7hysv3lYjcSpuxJkKI+QsVsAIOYsVMELOYgWMkLNYASPkLFbACDmLFTBCzmIFjJCzWAEj5CxWwAjP7evrH+59EyPBzAjTAAAAAElFTkSuQmCC", "encoding": "base64", "path": ["value"]}]}, "80227d59c85a49ebb67cb92a1ffbe680": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": "center", "align_items": "center", "align_self": null, "border": null, "bottom": null, "display": "flex", "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": "center", "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7f629cc347624efc88d8b0be03abfada": {"model_name": "DescriptionStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "0dad2b4d7c6948d98b99937600b0e69a": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_80227d59c85a49ebb67cb92a1ffbe680", "placeholder": "\u200b", "style": "IPY_MODEL_7f629cc347624efc88d8b0be03abfada", "value": ""}}, "2d5b7667e3c14e6faca70d9da3d5c8d6": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": "center", "align_self": null, "border": "none", "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": "3px", "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": "hidden", "overflow_x": null, "overflow_y": null, "padding": "2px", "right": null, "top": null, "visibility": null, "width": null}}, "e1e82802e36e47d0aee7a31ad3c7b957": {"model_name": "VBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "VBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "VBoxView", "box_style": "", "children": [], "layout": "IPY_MODEL_2d5b7667e3c14e6faca70d9da3d5c8d6"}}, "f5ec795b07a64441baeaca5d546d1e76": {"model_name": "EventModel", "model_module": "ipyevents", "model_module_version": "1.8.2", "state": {"_model_module": "ipyevents", "_model_module_version": "1.8.2", "_model_name": "EventModel", "_supported_key_events": ["keydown", "keyup"], "_supported_mouse_events": ["click", "auxclick", "dblclick", "mouseenter", "mouseleave", "mousedown", "mouseup", "mousemove", "wheel", "contextmenu", "dragstart", "drag", "dragend", "dragenter", "dragover", "dragleave", "drop"], "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": null, "ignore_modifier_key_events": false, "prevent_default_action": false, "source": "IPY_MODEL_e1e82802e36e47d0aee7a31ad3c7b957", "throttle_or_debounce": "", "wait": 0, "watched_events": ["click"], "xy": [], "xy_coordinate_system": ""}}, "ec0e174923dc47f8bdb6ba2c031ee2bc": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e36d7fc8bfbc4907b7908dd811cc32e1": {"model_name": "DescriptionStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "43fcf8c1eb4f4911b819fe73aefe61d7": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_ec0e174923dc47f8bdb6ba2c031ee2bc", "placeholder": "\u200b", "style": "IPY_MODEL_e36d7fc8bfbc4907b7908dd811cc32e1", "value": "Event info"}}, "634e18fdd8ff4866a2d6326aec86cb5c": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": "center", "align_items": "center", "align_self": null, "border": "solid 1px gray", "bottom": null, "display": "flex", "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": "center", "justify_items": null, "left": null, "margin": "0 0 0 0", "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": "contain", "object_position": null, "order": null, "overflow": "hidden", "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "50px"}}, "02c7ba7dcac14b2da3221130685df4fe": {"model_name": "ImageModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ImageModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ImageView", "format": "png", "height": "", "layout": "IPY_MODEL_634e18fdd8ff4866a2d6326aec86cb5c", "width": ""}, "buffers": [{"data": "", "encoding": "base64", "path": ["value"]}]}, "7a3160918b3842c3961d1f65edd3d9b8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": "center", "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": "3px", "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": "hidden", "overflow_x": null, "overflow_y": null, "padding": "2px", "right": null, "top": null, "visibility": null, "width": null}}, "3c28528530874b85893ad2a99aef08bc": {"model_name": "VBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "VBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "VBoxView", "box_style": "", "children": [], "layout": "IPY_MODEL_7a3160918b3842c3961d1f65edd3d9b8"}}, "de0a9294c72248a98f86209038d5d008": {"model_name": "EventModel", "model_module": "ipyevents", "model_module_version": "1.8.2", "state": {"_model_module": "ipyevents", "_model_module_version": "1.8.2", "_model_name": "EventModel", "_supported_key_events": ["keydown", "keyup"], "_supported_mouse_events": ["click", "auxclick", "dblclick", "mouseenter", "mouseleave", "mousedown", "mouseup", "mousemove", "wheel", "contextmenu", "dragstart", "drag", "dragend", "dragenter", "dragover", "dragleave", "drop"], "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": null, "ignore_modifier_key_events": false, "prevent_default_action": false, "source": "IPY_MODEL_3c28528530874b85893ad2a99aef08bc", "throttle_or_debounce": "", "wait": 0, "watched_events": ["click"], "xy": [], "xy_coordinate_system": ""}}}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="04_bbox_annotator.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Bounding Box Annotator</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="06_capture_annotator.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Capture annotator</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
