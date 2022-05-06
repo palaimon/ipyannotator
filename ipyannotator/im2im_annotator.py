@@ -20,7 +20,7 @@ from .custom_widgets.grid_menu import GridMenu, Grid
 from .navi_widget import Navi
 from .storage import JsonLabelStorage
 from IPython.display import display
-from .doc_utils import is_building_docs
+from .docs.utils import is_building_docs
 from PIL import Image as PILImage
 
 # Internal Cell
@@ -132,6 +132,10 @@ class Im2ImAnnotatorGUI(AppLayout):
             height=self._im2im_state.im_height,
             has_border=has_border,
             fit_canvas=fit_canvas
+        )
+        self._image.layout = Layout(
+            display='block',
+            margin='auto'
         )
 
         self._navi = Navi()
@@ -446,11 +450,11 @@ class Im2ImAnnotator(Annotator):
         self.view.on_client_ready(self.controller.handle_client_ready)
 
     def _on_annotation_step_change(self, annotation_step: AnnotatorStep):
-        if annotation_step == AnnotatorStep.EXPLORE:
-            self.state_to_widget.widgets_disabled = True
+        disabled_buttons = annotation_step == AnnotatorStep.EXPLORE
+        if disabled_buttons:
             self.view._grid_box.clear()
-        elif self.state_to_widget.widgets_disabled:
-            self.state_to_widget.widgets_disabled = False
+        self.state_to_widget.widgets_disabled = disabled_buttons
+        self.view._save_btn.disabled = disabled_buttons
 
         # forces annotator to have img loaded
         self.controller._update_im()

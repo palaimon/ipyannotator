@@ -94,7 +94,7 @@ def _label_store_to_button(
         button.tooltip = label
         button.disabled = disabled
         if value.get('answer', True):
-            button.layout.border = 'solid 2px #1B8CF3'
+            button.layout.border = 'solid 2px #f7f01e'
         buttons.append(button)
 
     return buttons

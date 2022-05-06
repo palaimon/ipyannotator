@@ -7,13 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.8.3] - 2022-05-06
+
+### Added
+- Extend documentation with new pages for API Reference and key Input/Output types [Ítalo Epifânio](https://github.com/itepifanio).
+
+### Change
+- Disabled save button when using explore step by [Ítalo Epifânio](https://github.com/itepifanio).
+
+### Fixed
+- Properly select elements on the Capture annotator [Ítalo Epifânio](https://github.com/itepifanio).
+- Video annotator supports now image resizing by properly using the fit canvas option by [Ítalo Epifânio](https://github.com/itepifanio).
+- [tqdm](https://github.com/tqdm/tqdm) now rendering correctly at image classification tutorial by [Ítalo Epifânio](https://github.com/itepifanio).
+- Index error at image classification tutorial when reading the artificial dataset by [Ítalo Epifânio](https://github.com/itepifanio).
+
 ## [0.8.1] - 2022-04-09
 
 ### Changed
 - Refactored notebooks to use python to handle folder structure instead of linux commands by [Ítalo Epifânio](https://github.com/itepifanio).
 
 ### Added
-- [tqdm](itlab.palaimon.io/products/ipyannotator/ipyannotator/-/merge_requests) dependency [Ítalo Epifânio](https://github.com/itepifanio).
+- [tqdm](https://github.com/tqdm/tqdm) dependency [Ítalo Epifânio](https://github.com/itepifanio).
 - Doc section explaining Ipyannotator dev dependencies [Ítalo Epifânio](https://github.com/itepifanio).
 
 ## [0.8.0] - 2022-04-09

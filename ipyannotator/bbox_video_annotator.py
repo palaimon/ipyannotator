@@ -184,20 +184,21 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
         on_join_btn_clicked: Callable,
         on_bbox_drawn: Callable,
         drawing_enabled: bool = True,
+        fit_canvas: bool = False,
         on_save_btn_clicked: Callable = None
     ):
         super().__init__(
             app_state=app_state,
             bbox_state=bbox_state,
             on_save_btn_clicked=on_save_btn_clicked,
-            fit_canvas=False
+            fit_canvas=fit_canvas
         )
 
         self._app_state = app_state
         self._bbox_state = bbox_state
         self.on_bbox_drawn = on_bbox_drawn
         self.bbox_trajectory = BBoxTrajectory()
-        self.history = BboxVideoHistory()
+        self.history = BboxVideoHistory(trajectories=TrajectoryStore())
         self.on_label_changed = on_label_changed
 
         pub.unsubAll(f'{self._image_box.state.root_topic}.bbox_coords')
@@ -206,6 +207,8 @@ class BBoxAnnotatorVideoGUI(BBoxAnnotatorGUI):
             *self._app_state.size,
             drawing_enabled=drawing_enabled
         )
+
+        self._init_canvas(self._bbox_state.drawing_enabled)
 
         self.right_menu = BBoxVideoCoordinates(  # type: ignore
             app_state=self._app_state,
@@ -498,7 +501,8 @@ class BBoxVideoAnnotator(BBoxAnnotator):
             drawing_enabled=self._output_item.drawing_enabled,
             on_label_changed=self.update_labels,
             on_join_btn_clicked=self.merge_tracks_selected,
-            on_bbox_drawn=self.controller.sync_labels
+            on_bbox_drawn=self.controller.sync_labels,
+            fit_canvas=self._input_item.fit_canvas
         )
 
         self.view.on_client_ready(self.controller.handle_client_ready)

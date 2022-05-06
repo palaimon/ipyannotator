@@ -16,7 +16,7 @@ from typing import Dict, Optional, List, Any, Tuple
 from abc import ABC, abstractmethod
 from pydantic import root_validator
 from .base import BaseState
-from .doc_utils import is_building_docs
+from .docs.utils import is_building_docs
 from .mltypes import BboxCoordinate, BboxVideoCoordinate
 from ipycanvas import MultiCanvas as IMultiCanvas, Canvas, hold_canvas
 from ipywidgets import Image, Label, Layout, HBox, VBox, Output

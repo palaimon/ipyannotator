@@ -139,20 +139,21 @@ class Tutorial:
 
         # update ipyannotator's annotations bassed on previous step and save
         annotator.storage.update((k, self.filterered.get(k, [])) for k in annotator.storage.keys())
-        annotator.view._save_btn.click()
+        annotator.storage.save()
 
     # Annotations fixer used in image_classification tutorial [improve]
-    def fix_incorrect_annotations(self, annotator):
+    def fix_incorrect_annotations(self, annotator: list):
         with self.all_annotations.open() as f:
             anno_ = json.load(f)
 
         #  mark spoiled on create step, imitating human correction
         for i in tqdm(annotator):
-            for j in range(i.app_state.max_im_number):
-                i.controller.idx_changed(j)
-                for k, v in i.capture_state.annotations.items():
-                    i.capture_state.annotations[k] = {'answer': anno_[k] != self.filterered[k]}
-                    i.view._save_btn.click()
+            i.storage.annotations.update(
+                (
+                    k, {'answer': anno_[k] != self.filterered[k]}
+                ) for k in i.storage.annotations.keys()
+            )
+            i.storage.annotations.save()
 
     # Random annotator used in bbox tutorial [create]
     def add_random_bboxes(self, annotator):
@@ -164,7 +165,7 @@ class Tutorial:
         bbox_noise = 0.2
 
         # lets randomly annotate each image from code and save annotations
-        for k, f_ in tqdm(zip(annotator.storage.keys(), filt)):
+        for k, f_ in tqdm(list(zip(annotator.storage.keys(), filt))):
             # do not overwrite existing annotations
             if annotator.storage[k]:
                 continue

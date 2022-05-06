@@ -159,7 +159,7 @@ def create_simple_object_detection_dataset(path, n_samples=100, n_shapes=2, n_co
 
     (path / 'images').mkdir(parents=True, exist_ok=True)
     red = (255, 0, 0)
-    blue = (0, 192, 192)
+    blue = (0, 0, 255)
     yellow = (255, 255, 0)
     color = [red, blue, yellow]
     cname = ['red', 'blue', 'yellow']

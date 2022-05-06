@@ -119,12 +119,14 @@ class ImageButton(VBox, HasTraits):
     def mark(self, ev):
         # pad to compensate self size with border
         if self.active:
+            active_color = '#f7f01e'
+            padding = '0px'
             if self.setting.display_label:
-                self.layout.border = 'solid 2px #1B8CF3'
-                self.layout.padding = '0px'
+                self.layout.border = f'solid 2px {active_color}'
+                self.layout.padding = padding
             else:
-                self.image.layout.border = 'solid 3px #1B8CF3'
-                self.image.layout.padding = '0px'
+                self.image.layout.border = f'solid 3px {active_color}'
+                self.image.layout.padding = padding
         else:
             if self.setting.display_label:
                 self.layout.border = 'none'

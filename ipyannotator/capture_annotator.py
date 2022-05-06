@@ -124,10 +124,12 @@ class CaptureAnnotatorGUI(AppLayout):
             pane_widths=(2, 8, 0),
             pane_heights=(1, 4, 1))
 
+    @debug_output.capture(clear_output=True)
     def _on_navi_clicked(self, index: int):
         if self.on_navi_clicked:
             self.on_navi_clicked(index)
 
+        self._grid_box.clear()
         self._grid_box.load(
             _label_store_to_image_button(self._capture_state.annotations)
         )
@@ -158,9 +160,9 @@ class CaptureAnnotatorGUI(AppLayout):
         if self._select_none_changed:
             self._select_none_changed(change)
 
-    def on_grid_clicked(self, event, name=None):
+    def on_grid_clicked(self, event, value=None):
         if self._grid_box_clicked:
-            self._grid_box_clicked(event, name)
+            self._grid_box_clicked(event, value)
         else:
             warnings.warn("Grid box click didn't triggered any event.")
 
@@ -282,8 +284,8 @@ class CaptureAnnotatorController:
         )
 
     @debug_output.capture(clear_output=False)
-    def handle_grid_click(self, event: dict, name=None):
-        p = self._storage.input_item_path / name
+    def handle_grid_click(self, event: dict, value=None):
+        p = self._storage.input_item_path / value
         current_state = deepcopy(self._capture_state.annotations)
         if not p.is_dir():
             state_answer = self._capture_state.annotations[

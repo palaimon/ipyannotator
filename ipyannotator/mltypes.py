@@ -61,6 +61,9 @@ class InputImage(Input):
 
     image_height: int
         Height of the image
+
+    fit_canvas: bool
+        Ignores the image size and fit image on the canvas size
     """
 
     def __init__(
@@ -81,9 +84,9 @@ class InputImage(Input):
 # Cell
 class OutputImageLabel(Output):
     """
-     Will handle the image output.
-     If no `label_dir` is specified, it should generate randomized one.
+    Configures the image output.
 
+    If no `label_dir` is specified, it generates randomized one.
     """
 
     def __init__(self, label_dir=None, label_width=50, label_height=50):
@@ -104,12 +107,26 @@ class OutputLabel(Output):
 
 # Cell
 class OutputImageBbox(Output):
+    """
+    classes: List[str]
+        Define the classes of objects available
+        to be classified
+    """
+
     def __init__(self, classes: List[str] = None):
         self.classes = classes or []
         self.drawing_enabled = True
 
 # Cell
 class OutputVideoBbox(OutputImageBbox):
+    """
+    Specialization of the OutputImageBbox.
+
+    classes: List[str]
+        Define the classes of objects available
+        to be classified
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.drawing_enabled = True
@@ -117,8 +134,12 @@ class OutputVideoBbox(OutputImageBbox):
 
 # Cell
 class OutputGridBox(Output):
+    """Configures the capture annotator"""
     pass
 
 # Cell
 class NoOutput(Output):
+    """Explore the data without worring
+    about which type of data it's wanted
+    to output"""
     pass

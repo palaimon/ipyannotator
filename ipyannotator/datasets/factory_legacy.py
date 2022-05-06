@@ -50,9 +50,9 @@ def get_settings(dataset: DS):
                         label_dir='class_images',
                         # used on create step - should be empty!
                         result_dir='create_results',
-                        im_width=50, im_height=50,
+                        im_width=100, im_height=100,
                         label_width=30, label_height=30,
-                        n_cols=3)
+                        n_cols=4)
 
     elif dataset == DS.ARTIFICIAL_DETECTION:
         project_path = Path('data/artificial_detection/')

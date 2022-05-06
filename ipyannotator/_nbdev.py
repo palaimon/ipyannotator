@@ -32,6 +32,10 @@ index = {"StateSettings": "00_base.ipynb",
          "LabelStore": "00c_annotation_types.ipynb",
          "LabelStoreCaster": "00c_annotation_types.ipynb",
          "is_building_docs": "00d_doc_utils.ipynb",
+         "doc_link": "00d_doc_utils.ipynb",
+         "type_repr": "00d_doc_utils.ipynb",
+         "format_param": "00d_doc_utils.ipynb",
+         "show_doc": "00d_doc_utils.ipynb",
          "nbglob": "00d_doc_utils.ipynb",
          "upd_metadata": "00d_doc_utils.ipynb",
          "hide": "00d_doc_utils.ipynb",
@@ -155,7 +159,7 @@ modules = ["base.py",
            "annotator.py",
            "mltypes.py",
            "ipytyping/annotations.py",
-           "doc_utils.py",
+           "docs/utils.py",
            "bbox_canvas.py",
            "helpers.py",
            "datasets/generators.py",
@@ -175,10 +179,12 @@ modules = ["base.py",
            "custom_input/coordinates.py",
            "explore_annotator.py",
            "services/bbox_trajectory.py",
-           "bbox_video_annotator.py"]
+           "bbox_video_annotator.py",
+           "docs/api.py",
+           "docs/input_output.py"]
 
 doc_url = "//ipyannotator"
 
-git_url = "https://gitlab.palaimon.io/devops/ipyannotator/tree/master/"
+git_url = "https://github.com/palaimon/ipyannotator/tree/main/"
 
 def custom_doc_links(name): return None

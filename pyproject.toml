@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ipyannotator"
-version = "0.8.1"
+version = "0.8.3"
 description = "The infinitely hackable annotation framework"
 authors = ["palaimon.io <oss@mail.palaimon.io>"]
 license = "Apache License 2.0"
@@ -21,7 +21,7 @@ pydantic = "^1.8.2"
 PyPubSub = "^4.0.3"
 pooch = "^1.5.2"
 ipython = "^8.0.1"
-nbdev = "^1.2.0"
+nbdev = "1.2.7"
 voila = "^0.3.1"
 tqdm = "^4.64.0"
 

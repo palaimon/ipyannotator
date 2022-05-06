@@ -12,7 +12,7 @@ sync:
 	nbdev_update_lib
 
 meta:
-	python ipyannotator/doc_utils.py
+	python ipyannotator/docs/utils.py
 
 docs: meta
 	sphinx-build . ./_build/html -a

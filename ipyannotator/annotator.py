@@ -82,6 +82,8 @@ class VideoBboxer(AnnotatorFactory):
 
 # Cell
 class Annotator:
+    """Ipyannotator uses a pair of input/output to configure its API"""
+
     def __init__(self, input_item: Input, output_item: Output = NoOutput(),
                  settings: Settings = Settings()):
         self.settings = settings
@@ -89,14 +91,10 @@ class Annotator:
         self.output_item = output_item
 
     def explore(self, k=-1):
-        '''
-        Lets visualize existing annotated dataset
-        As we don't have images for each class we provide label_dir=None for ipyannotator,
-        thus class labels will be generated automatically based on annotation.json file.
+        """Visualize the existing annotated dataset.
 
         To explore a part of dataset set `k` - number of classes to display;
-        By default explore `all` (k == -1)
-        '''
+        By default explore `all` (k == -1)"""
         subset = generate_subset_anno_json(project_path=self.settings.project_path,
                                            project_file=self.settings.project_file,
                                            number_of_labels=k)
@@ -120,6 +118,10 @@ class Annotator:
         return annotator
 
     def create(self):
+        """Create new annotated dataset from scratch.
+
+        If the result path already exists a warning will be displayed to
+        avoid overriding datasets"""
         anno_ = construct_annotation_path(project_path=self.settings.project_path,
                                           file_name=None,
                                           results_dir=self.settings.result_dir)
@@ -140,6 +142,10 @@ class Annotator:
         return annotator
 
     def improve(self):
+        """Improve existing annotated dataset.
+
+        Every annotator has a particular way of improving its datasets.
+        Some annotators allows label deleting other changing its properties."""
         # open labels from create step
         create_step_annotations = Path(
             self.settings.project_path) / self.settings.result_dir / 'annotations.json'
@@ -162,7 +168,7 @@ class Annotator:
                                             input_item=self.input_item,
                                             output_item=OutputGridBox(),
                                             annotation_file_path=anno_,
-                                            n_cols=2, n_rows=5,
+                                            n_cols=3, n_rows=4,
                                             question=(f'Check incorrect annotation'
                                                       f' for [{class_name[:-4]}] class'),
                                             filter_files=class_anno))
@@ -186,7 +192,7 @@ class Annotator:
                     v['bbox'][0]['y'],
                     v['bbox'][0]['width'],
                     v['bbox'][0]['height']
-                ] if v else [] for k, v in loaded_image_annotations.items()}
+                ] if v and v['bbox'] else [] for k, v in loaded_image_annotations.items()}
 
             captured_path = Path(self.settings.project_path) / "captured"
 
