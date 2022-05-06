@@ -23,8 +23,7 @@ jobs:
       run: |
         mkdir gh-pages
         touch gh-pages/.nojekyll
-        poetry run python ipyannotator/doc_utils.py
-        poetry run sphinx-build . ./_build/html -a
+        poetry run make docs
         cp -r _build/html/* ./gh-pages/
     - name: Deploy documentation
       if: ${{ github.event_name == 'push' }}
