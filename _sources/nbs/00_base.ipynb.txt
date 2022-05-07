@@ -34,7 +34,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -83,7 +87,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -191,7 +199,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -204,7 +216,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -226,7 +242,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -292,7 +312,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -316,7 +340,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -352,7 +380,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",

@@ -30,7 +30,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "3f14dc56",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -73,7 +77,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "196e5fde",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -115,7 +123,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "16418a55",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -148,7 +160,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "ff3545e4",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -181,7 +197,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "351f50fb",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -202,7 +222,7 @@
     "        button.tooltip = label\n",
     "        button.disabled = disabled\n",
     "        if value.get('answer', True):\n",
-    "            button.layout.border = 'solid 2px #1B8CF3'\n",
+    "            button.layout.border = 'solid 2px #f7f01e'\n",
     "        buttons.append(button)\n",
     "\n",
     "    return buttons"
@@ -212,7 +232,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "b67c7dcf",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",

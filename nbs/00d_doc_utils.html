@@ -89,6 +89,18 @@
  </a>
 </li>
 
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="22_input_output_doc.html">
+  Input/Output Types
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="21_api_doc.html">
+  API Reference
+ </a>
+</li>
+
     
 </ul>
       </div>
@@ -146,6 +158,23 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#show-doc-overriding">
+   Show doc overriding
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#previous-behavior">
+     Previous behavior
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#current-behavior">
+     Current behavior
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#docs-metadata">
    Docs metadata
   </a>
@@ -173,46 +202,62 @@
                 
   <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp doc_utils</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp docs.utils</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="kn">import</span> <span class="nn">os</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="doc-utils">
 <h1>Doc Utils<a class="headerlink" href="#doc-utils" title="Permalink to this headline">¶</a></h1>
 <p>This notebook develops helper modules to build Ipyannotator’s static documentation.</p>
 <p>The next cell design a helper function that check if the documentation it’s been built. This is specially helpful to mock some behaviors that doesn’t work well on static docs.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">is_building_docs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="k">return</span> <span class="s1">&#39;DOCUTILSCONFIG&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
 </div>
+<section id="show-doc-overriding">
+<h2>Show doc overriding<a class="headerlink" href="#show-doc-overriding" title="Permalink to this headline">¶</a></h2>
+<p>Nbdev <a class="reference external" href="https://github.com/fastai/nbdev/blob/master/nbdev/showdoc.py">show_doc</a> function doesn’t link the type hint correctly.</p>
+<section id="previous-behavior">
+<h3>Previous behavior<a class="headerlink" href="#previous-behavior" title="Permalink to this headline">¶</a></h3>
+<div class="output_subarea output_markdown rendered_html" dir="auto"><h3 id="Annotator" class="doc_header"><code>class</code> <code>Annotator</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/annotator.py#L84" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<p><code>Annotator</code>(<strong><code>input_item</code></strong>:<a href="/ipyannotatormltypes.html#Input"><code>Input</code></a>, <strong><code>output_item</code></strong>:<a href="/ipyannotatormltypes.html#Output"><code>Output</code></a>=<em><code>Annotator Output type: NoOutput</code></em>, <strong><code>settings</code></strong>:<a href="/ipyannotatorbase.html#Settings"><code>Settings</code></a>=<em><code>Settings(project_path=Path('user_project'), project_file=None, image_dir='images', label_dir=None, result_dir=None, im_width=50, im_height=50, label_width=50, label_height=50, n_cols=3, n_rows=None)</code></em>)</p>
+</blockquote>
+<p>Ipyannotator uses a pair of input/output to configure its API</p>
 </div>
+</section>
+<section id="current-behavior">
+<h3>Current behavior<a class="headerlink" href="#current-behavior" title="Permalink to this headline">¶</a></h3>
+<div class="output_subarea output_markdown rendered_html" dir="auto"><h3 id="Annotator" class="doc_header"><code>class</code> <code>Annotator</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/annotator.py#L84" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<p><code>Annotator</code>(<strong><code>input_item</code></strong>:<a href="https://nbviewer.jupyter.org/github/palaimon/ipyannotator/tree/main/nbs/00b_mltypes.ipynb#Types"><code>Input</code></a>, <strong><code>output_item</code></strong>:<a href="https://nbviewer.jupyter.org/github/palaimon/ipyannotator/tree/main/nbs/00b_mltypes.ipynb#Types"><code>Output</code></a>=<em><code>Annotator Output type: NoOutput</code></em>, <strong><code>settings</code></strong>:<a href="https://nbviewer.jupyter.org/github/palaimon/ipyannotator/tree/main/nbs/00_base.ipynb#Helpers"><code>Settings</code></a>=<em><code>Settings(project_path=Path('user_project'), project_file=None, image_dir='images', label_dir=None, result_dir=None, im_width=50, im_height=50, label_width=50, label_height=50, n_cols=3, n_rows=None)</code></em>)</p>
+</blockquote>
+<p>Ipyannotator uses a pair of input/output to configure its API</p>
 </div>
+<p>Note that the type hint links were fixed. The following cells override this behavior.</p>
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell tag_remove-input docutils container">
+</div>
+</section>
+</section>
 <section id="docs-metadata">
 <h2>Docs metadata<a class="headerlink" href="#docs-metadata" title="Permalink to this headline">¶</a></h2>
-<p>The following cells was extracted from <a class="reference external" href="https://github.com/fastai/jb-nbdev">jb-nbdev</a> and will perform some changes on our metadata to integrate nbdev and mynb-st.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">fastcore.all</span> <span class="kn">import</span> <span class="n">L</span><span class="p">,</span> <span class="n">compose</span><span class="p">,</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">nbdev.export2html</span> <span class="kn">import</span> <span class="n">_mk_flag_re</span><span class="p">,</span> <span class="n">_re_cell_to_collapse_output</span><span class="p">,</span> <span class="n">check_re</span>
-<span class="kn">from</span> <span class="nn">nbdev.export</span> <span class="kn">import</span> <span class="n">check_re_multi</span>
-<span class="kn">import</span> <span class="nn">nbformat</span> <span class="k">as</span> <span class="nn">nbf</span>
-</pre></div>
-</div>
-</div>
+<p>The following cells was extracted from <a class="reference external" href="https://github.com/fastai/jb-nbdev">nb-nbdev</a> and will perform some changes on our metadata to integrate nbdev and mynb-st.</p>
+<div class="cell tag_remove-input docutils container">
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -236,34 +281,9 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">upd_metadata</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
-    <span class="n">cell_tags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="p">[])))</span>
-    <span class="k">if</span> <span class="n">tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cell_tags</span><span class="p">:</span>
-        <span class="n">cell_tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-    <span class="n">cell</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell_tags</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-
-    <span class="n">_func</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">hide</span><span class="p">,</span> <span class="n">collapse_cells</span><span class="p">)</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="n">nbglob</span><span class="p">(</span><span class="s1">&#39;nbs/&#39;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="n">nb</span> <span class="o">=</span> <span class="n">nbf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">nbf</span><span class="o">.</span><span class="n">NO_CONVERT</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">nb</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
-            <span class="n">_func</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="n">nbf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 </section>
 </section>

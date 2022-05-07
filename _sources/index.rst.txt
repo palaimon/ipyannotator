@@ -12,4 +12,6 @@
    :hidden:
 
    docs/tutorials
-   docs/internal-components   
+   docs/internal-components
+   ../nbs/22_input_output_doc
+   ../nbs/21_api_doc

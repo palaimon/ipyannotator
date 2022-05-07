@@ -91,6 +91,18 @@
  </a>
 </li>
 
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="22_input_output_doc.html">
+  Input/Output Types
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="21_api_doc.html">
+  API Reference
+ </a>
+</li>
+
     
 </ul>
       </div>
@@ -295,17 +307,7 @@
 <section class="tex2jax_ignore mathjax_ignore" id="generators-for-mot-data">
 <h1>Generators for MOT data<a class="headerlink" href="#generators-for-mot-data" title="Permalink to this headline">¶</a></h1>
 <p>MOT data format can be <a class="reference external" href="https://github.com/JonathonLuiten/TrackEval/blob/master/docs/MOTChallenge-Official/Readme.md#data-format">found here</a>.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -317,13 +319,7 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="kn">from</span> <span class="nn">skimage.draw</span> <span class="kn">import</span> <span class="n">disk</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -334,7 +330,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;/tmp/tmpypd5b8ad&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;/tmp/tmpiq3pi52g&#39;
 </pre></div>
 </div>
 </div>
@@ -350,173 +346,21 @@
 </div>
 <section id="create-mot-gt-and-render-corresponding-frames">
 <h2>Create mot gt and render corresponding frames<a class="headerlink" href="#create-mot-gt-and-render-corresponding-frames" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">class</span> <span class="nc">TrackObject</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">center</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
-    <span class="n">color</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
-
-
-<span class="k">class</span> <span class="nc">TrackObjectRectangle</span><span class="p">(</span><span class="n">TrackObject</span><span class="p">):</span>
-    <span class="n">size</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
-    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;rectangle&#39;</span>
-
-
-<span class="k">class</span> <span class="nc">TrackObjectCircle</span><span class="p">(</span><span class="n">TrackObject</span><span class="p">):</span>
-    <span class="n">radius</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;circle&#39;</span>
-
-
-<span class="k">class</span> <span class="nc">Frame</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">res</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
-    <span class="n">pos</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">objects</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">TrackObject</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">img</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
 </div>
+<div class="cell tag_remove-input docutils container">
 </div>
+<div class="cell tag_remove-input docutils container">
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">gen_frame</span><span class="p">(</span><span class="n">n_frames</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Frame</span><span class="p">]:</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_frames</span><span class="p">):</span>
-        <span class="k">yield</span> <span class="n">Frame</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">res</span><span class="p">)</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
 </div>
+<div class="cell tag_remove-input docutils container">
 </div>
+<div class="cell tag_remove-input docutils container">
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">gen_bg_img</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;rand&#39;</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Frame</span><span class="p">]:</span>
-    <span class="k">for</span> <span class="n">gt</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>
-        <span class="c1"># print(g)</span>
-        <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">res</span>
-        <span class="k">if</span> <span class="n">bg</span> <span class="o">==</span> <span class="s1">&#39;rand&#39;</span><span class="p">:</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">channel</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
-        <span class="n">gt</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="n">img</span>
-        <span class="k">yield</span> <span class="n">gt</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">default_path</span><span class="p">(</span><span class="n">current_frame</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">speed</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;rectangle&#39;</span><span class="p">):</span>
-    <span class="n">initial_x</span><span class="p">,</span> <span class="n">initial_y</span> <span class="o">=</span> <span class="n">start</span>
-    <span class="n">x_speed</span><span class="p">,</span> <span class="n">y_speed</span> <span class="o">=</span> <span class="n">speed</span>
-
-    <span class="n">x</span> <span class="o">=</span> <span class="n">initial_x</span> <span class="o">+</span> <span class="n">current_frame</span> <span class="o">*</span> <span class="n">x_speed</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">initial_y</span> <span class="o">+</span> <span class="n">current_frame</span> <span class="o">*</span> <span class="n">y_speed</span>
-
-    <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;circle&#39;</span><span class="p">:</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">radius</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">radius</span>
-
-    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">gen_moving_object</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">object_id</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">path_f</span><span class="o">=</span><span class="n">default_path</span><span class="p">,</span>
-                      <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;rectangle&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Frame</span><span class="p">]:</span>
-
-    <span class="n">frame_nr</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">gt</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;circle&#39;</span><span class="p">:</span>
-            <span class="n">center</span> <span class="o">=</span> <span class="n">path_f</span><span class="p">(</span><span class="n">frame_nr</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">)</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">size</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
-            <span class="n">o_track</span> <span class="o">=</span> <span class="n">TrackObjectCircle</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">object_id</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
-                                        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">center</span> <span class="o">=</span> <span class="n">path_f</span><span class="p">(</span><span class="n">frame_nr</span><span class="p">)</span>
-            <span class="c1"># error: Incompatible types in assignment (expression has type</span>
-            <span class="c1"># &quot;TrackObjectRectangle&quot;, variable has type &quot;TrackObjectCircle&quot;)</span>
-            <span class="n">o_track</span> <span class="o">=</span> <span class="n">TrackObjectRectangle</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">object_id</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-                                           <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
-
-        <span class="n">gt</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o_track</span><span class="p">)</span>
-        <span class="n">frame_nr</span> <span class="o">=</span> <span class="n">frame_nr</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">yield</span> <span class="n">gt</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">gen_render_objects</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">gt</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">gt</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;circle&#39;</span><span class="p">:</span>
-                <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">disk</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">rectangle</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">gt</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
-            <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">color</span>
-            <span class="n">gt</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">rr</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">cc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
-        <span class="k">yield</span> <span class="n">gt</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-
-<span class="k">def</span> <span class="nf">occlude_lower_left_img</span><span class="p">(</span><span class="n">track_img</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
-    <span class="k">for</span> <span class="n">gt</span> <span class="ow">in</span> <span class="n">track_img</span><span class="p">:</span>
-        <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
-        <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">rectangle</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">gt</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-        <span class="n">gt</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">rr</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">cc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">color</span>
-        <span class="k">yield</span> <span class="n">gt</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">gt_to_mot</span><span class="p">(</span><span class="n">gt</span><span class="p">:</span> <span class="n">Frame</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;mot format &lt;frame&gt;, &lt;id&gt;, &lt;bb_left&gt;,</span>
-<span class="sd">        &lt;bb_top&gt;, &lt;bb_width&gt;, &lt;bb_height&gt;, &lt;conf&gt;, &lt;label&gt;, &lt;vis&gt;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># gt possible None</span>
-    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">gt</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
-        <span class="n">cx</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">cy</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">mot</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;frame&#39;</span><span class="p">:</span> <span class="n">gt</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span>
-            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s1">&#39;conf&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-            <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-            <span class="s1">&#39;vis&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;circle&#39;</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
-            <span class="n">mot</span><span class="p">[</span><span class="s1">&#39;bb_left&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cx</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">radius</span>  <span class="c1"># type: ignore</span>
-            <span class="n">mot</span><span class="p">[</span><span class="s1">&#39;bb_top&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cy</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">radius</span>  <span class="c1"># type: ignore</span>
-            <span class="n">mot</span><span class="p">[</span><span class="s1">&#39;bb_width&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">radius</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># type: ignore</span>
-            <span class="n">mot</span><span class="p">[</span><span class="s1">&#39;bb_height&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">radius</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># type: ignore</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">mot</span><span class="p">[</span><span class="s1">&#39;bb_left&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cy</span>
-            <span class="n">mot</span><span class="p">[</span><span class="s1">&#39;bb_top&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cx</span>
-            <span class="n">mot</span><span class="p">[</span><span class="s1">&#39;bb_width&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
-            <span class="n">mot</span><span class="p">[</span><span class="s1">&#39;bb_height&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
-
-        <span class="k">yield</span> <span class="n">mot</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

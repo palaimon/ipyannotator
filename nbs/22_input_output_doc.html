@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Input/Output Types &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="21_api_doc.html" />
+    <link rel="prev" title="Bbox video annotator" href="19_bbox_video_annotator.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../docs/internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  Input/Output Types
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="21_api_doc.html">
+  API Reference
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#generic-annotation">
+   Generic Annotation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#image-classification">
+   Image classification
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#capture-annotator">
+   Capture Annotator
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bounding-box-image-annotation">
+   Bounding Box image annotation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bounding-box-video-annotator">
+   Bounding box video annotator
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default_exp docs.input_output</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="input-output-types">
+<h1>Input/Output Types<a class="headerlink" href="#input-output-types" title="Permalink to this headline">¶</a></h1>
+<p>Ipyannotator uses a pair of Input/Output to configure its API. The pair of Input/Output provides a simple and flexible way to write and combine annotators, making it easier users to customize the Ipyannotator API to their needs.</p>
+<p>The current page explain which pairs are available.</p>
+<div class="cell tag_remove-input docutils container">
+</div>
+<section id="generic-annotation">
+<h2>Generic Annotation<a class="headerlink" href="#generic-annotation" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="InputImage" class="doc_header"><code>class</code> <code>InputImage</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L54" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>InputImage</code>(<strong><code class="docutils literal notranslate"><span class="pre">image_dir</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">str</span></code>=<em><code class="docutils literal notranslate"><span class="pre">'pics'</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_width</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_height</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">fit_canvas</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">bool</span></code>=<em><code class="docutils literal notranslate"><span class="pre">False</span></code></em>) :: <a class="reference external" href="/ipyannotatormltypes.html#Input"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></p>
+</div></blockquote>
+<p>image_dir: string
+Directory of the image</p>
+<p>image_width: int
+Width of the image</p>
+<p>image_height: int
+Height of the image</p>
+<p>fit_canvas: bool
+Ignores the image size and fit image on the canvas size</p>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="NoOutput" class="doc_header"><code>class</code> <code>NoOutput</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L141" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>NoOutput</code>() :: <a class="reference external" href="/ipyannotatormltypes.html#Output"><code class="docutils literal notranslate"><span class="pre">Output</span></code></a></p>
+</div></blockquote>
+<p>Explore the data without worring
+about which type of data it's wanted
+to output</p>
+</div>
+</div>
+</section>
+<section id="image-classification">
+<h2>Image classification<a class="headerlink" href="#image-classification" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="InputImage" class="doc_header"><code>class</code> <code>InputImage</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L54" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>InputImage</code>(<strong><code class="docutils literal notranslate"><span class="pre">image_dir</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">str</span></code>=<em><code class="docutils literal notranslate"><span class="pre">'pics'</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_width</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_height</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">fit_canvas</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">bool</span></code>=<em><code class="docutils literal notranslate"><span class="pre">False</span></code></em>) :: <a class="reference external" href="/ipyannotatormltypes.html#Input"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></p>
+</div></blockquote>
+<p>image_dir: string
+Directory of the image</p>
+<p>image_width: int
+Width of the image</p>
+<p>image_height: int
+Height of the image</p>
+<p>fit_canvas: bool
+Ignores the image size and fit image on the canvas size</p>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="OutputImageLabel" class="doc_header"><code>class</code> <code>OutputImageLabel</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L85" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>OutputImageLabel</code>(<strong><code class="docutils literal notranslate"><span class="pre">label_dir</span></code></strong>=<em><code class="docutils literal notranslate"><span class="pre">None</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">label_width</span></code></strong>=<em><code class="docutils literal notranslate"><span class="pre">50</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">label_height</span></code></strong>=<em><code class="docutils literal notranslate"><span class="pre">50</span></code></em>) :: <a class="reference external" href="/ipyannotatormltypes.html#Output"><code class="docutils literal notranslate"><span class="pre">Output</span></code></a></p>
+</div></blockquote>
+<p>Configures the image output.</p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">label_dir</span></code> is specified, it generates randomized one.</p>
+</div>
+</div>
+</section>
+<section id="capture-annotator">
+<h2>Capture Annotator<a class="headerlink" href="#capture-annotator" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="InputImage" class="doc_header"><code>class</code> <code>InputImage</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L54" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>InputImage</code>(<strong><code class="docutils literal notranslate"><span class="pre">image_dir</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">str</span></code>=<em><code class="docutils literal notranslate"><span class="pre">'pics'</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_width</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_height</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">fit_canvas</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">bool</span></code>=<em><code class="docutils literal notranslate"><span class="pre">False</span></code></em>) :: <a class="reference external" href="/ipyannotatormltypes.html#Input"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></p>
+</div></blockquote>
+<p>image_dir: string
+Directory of the image</p>
+<p>image_width: int
+Width of the image</p>
+<p>image_height: int
+Height of the image</p>
+<p>fit_canvas: bool
+Ignores the image size and fit image on the canvas size</p>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="OutputGridBox" class="doc_header"><code>class</code> <code>OutputGridBox</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L136" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>OutputGridBox</code>() :: <a class="reference external" href="/ipyannotatormltypes.html#Output"><code class="docutils literal notranslate"><span class="pre">Output</span></code></a></p>
+</div></blockquote>
+<p>Configures the capture annotator</p>
+</div>
+</div>
+</section>
+<section id="bounding-box-image-annotation">
+<h2>Bounding Box image annotation<a class="headerlink" href="#bounding-box-image-annotation" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="InputImage" class="doc_header"><code>class</code> <code>InputImage</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L54" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>InputImage</code>(<strong><code class="docutils literal notranslate"><span class="pre">image_dir</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">str</span></code>=<em><code class="docutils literal notranslate"><span class="pre">'pics'</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_width</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_height</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">fit_canvas</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">bool</span></code>=<em><code class="docutils literal notranslate"><span class="pre">False</span></code></em>) :: <a class="reference external" href="/ipyannotatormltypes.html#Input"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></p>
+</div></blockquote>
+<p>image_dir: string
+Directory of the image</p>
+<p>image_width: int
+Width of the image</p>
+<p>image_height: int
+Height of the image</p>
+<p>fit_canvas: bool
+Ignores the image size and fit image on the canvas size</p>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="OutputImageBbox" class="doc_header"><code>class</code> <code>OutputImageBbox</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L109" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>OutputImageBbox</code>(<strong><code class="docutils literal notranslate"><span class="pre">classes</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">List</span></code>[<code class="docutils literal notranslate"><span class="pre">str</span></code>]=<em><code class="docutils literal notranslate"><span class="pre">None</span></code></em>) :: <a class="reference external" href="/ipyannotatormltypes.html#Output"><code class="docutils literal notranslate"><span class="pre">Output</span></code></a></p>
+</div></blockquote>
+<p>classes: List[str]
+Define the classes of objects available
+to be classified</p>
+</div>
+</div>
+</section>
+<section id="bounding-box-video-annotator">
+<h2>Bounding box video annotator<a class="headerlink" href="#bounding-box-video-annotator" title="Permalink to this headline">¶</a></h2>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="InputImage" class="doc_header"><code>class</code> <code>InputImage</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L54" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>InputImage</code>(<strong><code class="docutils literal notranslate"><span class="pre">image_dir</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">str</span></code>=<em><code class="docutils literal notranslate"><span class="pre">'pics'</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_width</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">image_height</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">int</span></code>=<em><code class="docutils literal notranslate"><span class="pre">100</span></code></em>, <strong><code class="docutils literal notranslate"><span class="pre">fit_canvas</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">bool</span></code>=<em><code class="docutils literal notranslate"><span class="pre">False</span></code></em>) :: <a class="reference external" href="/ipyannotatormltypes.html#Input"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></p>
+</div></blockquote>
+<p>image_dir: string
+Directory of the image</p>
+<p>image_width: int
+Width of the image</p>
+<p>image_height: int
+Height of the image</p>
+<p>fit_canvas: bool
+Ignores the image size and fit image on the canvas size</p>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<h3 id="OutputVideoBbox" class="doc_header"><code>class</code> <code>OutputVideoBbox</code><a href="https://github.com/palaimon/ipyannotator/tree/main/ipyannotator/mltypes.py#L121" class="source_link" style="float:right">[source]</a></h3>
+<blockquote>
+<div><p><code>OutputVideoBbox</code>(<strong>*<code class="docutils literal notranslate"><span class="pre">args</span></code></strong>, <strong>**<code class="docutils literal notranslate"><span class="pre">kwargs</span></code></strong>) :: <a class="reference external" href="/ipyannotatormltypes.html#OutputImageBbox"><code class="docutils literal notranslate"><span class="pre">OutputImageBbox</span></code></a></p>
+</div></blockquote>
+<p>Specialization of the OutputImageBbox.</p>
+<p>classes: List[str]
+Define the classes of objects available
+to be classified</p>
+</div>
+</div>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="19_bbox_video_annotator.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Bbox video annotator</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="21_api_doc.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API Reference</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

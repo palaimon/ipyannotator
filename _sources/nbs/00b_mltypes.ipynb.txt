@@ -34,7 +34,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -168,6 +172,9 @@
     "\n",
     "    image_height: int\n",
     "        Height of the image\n",
+    "\n",
+    "    fit_canvas: bool\n",
+    "        Ignores the image size and fit image on the canvas size\n",
     "    \"\"\"\n",
     "\n",
     "    def __init__(\n",
@@ -280,9 +287,9 @@
     "#export\n",
     "class OutputImageLabel(Output):\n",
     "    \"\"\"\n",
-    "     Will handle the image output.\n",
-    "     If no `label_dir` is specified, it should generate randomized one.\n",
+    "    Configures the image output.\n",
     "\n",
+    "    If no `label_dir` is specified, it generates randomized one.\n",
     "    \"\"\"\n",
     "\n",
     "    def __init__(self, label_dir=None, label_width=50, label_height=50):\n",
@@ -351,6 +358,12 @@
    "source": [
     "#export\n",
     "class OutputImageBbox(Output):\n",
+    "    \"\"\"\n",
+    "    classes: List[str]\n",
+    "        Define the classes of objects available\n",
+    "        to be classified\n",
+    "    \"\"\"\n",
+    "\n",
     "    def __init__(self, classes: List[str] = None):\n",
     "        self.classes = classes or []\n",
     "        self.drawing_enabled = True"
@@ -364,6 +377,14 @@
    "source": [
     "#export\n",
     "class OutputVideoBbox(OutputImageBbox):\n",
+    "    \"\"\"\n",
+    "    Specialization of the OutputImageBbox.\n",
+    "\n",
+    "    classes: List[str]\n",
+    "        Define the classes of objects available\n",
+    "        to be classified\n",
+    "    \"\"\"\n",
+    "\n",
     "    def __init__(self, *args, **kwargs):\n",
     "        super().__init__(*args, **kwargs)\n",
     "        self.drawing_enabled = True\n",
@@ -378,6 +399,7 @@
    "source": [
     "#export\n",
     "class OutputGridBox(Output):\n",
+    "    \"\"\"Configures the capture annotator\"\"\"\n",
     "    pass"
    ]
   },
@@ -389,6 +411,9 @@
    "source": [
     "#export\n",
     "class NoOutput(Output):\n",
+    "    \"\"\"Explore the data without worring\n",
+    "    about which type of data it's wanted\n",
+    "    to output\"\"\"\n",
     "    pass"
    ]
   },

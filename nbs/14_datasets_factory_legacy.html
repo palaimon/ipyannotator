@@ -91,6 +91,18 @@
  </a>
 </li>
 
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="22_input_output_doc.html">
+  Input/Output Types
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="21_api_doc.html">
+  API Reference
+ </a>
+</li>
+
     
 </ul>
       </div>
@@ -285,43 +297,11 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-
-
-<span class="kn">from</span> <span class="nn">ipyannotator.base</span> <span class="kn">import</span> <span class="n">Settings</span>
-<span class="kn">from</span> <span class="nn">ipyannotator.datasets.download</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_cifar10</span><span class="p">,</span>
-                                            <span class="n">get_cub_200_2011</span><span class="p">,</span>
-                                            <span class="n">get_oxford_102_flowers</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">ipyannotator.datasets.generators_legacy</span> <span class="kn">import</span> <span class="n">create_color_classification</span>
-
-<span class="kn">from</span> <span class="nn">ipyannotator.datasets.generators</span> <span class="kn">import</span> <span class="n">create_object_detection</span><span class="p">,</span> <span class="n">xyxy_to_xywh</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="datasets-factory">
 <h1>Datasets factory<a class="headerlink" href="#datasets-factory" title="Permalink to this headline">¶</a></h1>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">class</span> <span class="nc">DS</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">ARTIFICIAL_CLASSIFICATION</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-    <span class="n">ARTIFICIAL_DETECTION</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-    <span class="n">CIFAR10</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-    <span class="n">CUB200</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-    <span class="n">OXFORD102</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -347,9 +327,9 @@
                         <span class="n">label_dir</span><span class="o">=</span><span class="s1">&#39;class_images&#39;</span><span class="p">,</span>
                         <span class="c1"># used on create step - should be empty!</span>
                         <span class="n">result_dir</span><span class="o">=</span><span class="s1">&#39;create_results&#39;</span><span class="p">,</span>
-                        <span class="n">im_width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">im_height</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                        <span class="n">im_width</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">im_height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                         <span class="n">label_width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">label_height</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-                        <span class="n">n_cols</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+                        <span class="n">n_cols</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="n">DS</span><span class="o">.</span><span class="n">ARTIFICIAL_DETECTION</span><span class="p">:</span>
         <span class="n">project_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/artificial_detection/&#39;</span><span class="p">)</span>
@@ -432,26 +412,7 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">_combine_train_test</span><span class="p">(</span><span class="n">project_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
-    <span class="c1"># combine train/test in one json file.</span>
-    <span class="c1"># Used to generate all possible class labels</span>
-    <span class="n">all_annotations</span> <span class="o">=</span> <span class="n">project_path</span> <span class="o">/</span> <span class="s2">&quot;annotations.json&quot;</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">project_path</span> <span class="o">/</span> <span class="s2">&quot;annotations_train.json&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">train</span><span class="p">:</span>
-        <span class="n">tr</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">project_path</span> <span class="o">/</span> <span class="s2">&quot;annotations_test.json&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">test</span><span class="p">:</span>
-        <span class="n">te</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">all_annotations</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="o">**</span><span class="n">tr</span><span class="p">,</span> <span class="o">**</span><span class="n">te</span><span class="p">},</span> <span class="n">outfile</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">all_annotations</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 </section>
 

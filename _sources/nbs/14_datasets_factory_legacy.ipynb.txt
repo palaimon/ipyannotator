@@ -15,7 +15,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -47,7 +51,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -87,9 +95,9 @@
     "                        label_dir='class_images',\n",
     "                        # used on create step - should be empty!\n",
     "                        result_dir='create_results',\n",
-    "                        im_width=50, im_height=50,\n",
+    "                        im_width=100, im_height=100,\n",
     "                        label_width=30, label_height=30,\n",
-    "                        n_cols=3)\n",
+    "                        n_cols=4)\n",
     "\n",
     "    elif dataset == DS.ARTIFICIAL_DETECTION:\n",
     "        project_path = Path('data/artificial_detection/')\n",
@@ -173,7 +181,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",

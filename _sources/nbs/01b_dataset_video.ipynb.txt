@@ -55,7 +55,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "ec91f97e",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -83,7 +87,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "c780e88b",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -141,7 +149,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "d870b97b",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -172,7 +184,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "3c3553b4",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -200,7 +216,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "ffa05768",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -253,7 +273,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "817cdcc9",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -275,7 +299,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "6e39e3f7",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -323,7 +351,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "31155dcc",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -409,7 +441,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "2623ff0f",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -444,7 +480,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "0f4d9dee",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",

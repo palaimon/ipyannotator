@@ -53,7 +53,7 @@
     "from ipyannotator.annotator import Annotator\n",
     "from ipyannotator.datasets.factory_legacy import DS, get_settings, _combine_train_test\n",
     "from ipyannotator.helpers import Tutorial\n",
-    "from ipyannotator.doc_utils import is_building_docs"
+    "from ipyannotator.docs.utils import is_building_docs"
    ]
   },
   {

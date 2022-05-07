@@ -41,7 +41,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -79,7 +83,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -197,12 +205,14 @@
     "    def mark(self, ev):\n",
     "        # pad to compensate self size with border\n",
     "        if self.active:\n",
+    "            active_color = '#f7f01e'\n",
+    "            padding = '0px'\n",
     "            if self.setting.display_label:\n",
-    "                self.layout.border = 'solid 2px #1B8CF3'\n",
-    "                self.layout.padding = '0px'\n",
+    "                self.layout.border = f'solid 2px {active_color}'\n",
+    "                self.layout.padding = padding\n",
     "            else:\n",
-    "                self.image.layout.border = 'solid 3px #1B8CF3'\n",
-    "                self.image.layout.padding = '0px'\n",
+    "                self.image.layout.border = f'solid 3px {active_color}'\n",
+    "                self.image.layout.padding = padding\n",
     "        else:\n",
     "            if self.setting.display_label:\n",
     "                self.layout.border = 'none'\n",

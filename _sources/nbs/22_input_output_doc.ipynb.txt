@@ -1,0 +1,264 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b30eb306",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp docs.input_output"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e112dd88",
+   "metadata": {},
+   "source": [
+    "# Input/Output Types\n",
+    "\n",
+    "Ipyannotator uses a pair of Input/Output to configure its API. The pair of Input/Output provides a simple and flexible way to write and combine annotators, making it easier users to customize the Ipyannotator API to their needs.\n",
+    "\n",
+    "The current page explain which pairs are available."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9e1e7b91",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "from nbdev import show_doc\n",
+    "from ipyannotator.mltypes import (\n",
+    "    InputImage,\n",
+    "    OutputImageLabel,\n",
+    "    OutputImageBbox,\n",
+    "    OutputVideoBbox,\n",
+    "    OutputGridBox,\n",
+    "    NoOutput\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bcd3e259",
+   "metadata": {},
+   "source": [
+    "## Generic Annotation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4f7c3784",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(InputImage, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e4722377",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(NoOutput, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f120814c",
+   "metadata": {},
+   "source": [
+    "## Image classification"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "19b09c0d",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(InputImage, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e523878a",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(OutputImageLabel, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4d1c883e",
+   "metadata": {},
+   "source": [
+    "## Capture Annotator"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "33a36698",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(InputImage, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "27949366",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(OutputGridBox, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b7322dd1",
+   "metadata": {},
+   "source": [
+    "## Bounding Box image annotation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "754e336b",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(InputImage, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0d2c46ef",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(OutputImageBbox, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "14b66b6e",
+   "metadata": {},
+   "source": [
+    "## Bounding box video annotator"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "fd9bcd48",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(InputImage, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8ff9bd80",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(OutputVideoBbox, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "45261ebd",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

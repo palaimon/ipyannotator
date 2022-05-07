@@ -91,6 +91,18 @@
  </a>
 </li>
 
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="22_input_output_doc.html">
+  Input/Output Types
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="21_api_doc.html">
+  API Reference
+ </a>
+</li>
+
     
 </ul>
       </div>
@@ -326,64 +338,16 @@
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="storage">
 <h1>Storage<a class="headerlink" href="#storage" title="Permalink to this headline">¶</a></h1>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">MutableMapping</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="project-structure-setup">
 <h1>Project Structure setup<a class="headerlink" href="#project-structure-setup" title="Permalink to this headline">¶</a></h1>
 <p>just to folders, first containing object (e.g images) to annotate and second folder
 contains annotation data/results.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">group_files_by_class</span><span class="p">(</span><span class="n">annotations_dict</span><span class="p">):</span>
-    <span class="n">grouped</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">file</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">annotations_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">for</span> <span class="n">class_</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
-            <span class="n">grouped</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">grouped</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-
-<span class="k">def</span> <span class="nf">construct_annotation_path</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">results_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">parent</span>
-    <span class="k">elif</span> <span class="n">project_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
-            <span class="n">project_path</span><span class="p">,</span> <span class="s1">&#39;results&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">results_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">)</span>
-
-        <span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s1">&#39;annotations.json&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Annotations file already exists in </span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s2">!&quot;</span>
-                          <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> If you want to create annotations from scratch&quot;</span>
-                          <span class="s2">&quot; - use empty dir!&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must define `project_path` or `file_name`!&quot;</span><span class="p">)</span>
-
-    <span class="n">results_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">annotation_file_path</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -401,68 +365,9 @@ contains annotation data/results.</p>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="kn">from</span> <span class="nn">ipyannotator.base</span> <span class="kn">import</span> <span class="n">validate_project_path</span>
-
-
-<span class="k">def</span> <span class="nf">setup_project_paths</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">image_dir</span><span class="o">=</span><span class="s1">&#39;pics&#39;</span><span class="p">,</span>
-                        <span class="n">label_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">results_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">project_path</span> <span class="o">=</span> <span class="n">validate_project_path</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
-
-    <span class="n">im_dir</span> <span class="o">=</span> <span class="n">project_path</span> <span class="o">/</span> <span class="n">image_dir</span>
-
-    <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">parent</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: `results_dir` is deduced from `file_name` path: </span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
-            <span class="n">project_path</span><span class="p">,</span> <span class="s1">&#39;results&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">results_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">)</span>
-
-        <span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s1">&#39;annotations.json&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: Annotations file already exists in </span><span class="si">{</span><span class="n">results_dir</span><span class="si">}</span><span class="s2">&quot;</span>
-                  <span class="s2">&quot;!</span><span class="se">\n</span><span class="s2">         If you want to create annotations from scratch&quot;</span>
-                  <span class="s2">&quot; - use empty dir isntead.&quot;</span><span class="p">)</span>
-
-    <span class="n">results_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">project_paths</span> <span class="o">=</span> <span class="p">(</span><span class="n">im_dir</span><span class="p">,</span> <span class="n">annotation_file_path</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">label_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">project_paths</span> <span class="o">+=</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">label_dir</span><span class="p">),)</span>
-
-    <span class="k">return</span> <span class="n">project_paths</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-
-
-<span class="k">def</span> <span class="nf">get_image_list_from_folder</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
-    <span class="sd">&#39;&#39;&#39; Scans &lt;image_dir&gt; to construct list of existing images as &lt;Path&gt; objects</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="c1"># if no files in `image_dir` assume all images are under `class_name` directories</span>
-    <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">Path</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)]):</span>
-        <span class="n">path_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">image_dir</span><span class="si">}</span><span class="s1">/*/*&#39;</span><span class="p">)]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">path_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)</span> <span class="k">if</span>
-                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">))]</span>
-
-    <span class="k">return</span> <span class="n">path_list</span>
-
-
-<span class="k">def</span> <span class="nf">strip_path</span><span class="p">(</span><span class="n">paths</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="generic-storage-for-annotations">
@@ -551,120 +456,9 @@ contains annotation data/results.</p>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="kn">from</span> <span class="nn">ipyannotator.helpers</span> <span class="kn">import</span> <span class="n">flatten</span><span class="p">,</span> <span class="n">reconstruct_class_images</span>
-
-
-<span class="k">class</span> <span class="nc">JsonLabelStorage</span><span class="p">(</span><span class="n">AnnotationStorage</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">label_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Path</span><span class="p">],</span> <span class="n">annotation_file_path</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">annotation_file_path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">label_dir</span> <span class="o">=</span> <span class="n">label_dir</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">annotation_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
-                                            <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">())</span> <span class="k">else</span> <span class="kc">False</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="n">get_image_list_from_folder</span><span class="p">(</span><span class="n">im_dir</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_dir</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
-            <span class="c1"># artificialy generate labels if no class images given (TODO: temorary workaround)</span>
-            <span class="k">if</span> <span class="s1">&#39;class_autogenerated_&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">label_dir</span><span class="p">):</span>
-                <span class="n">label_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span><span class="p">:</span>
-                    <span class="n">reconstruct_class_images</span><span class="p">(</span><span class="n">label_dir</span><span class="p">,</span> <span class="n">annotation_file_path</span><span class="p">,</span> <span class="n">lbl_w</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">lbl_h</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Annotation file should be provided&quot;</span>
-                                  <span class="s2">&quot; to generate labels automatically!&quot;</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">strip_path</span><span class="p">(</span><span class="n">get_image_list_from_folder</span><span class="p">(</span><span class="n">label_dir</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_dir</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">label_dir</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;label_dir should have str or Path type&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span><span class="p">:</span>  <span class="c1"># init from json</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># init storage from folder</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">get_im_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_files</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-        <span class="n">images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;!! No Images to dipslay !!&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">filter_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">images</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="ow">in</span> <span class="n">filter_files</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;!! No image files to display. Check filter !!&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">images</span>
-
-    <span class="k">def</span> <span class="nf">get_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;!! No labels to display !!&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">[]</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_dir</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-            <span class="k">return</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">values</span><span class="p">])</span>
-
-        <span class="c1"># create mod -&gt; display all labels from folder, not json</span>
-        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span><span class="p">)</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-
-<span class="k">class</span> <span class="nc">JsonCaptureStorage</span><span class="p">(</span><span class="n">AnnotationStorage</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">annotation_file_path</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">im_dir</span> <span class="o">=</span> <span class="n">im_dir</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">annotation_file_path</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">annotation_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
-                                            <span class="n">annotation_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">())</span> <span class="k">else</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">get_image_list_from_folder</span><span class="p">(</span><span class="n">im_dir</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_annotation_file</span><span class="p">:</span>  <span class="c1"># init from json</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># init storage from folder</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">get_im_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_files</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;!! No Images to dipslay !!&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">filter_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">images</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="ow">in</span> <span class="n">filter_files</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;!! No image files to display. Check filter !!&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">images</span>
-
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_file_path</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="db-backed-storage">
@@ -698,24 +492,7 @@ contains annotation data/results.</p>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">_list_tables</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    SELECT</span>
-<span class="s2">        name</span>
-<span class="s2">    FROM</span>
-<span class="s2">        sqlite_master</span>
-<span class="s2">    WHERE</span>
-<span class="s2">        type = &#39;table&#39; AND</span>
-<span class="s2">        name NOT LIKE &#39;sqlite_%&#39;;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">suppliers</span><span class="p">;</span><span class="w"></span>
 
@@ -728,52 +505,9 @@ contains annotation data/results.</p>
 <span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">_create_tables</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">CREATE TABLE IF NOT EXISTS data (objectID TEXT,</span>
-<span class="s2">                                 timestamp DATETIME DEFAULT(STRFTIME(&#39;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:</span><span class="si">%f</span><span class="s2">&#39;, &#39;NOW&#39;)),</span>
-<span class="s2">                                 data JSON,</span>
-<span class="s2">                                 author TEXT,</span>
-<span class="s2">                                 PRIMARY KEY (objectId, timestamp)</span>
-<span class="s2">                                );</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    CREATE TABLE IF NOT EXISTS objects (objectID TEXT,</span>
-<span class="s2">                                        orderID INTEGER PRIMARY KEY AUTOINCREMENT</span>
-
-<span class="s2">                                       )</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-</pre></div>
+<div class="cell tag_remove-input docutils container">
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="k">def</span> <span class="nf">_list_table</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">latest</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">latest</span><span class="p">:</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        SELECT * from </span><span class="si">{}</span><span class="s2"></span>
-
-<span class="s2">        GROUP BY objectID</span>
-<span class="s2">        ORDER BY timestamp</span>
-<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        SELECT * from </span><span class="si">{}</span><span class="s2"></span>
-<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 </section>
 <section id="sql-helper-functions">

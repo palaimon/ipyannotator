@@ -42,7 +42,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -110,7 +114,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -179,7 +187,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -252,7 +264,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -322,20 +338,21 @@
     "\n",
     "        # update ipyannotator's annotations bassed on previous step and save\n",
     "        annotator.storage.update((k, self.filterered.get(k, [])) for k in annotator.storage.keys())\n",
-    "        annotator.view._save_btn.click()\n",
+    "        annotator.storage.save()\n",
     "\n",
     "    # Annotations fixer used in image_classification tutorial [improve]\n",
-    "    def fix_incorrect_annotations(self, annotator):\n",
+    "    def fix_incorrect_annotations(self, annotator: list):\n",
     "        with self.all_annotations.open() as f:\n",
     "            anno_ = json.load(f)\n",
     "\n",
     "        #  mark spoiled on create step, imitating human correction\n",
     "        for i in tqdm(annotator):\n",
-    "            for j in range(i.app_state.max_im_number):\n",
-    "                i.controller.idx_changed(j)\n",
-    "                for k, v in i.capture_state.annotations.items():\n",
-    "                    i.capture_state.annotations[k] = {'answer': anno_[k] != self.filterered[k]}\n",
-    "                    i.view._save_btn.click()\n",
+    "            i.storage.annotations.update(\n",
+    "                (\n",
+    "                    k, {'answer': anno_[k] != self.filterered[k]}\n",
+    "                ) for k in i.storage.annotations.keys()\n",
+    "            )\n",
+    "            i.storage.annotations.save()\n",
     "\n",
     "    # Random annotator used in bbox tutorial [create]\n",
     "    def add_random_bboxes(self, annotator):\n",
@@ -347,7 +364,7 @@
     "        bbox_noise = 0.2\n",
     "\n",
     "        # lets randomly annotate each image from code and save annotations\n",
-    "        for k, f_ in tqdm(zip(annotator.storage.keys(), filt)):\n",
+    "        for k, f_ in tqdm(list(zip(annotator.storage.keys(), filt))):\n",
     "            # do not overwrite existing annotations\n",
     "            if annotator.storage[k]:\n",
     "                continue\n",

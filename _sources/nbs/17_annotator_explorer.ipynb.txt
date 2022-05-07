@@ -30,7 +30,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "c1df78df",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -71,7 +75,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "f846f52d",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -160,7 +168,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "c0d520b1",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -178,7 +190,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "aa9df6b1",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -207,7 +223,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "acebb466",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",

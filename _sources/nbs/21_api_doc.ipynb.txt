@@ -1,0 +1,133 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4ea99533",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# default_exp docs.api"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8ae283ca",
+   "metadata": {},
+   "source": [
+    "# API Reference\n",
+    "\n",
+    "Detailed information about Ipyannotator API. To see usage please check Ipyannotator tutorials."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "443a3204",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "from ipyannotator.annotator import Annotator\n",
+    "from ipyannotator.docs.utils import show_doc"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "810c4106",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(Annotator, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8d7d2c09",
+   "metadata": {},
+   "source": [
+    "Once the API is configured the following actions are available."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a899c11b",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(Annotator.explore)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e1e8918b",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(Annotator.create)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "84c2193f",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(Annotator.improve)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "26cc23cf",
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#hide\n",
+    "from nbdev.export import notebook2script\n",
+    "notebook2script()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

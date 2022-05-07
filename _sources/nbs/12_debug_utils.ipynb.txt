@@ -30,7 +30,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "919888ab",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -70,7 +74,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "8654715d",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",

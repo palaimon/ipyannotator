@@ -32,7 +32,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "# exporti\n",
@@ -43,7 +47,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -117,7 +125,7 @@
     "draw = ImageDraw.Draw(im)\n",
     "\n",
     "draw.ellipse((100, 100, 150, 200), fill=(255, 0, 0), outline=(0, 0, 0))\n",
-    "draw.rectangle((200, 100, 300, 200), fill=(0, 192, 192), outline=(255, 255, 255))\n",
+    "draw.rectangle((200, 100, 300, 200), fill=(4, 4, 200), outline=(255, 255, 255))\n",
     "draw.line((350, 200, 450, 100), fill=(255, 255, 0), width=10)\n",
     "im"
    ]
@@ -164,7 +172,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -212,7 +224,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -257,7 +273,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -282,7 +302,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -425,7 +449,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -510,7 +538,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -522,7 +554,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -564,7 +600,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "# exporti\n",
@@ -573,7 +613,7 @@
     "\n",
     "    (path / 'images').mkdir(parents=True, exist_ok=True)\n",
     "    red = (255, 0, 0)\n",
-    "    blue = (0, 192, 192)\n",
+    "    blue = (0, 0, 255)\n",
     "    yellow = (255, 255, 0)\n",
     "    color = [red, blue, yellow]\n",
     "    cname = ['red', 'blue', 'yellow']\n",

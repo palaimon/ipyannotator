@@ -45,7 +45,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "60f35301",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -86,7 +90,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "fd9286ee",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -182,7 +190,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "ed316cbd",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -258,7 +270,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "95292b6b",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -390,7 +406,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "f7c31a1c",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",

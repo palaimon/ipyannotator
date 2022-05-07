@@ -41,7 +41,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -106,7 +110,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -134,7 +142,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -234,10 +246,12 @@
     "            pane_widths=(2, 8, 0),\n",
     "            pane_heights=(1, 4, 1))\n",
     "\n",
+    "    @debug_output.capture(clear_output=True)\n",
     "    def _on_navi_clicked(self, index: int):\n",
     "        if self.on_navi_clicked:\n",
     "            self.on_navi_clicked(index)\n",
     "\n",
+    "        self._grid_box.clear()\n",
     "        self._grid_box.load(\n",
     "            _label_store_to_image_button(self._capture_state.annotations)\n",
     "        )\n",
@@ -268,9 +282,9 @@
     "        if self._select_none_changed:\n",
     "            self._select_none_changed(change)\n",
     "\n",
-    "    def on_grid_clicked(self, event, name=None):\n",
+    "    def on_grid_clicked(self, event, value=None):\n",
     "        if self._grid_box_clicked:\n",
-    "            self._grid_box_clicked(event, name)\n",
+    "            self._grid_box_clicked(event, value)\n",
     "        else:\n",
     "            warnings.warn(\"Grid box click didn't triggered any event.\")"
    ]
@@ -440,7 +454,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -492,7 +510,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -577,8 +599,8 @@
     "        )\n",
     "\n",
     "    @debug_output.capture(clear_output=False)\n",
-    "    def handle_grid_click(self, event: dict, name=None):\n",
-    "        p = self._storage.input_item_path / name\n",
+    "    def handle_grid_click(self, event: dict, value=None):\n",
+    "        p = self._storage.input_item_path / value\n",
     "        current_state = deepcopy(self._capture_state.annotations)\n",
     "        if not p.is_dir():\n",
     "            state_answer = self._capture_state.annotations[\n",
@@ -989,7 +1011,7 @@
     "ca_annotator.app_state.index = 0\n",
     "ca_annotator.controller.handle_grid_click(\n",
     "    event={},\n",
-    "    name='pink25x25.png'\n",
+    "    value='pink25x25.png'\n",
     ")\n",
     "\n",
     "assert ca_annotator.capture_state.annotations['../data/projects/capture1/pics/pink25x25.png'] == {\n",
@@ -1013,7 +1035,7 @@
     "\n",
     "ca_annotator.controller.handle_grid_click(\n",
     "    event=None,\n",
-    "    name='pink50x125.png'\n",
+    "    value='pink50x125.png'\n",
     ")\n",
     "\n",
     "assert ca_annotator.capture_state.annotations['../data/projects/capture1/pics/pink50x125.png'] == {\n",

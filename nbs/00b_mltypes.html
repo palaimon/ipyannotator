@@ -91,6 +91,18 @@
  </a>
 </li>
 
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="22_input_output_doc.html">
+  Input/Output Types
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="21_api_doc.html">
+  API Reference
+ </a>
+</li>
+
     
 </ul>
       </div>
@@ -306,17 +318,7 @@
 </div>
 <section class="tex2jax_ignore mathjax_ignore" id="mltypes">
 <h1>Mltypes<a class="headerlink" href="#mltypes" title="Permalink to this headline">¶</a></h1>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#exporti</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">import</span> <span class="nn">attr</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-</pre></div>
-</div>
-</div>
+<div class="cell tag_remove-input docutils container">
 </div>
 <section id="types">
 <h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
@@ -387,6 +389,9 @@
 
 <span class="sd">    image_height: int</span>
 <span class="sd">        Height of the image</span>
+
+<span class="sd">    fit_canvas: bool</span>
+<span class="sd">        Ignores the image size and fit image on the canvas size</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -412,9 +417,9 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
 <span class="k">class</span> <span class="nc">OutputImageLabel</span><span class="p">(</span><span class="n">Output</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">     Will handle the image output.</span>
-<span class="sd">     If no `label_dir` is specified, it should generate randomized one.</span>
+<span class="sd">    Configures the image output.</span>
 
+<span class="sd">    If no `label_dir` is specified, it generates randomized one.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label_width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">label_height</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
@@ -445,6 +450,12 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
 <span class="k">class</span> <span class="nc">OutputImageBbox</span><span class="p">(</span><span class="n">Output</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    classes: List[str]</span>
+<span class="sd">        Define the classes of objects available</span>
+<span class="sd">        to be classified</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes</span> <span class="o">=</span> <span class="n">classes</span> <span class="ow">or</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawing_enabled</span> <span class="o">=</span> <span class="kc">True</span>
@@ -456,6 +467,14 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
 <span class="k">class</span> <span class="nc">OutputVideoBbox</span><span class="p">(</span><span class="n">OutputImageBbox</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Specialization of the OutputImageBbox.</span>
+
+<span class="sd">    classes: List[str]</span>
+<span class="sd">        Define the classes of objects available</span>
+<span class="sd">        to be classified</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawing_enabled</span> <span class="o">=</span> <span class="kc">True</span>
@@ -468,6 +487,7 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
 <span class="k">class</span> <span class="nc">OutputGridBox</span><span class="p">(</span><span class="n">Output</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Configures the capture annotator&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </pre></div>
 </div>
@@ -477,6 +497,9 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#export</span>
 <span class="k">class</span> <span class="nc">NoOutput</span><span class="p">(</span><span class="n">Output</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Explore the data without worring</span>
+<span class="sd">    about which type of data it&#39;s wanted</span>
+<span class="sd">    to output&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </pre></div>
 </div>

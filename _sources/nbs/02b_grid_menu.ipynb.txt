@@ -45,7 +45,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "1d7bd480",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
@@ -88,7 +92,11 @@
    "cell_type": "code",
    "execution_count": null,
    "id": "de01fde1",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
    "outputs": [],
    "source": [
     "#exporti\n",
