@@ -34,7 +34,7 @@ The notebooks contains the development dependencies: [pytest](https://docs.pytes
 
 ### Run ipyannotator as stand-alone web app using voila
 
-Ipyannotator can be executed as a web app using the [voila](https://github.com/voila-dashboards/voila) library.
+Ipyannotator can be executed as a web app using the [voila](https://github.com/voila-dashboards/voila) library. The following sections describe how to run using poetry and pip.
 
 #### Using poetry
 
