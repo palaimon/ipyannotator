@@ -2,7 +2,11 @@
 
 ![CI-Badge](https://github.com/palaimon/ipyannotator/workflows/CI/badge.svg)
 
-Ipyannotator is a flexible annotation system. The library contains some pre-defined annotators that can be used out of the box, but it also can be extend and customized according to the users needs. Check our [tutorials](https://palaimon.github.io/ipyannotator/docs/tutorials.html) for a quickly understanding of it's usage and check our [API](https://palaimon.github.io/ipyannotator/nbs/21_api_doc.html) for quick reference.
+Ipyannotator is a flexible annotation system. Developed to allow users to hack its features by extending and customizing it. 
+
+The large variety of annotation tasks, data formats and data visualizations is a challenging when dealing with multiple domains of supervised machine learning (ML). The existent tooling is not flexible enough which imposes limitations to the user. By providing a framework where users can use, customize and create their own annotation tooling this projects aims to solve this problem.
+
+The library contains some pre-defined annotators that can be used out of the box, but it also can be extend and customized according to the users needs. Check our [tutorials](https://palaimon.github.io/ipyannotator/docs/tutorials.html) for a quickly understanding of it's usage and check our [API](https://palaimon.github.io/ipyannotator/nbs/21_api_doc.html) for quick reference.
 
 This library has been written in the [literate programming style](https://en.wikipedia.org/wiki/Literate_programming) popularized for jupyter notebooks by [nbdev](https://www.fast.ai/2019/12/02/nbdev/). Further than our documentation the jupyter notebooks located at `nbs/` can be explored to learn more about the inner working of Ipyannotator.
 
