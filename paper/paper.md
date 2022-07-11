@@ -33,7 +33,15 @@ Ipyannotator is a library developed to provide a solution to this problem. Ipyan
 
 Jupyter is one of the most popular tools for data science [@wang2019how] and is currently used by more than 7850000 public repositories on GitHub [@parente2022nbestimate]. Ipyannotator is a tool developed to be used on Jupyter Notebook, allowing researchers and developers to integrate the library into their ML projects quickly and easily. The solution, however, is not limited to research and developement teams. Since the Ipyannotator runs also on a web server, it can by used for annotation purposes by any user.
 
-[@lahtinen2021brima] developed an annotator as a browser plugin, [@dutta2019via] built an annotator as a program that runs on the browser, and [@bernal2019gtcreator] developed a desktop application for domain-specific medical image annotation. The previous annotation tools are restricted to fixed data types and a specific type of annotation. Since the Ipyannotator can be integrated via Jupyter Notebook, additional features and general customization can easily be performed by the developers, creating an "infinitely hackable annotation framework".
+[@lahtinen2021brima] developed an annotator as a browser plugin, [@dutta2019via] built an annotator as a program that runs on the browser, and [@bernal2019gtcreator] developed a desktop application for domain-specific medical image annotation. The previous annotation tools are restricted to fixed data types and a specific type of annotation. Since Ipyannotator runs on top of Jupyter notebooks and due to the dynamic nature of the Python language, extra features and customization can be easily developed by the data science team, creating an "infinitely hackable annotation framework".
+
+# Infinitely hackable annotation framework
+
+Ipyannotator uses Python libs that abstract the HTML and Javascript interactions, allowing developers to design UI interactions and HTML elements using Python. Python's dynamic nature allows users to modify classes or modules in runtime, due to the libs mentioned users can change the default behavior of Ipyannotator's UI interactions and elements, hacking the library. Browser interaction like mouse moving and HTML elements like dropdowns are some of the examples that can be changed in runtime when using Ipyannotator.
+
+Being integrated with Jupyter notebooks makes Ipyannotator usage easily hacked. The data science team can change the library behavior while writing their own scripts on a platform and using a programming language that they already know.
+
+In addition to the ability to change Ipyannotator's browser interaction using Python, the library also provides a flexible API that enables adding custom annotators. With a custom pair of input and output classes, the user can create and register a new annotator while reusing the library resources.
 
 # A simple but flexible API to define annotation tasks
 Ipyannotator provides a simple API (application programming interface) which is based on three steps describing general tasks in the data annotation process. These are denoted as the explore, create, and improve phase.
