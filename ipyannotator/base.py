@@ -90,6 +90,24 @@ class Annotator(ABC):
 # Internal Cell
 
 class Settings(NamedTuple):
+    """
+    Holds Ipyannotator API settings
+
+        project_path: parent directory of the project_file and image_dir
+        project_file: json file with annotations
+        image_dir: directory that stores all images to be explored
+        label_dir: directory that hold the image labels (if any)
+        result_dir: directory to store the annotation results
+
+        im_width: size of the images from image_dir
+        im_height: height of the images from image_dir
+        label_width: width of the labels from labels_dir
+        label_height: height of the labels from labels_dir
+
+        n_cols: number of columns displayed at the right menu
+        n_rows: number of rows displayed at the right menu
+    """
+
     project_path: Path = Path('user_project')
     project_file: Optional[Path] = None
     image_dir: str = 'images'

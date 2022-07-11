@@ -5,9 +5,13 @@ __all__ = []
 # Internal Cell
 from ..annotator import Annotator
 from .utils import show_doc
+from ..base import Settings
 
 # Internal Cell
 show_doc(Annotator, title_level=3)
+
+# Internal Cell
+show_doc(Settings, title_level=4)
 
 # Internal Cell
 show_doc(Annotator.explore)
