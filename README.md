@@ -4,11 +4,11 @@
 
 Ipyannotator is a flexible annotation system. Developed to allow users to hack its features by extending and customizing it. 
 
-The large variety of annotation tasks, data formats and data visualizations is a challenging when dealing with multiple domains of supervised machine learning (ML). The existent tooling is not flexible enough which imposes limitations to the user. By providing a framework where users can use, customize and create their own annotation tooling this projects aims to solve this problem.
+The large variety of annotation tasks, data formats and data visualizations is a challenging when dealing with multiple domains of supervised machine learning (ML). The existent tooling is often not flexible enough which imposes limitations to the user. By providing a framework where users can use, customize and create their own annotation tooling this projects aims to solve this problem.
 
 The library contains some pre-defined annotators that can be used out of the box, but it also can be extend and customized according to the users needs. Check our [tutorials](https://palaimon.github.io/ipyannotator/docs/tutorials.html) for a quickly understanding of it's usage and check our [API](https://palaimon.github.io/ipyannotator/nbs/21_api_doc.html) for quick reference.
 
-This library has been written in the [literate programming style](https://en.wikipedia.org/wiki/Literate_programming) popularized for jupyter notebooks by [nbdev](https://www.fast.ai/2019/12/02/nbdev/). Further than our documentation the jupyter notebooks located at `nbs/` can be explored to learn more about the inner working of Ipyannotator.
+This library has been written in the [literate programming style](https://en.wikipedia.org/wiki/Literate_programming) popularized for jupyter notebooks by [nbdev](https://www.fast.ai/2019/12/02/nbdev/). In addition to our [online documentation](palaimon.github.io/ipyannotator) the jupyter notebooks located at `nbs/` allow an interactive exploration of the inner workings of Ipyannotator.
 
 We hope this repository helps you to explore how annotation UI's can be quickly built using only python code and leveraging many awesome libraries ([ipywidgets](https://github.com/jupyter-widgets/ipywidgets), [voila](https://github.com/voila-dashboards/voila), [ipycanvas](https://github.com/martinRenou/ipycanvas), etc.) from the [jupyter Eco-system](https://jupyter.org/).
 
@@ -30,7 +30,9 @@ Ipyannotator provides a [simple API](https://palaimon.github.io/ipyannotator/nbs
 
 ### Run ipyannotator tests
 
-The notebooks contains the development dependencies: [pytest](https://docs.pytest.org/en/7.1.x/) and [ipytest](https://github.com/chmp/ipytest). The tests can be executed using `nbdev_test_nbs` on the terminal. 
+The tests can be executed using `nbdev_test_nbs` on the terminal. 
+
+Ipyannotator notebooks contains the development dependencies: [pytest](https://docs.pytest.org/en/7.1.x/) and [ipytest](https://github.com/chmp/ipytest). Make sure this dependencies are installed to run the tests.
 
 ### Run ipyannotator as stand-alone web app using voila
 
@@ -38,7 +40,7 @@ Ipyannotator can be executed as a web app using the [voila](https://github.com/v
 
 #### Using poetry
 
-After the lib it's installed:
+On your terminal:
 
 ```shell
 cd {project_root}
