@@ -322,6 +322,24 @@
     "#exporti\n",
     "\n",
     "class Settings(NamedTuple):\n",
+    "    \"\"\"\n",
+    "    Holds Ipyannotator API settings\n",
+    "\n",
+    "        project_path: parent directory of the project_file and image_dir\n",
+    "        project_file: json file with annotations\n",
+    "        image_dir: directory that stores all images to be explored\n",
+    "        label_dir: directory that hold the image labels (if any)\n",
+    "        result_dir: directory to store the annotation results\n",
+    "\n",
+    "        im_width: size of the images from image_dir\n",
+    "        im_height: height of the images from image_dir\n",
+    "        label_width: width of the labels from labels_dir\n",
+    "        label_height: height of the labels from labels_dir\n",
+    "\n",
+    "        n_cols: number of columns displayed at the right menu\n",
+    "        n_rows: number of rows displayed at the right menu\n",
+    "    \"\"\"\n",
+    "\n",
     "    project_path: Path = Path('user_project')\n",
     "    project_file: Optional[Path] = None\n",
     "    image_dir: str = 'images'\n",
@@ -436,7 +454,7 @@
  ],
  "metadata": {
   "kernelspec": {
-   "display_name": "Python 3",
+   "display_name": "Python 3 (ipykernel)",
    "language": "python",
    "name": "python3"
   }

@@ -168,14 +168,33 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#run-ipyannotator-as-stand-alone-web-app-using-voila">
-   Run ipyannotator as stand-alone web app using voila
+  <a class="reference internal nav-link" href="#running-ipyannotator">
+   Running ipyannotator
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#documentation">
-   Documentation
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#run-ipyannotator-tests">
+     Run ipyannotator tests
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#run-ipyannotator-as-stand-alone-web-app-using-voila">
+     Run ipyannotator as stand-alone web app using voila
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#using-poetry">
+       Using poetry
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#using-pip">
+       Using pip
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#jupyter-lab-trouble-shooting">
@@ -190,6 +209,11 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#additional-resources">
    Additional resources
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#acknowledgements">
+   Acknowledgements
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -221,7 +245,10 @@
   <section class="tex2jax_ignore mathjax_ignore" id="ipyannotator-the-infinitely-hackable-annotation-framework">
 <h1>Ipyannotator - the infinitely hackable annotation framework<a class="headerlink" href="#ipyannotator-the-infinitely-hackable-annotation-framework" title="Permalink to this headline">¶</a></h1>
 <p><img alt="CI-Badge" src="https://github.com/palaimon/ipyannotator/workflows/CI/badge.svg" /></p>
-<p>Ipyannotator is a flexible annotation system. The library contains some pre-defined annotators that can be used out of the box, but it also can be extend and customized according to the users needs.</p>
+<p>Ipyannotator is a flexible annotation system. Developed to allow users to hack its features by extending and customizing it.</p>
+<p>The large variety of annotation tasks, data formats and data visualizations is a challenging when dealing with multiple domains of supervised machine learning (ML). The existent tooling is often not flexible enough which imposes limitations to the user. By providing a framework where users can use, customize and create their own annotation tooling this projects aims to solve this problem.</p>
+<p>The library contains some pre-defined annotators that can be used out of the box, but it also can be extend and customized according to the users needs. Check our <a class="reference external" href="https://palaimon.github.io/ipyannotator/docs/tutorials.html">tutorials</a> for a quickly understanding of it’s usage and check our <a class="reference external" href="https://palaimon.github.io/ipyannotator/nbs/21_api_doc.html">API</a> for quick reference.</p>
+<p>This library has been written in the <a class="reference external" href="https://en.wikipedia.org/wiki/Literate_programming">literate programming style</a> popularized for jupyter notebooks by <a class="reference external" href="https://www.fast.ai/2019/12/02/nbdev/">nbdev</a>. In addition to our <span class="xref myst">online documentation</span> the jupyter notebooks located at <code class="docutils literal notranslate"><span class="pre">nbs/</span></code> allow an interactive exploration of the inner workings of Ipyannotator.</p>
 <p>We hope this repository helps you to explore how annotation UI’s can be quickly built using only python code and leveraging many awesome libraries (<a class="reference external" href="https://github.com/jupyter-widgets/ipywidgets">ipywidgets</a>, <a class="reference external" href="https://github.com/voila-dashboards/voila">voila</a>, <a class="reference external" href="https://github.com/martinRenou/ipycanvas">ipycanvas</a>, etc.) from the <a class="reference external" href="https://jupyter.org/">jupyter Eco-system</a>.</p>
 <p>At https://palaimon.io we have used the concepts underlying Ipyannotator internally for various projects and this is our attempt to contribute back to the OSS community some of the benefits we have had using OOS software.</p>
 <section id="please-star-fork-and-open-issues">
@@ -230,52 +257,45 @@
 </section>
 <section id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>Ipyannotator is available on Pypi and can be installed using:</p>
 <p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ipyannotator</span></code></p>
-<p><strong>dependencies (should be handled by pip)</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">=</span> <span class="s2">&quot;^3.7&quot;</span>
-<span class="n">traitlets</span> <span class="o">=</span> <span class="s1">&#39;=4.3.3&#39;</span>
-<span class="n">ipycanvas</span> <span class="o">=</span> <span class="s2">&quot;^0.5.1&quot;</span>
-<span class="n">ipyevents</span> <span class="o">=</span> <span class="s2">&quot;^0.8.0&quot;</span>
-<span class="n">ipywidgets</span> <span class="o">=</span> <span class="s2">&quot;^7.5.1&quot;</span>
-</pre></div>
-</div>
+</section>
+<section id="running-ipyannotator">
+<h2>Running ipyannotator<a class="headerlink" href="#running-ipyannotator" title="Permalink to this headline">¶</a></h2>
+<p>Ipyannotator provides a <a class="reference external" href="https://palaimon.github.io/ipyannotator/nbs/21_api_doc.html">simple API</a> that provides the ability to explore, create and improve annotation datasets by using a pair of input/outputs. All pair of input/output are <a class="reference external" href="https://palaimon.github.io/ipyannotator/nbs/22_input_output_doc.html">listed on Ipyannotator’s docs</a>. Check <a class="reference external" href="https://palaimon.github.io/ipyannotator/docs/tutorials.html">Ipyannotator tutorials</a> for a quickly demonstration of the library.</p>
+<section id="run-ipyannotator-tests">
+<h3>Run ipyannotator tests<a class="headerlink" href="#run-ipyannotator-tests" title="Permalink to this headline">¶</a></h3>
+<p>The tests can be executed using <code class="docutils literal notranslate"><span class="pre">nbdev_test_nbs</span></code> on the terminal.</p>
+<p>Ipyannotator notebooks contains the development dependencies: <a class="reference external" href="https://docs.pytest.org/en/7.1.x/">pytest</a> and <a class="reference external" href="https://github.com/chmp/ipytest">ipytest</a>. Make sure this dependencies are installed to run the tests.</p>
 </section>
 <section id="run-ipyannotator-as-stand-alone-web-app-using-voila">
-<h2>Run ipyannotator as stand-alone web app using voila<a class="headerlink" href="#run-ipyannotator-as-stand-alone-web-app-using-voila" title="Permalink to this headline">¶</a></h2>
-<p>Using <code class="docutils literal notranslate"><span class="pre">poetry</span></code>:</p>
-<p>install:</p>
+<h3>Run ipyannotator as stand-alone web app using voila<a class="headerlink" href="#run-ipyannotator-as-stand-alone-web-app-using-voila" title="Permalink to this headline">¶</a></h3>
+<p>Ipyannotator can be executed as a web app using the <a class="reference external" href="https://github.com/voila-dashboards/voila">voila</a> library. The following sections describe how to run using poetry and pip.</p>
+<section id="using-poetry">
+<h4>Using poetry<a class="headerlink" href="#using-poetry" title="Permalink to this headline">¶</a></h4>
+<p>On your terminal:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="o">{</span>project_root<span class="o">}</span>
 poetry install --no-dev
-poetry run pip install voila
 </pre></div>
 </div>
-<p>and run simple ipyannotator standalone example:</p>
+<p>Any jupyter notebook with ipyannotator can be executed as an standalone web application. An example of voila usage it’s available in the current repository and can be executed as it follow:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry run voila nbs/09_voila_example.ipynb --enable_nbextensions<span class="o">=</span>True
 </pre></div>
 </div>
-<p>Same with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+</section>
+<section id="using-pip">
+<h4>Using pip<a class="headerlink" href="#using-pip" title="Permalink to this headline">¶</a></h4>
+<p>The installation and execution process can also be done using pip.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>   <span class="nb">cd</span> <span class="o">{</span>project_root<span class="o">}</span>
    
-   pip install . 
+   pip install .
    pip install voila
    
    voila nbs/09_voila_example.ipynb --enable_nbextensions<span class="o">=</span>True
 </pre></div>
 </div>
 </section>
-<section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
-<p>This library has been written in the <a class="reference external" href="https://en.wikipedia.org/wiki/Literate_programming">literate programming style</a> popularized for
-jupyter notebooks by <a class="reference external" href="https://www.fast.ai/2019/12/02/nbdev/">nbdev</a>. Please explore the jupyter notebooks in <code class="docutils literal notranslate"><span class="pre">nbs/</span></code> to learn more about
-the inner working of ipyannotator.</p>
-<p>The notebooks contains the development dependencies:
-<a class="reference external" href="https://docs.pytest.org/en/7.1.x/">pytest</a> and <a class="reference external" href="https://github.com/chmp/ipytest">ipytest</a>,
-if you want to run the notebooks remove the tests or install the libraries mentioned.</p>
-<p>Also check out the following notebook for a more high level overview.</p>
-<ul class="simple">
-<li><p>Tutorial demonstrating how ipyannotator can be seamlessly integrated in your data science workflow. <code class="docutils literal notranslate"><span class="pre">nbs/08_tutorial_road_damage.ipynb</span></code></p></li>
-<li><p><a class="reference external" href="https://www.youtube.com/watch?v=jFAp1s1O8Hg">Recoding of jupytercon 2020</a> talk explaining the high level concepts / vision of ipyannotator.</p></li>
-</ul>
+</section>
 </section>
 <section id="jupyter-lab-trouble-shooting">
 <h2>Jupyter lab trouble shooting<a class="headerlink" href="#jupyter-lab-trouble-shooting" title="Permalink to this headline">¶</a></h2>
@@ -302,13 +322,16 @@ the <a class="reference external" href="https://nbdev.fast.ai/tutorial.html">nbd
 <p><img alt="jupytercon 2020" src="https://jupytercon.com/_nuxt/img/5035c8d.svg" /></p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://cfp.jupytercon.com/2020/schedule/presentation/237/ipyannotator-the-infinitely-hackable-annotation-framework/">jupytercon 2020 talk</a>.</p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=jFAp1s1O8Hg">Recording of jupytercon 2020</a> talk explaining the high level concepts / vision of ipyannotator.</p></li>
 </ul>
-<p>##Acknowledgements</p>
+</section>
+<section id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
 <p>The authors acknowledge the financial support by the Federal Ministry for Digital and Transport of Germany under the program mFUND (project number 19F2160A).</p>
 </section>
 <section id="copyright">
 <h2>Copyright<a class="headerlink" href="#copyright" title="Permalink to this headline">¶</a></h2>
-<p>Copyright 2020 onwards, Palaimon GmbH. Licensed under the Apache License, Version 2.0 (the “License”); you may not use this project’s files except in compliance with the License. A copy of the License is provided in the LICENSE file in this repository.</p>
+<p>Copyright 2022 onwards, Palaimon GmbH. Licensed under the Apache License, Version 2.0 (the “License”); you may not use this project’s files except in compliance with the License. A copy of the License is provided in the LICENSE file in this repository.</p>
 <!-- Matomo Image Tracker-->
 <img referrerpolicy="no-referrer-when-downgrade" src="https://matomo.palaimon.io/matomo.php?idsite=4&amp;rec=1" style="border:0" alt="" />
 <!-- End Matomo -->

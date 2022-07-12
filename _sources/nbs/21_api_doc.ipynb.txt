@@ -17,7 +17,7 @@
    "source": [
     "# API Reference\n",
     "\n",
-    "Detailed information about Ipyannotator API. To see usage please check Ipyannotator tutorials."
+    "Detailed information about Ipyannotator API. To see usage please check [Ipyannotator tutorials](https://palaimon.github.io/ipyannotator/nbs/22_input_output_doc.html)."
    ]
   },
   {
@@ -33,7 +33,16 @@
    "source": [
     "#exporti\n",
     "from ipyannotator.annotator import Annotator\n",
-    "from ipyannotator.docs.utils import show_doc"
+    "from ipyannotator.docs.utils import show_doc\n",
+    "from ipyannotator.base import Settings"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ab95f6b1",
+   "metadata": {},
+   "source": [
+    "To use Ipyannotator API it's necessary to import the `Annotator` class by using `from ipyannotator.annotator import Annotator`. "
    ]
   },
   {
@@ -49,6 +58,55 @@
    "source": [
     "#exporti\n",
     "show_doc(Annotator, title_level=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7c6ab67b",
+   "metadata": {},
+   "source": [
+    "The pairs of input/output available are listed on the [Input/Output Types](https://palaimon.github.io/ipyannotator/nbs/22_input_output_doc.html) section. \n",
+    "\n",
+    "When working with the `Annotator` class the input type is always required, but the output type has a `NoOutput` default option that returns an annotator to explore the input images. `NoOutput` usage can be found on the [Bounding Box Annotator Tutorial](https://palaimon.github.io/ipyannotator/nbs/01c_tutorial_bbox.html#explore).\n",
+    "\n",
+    "The final piece of the configuration to access the Ipyannotator API is the `Settings` class that can be imported using `from ipyannotator.base import Settings`. Ipyannotator `Settings` class allow users to customize the folder structure to get the images, read annotations and store results, but also provides a default folder structure:\n",
+    "\n",
+    "```\n",
+    "user_project\n",
+    "│   annotation.json\n",
+    "│\n",
+    "└───images\n",
+    "│   │   00001.png\n",
+    "│   │   00002.png\n",
+    "│   │   ...    \n",
+    "│\n",
+    "└───results\n",
+    "    │ annotations.json\n",
+    "\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "747d6bc4",
+   "metadata": {
+    "tags": [
+     "remove-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "#exporti\n",
+    "show_doc(Settings, title_level=4)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6e53ec99",
+   "metadata": {},
+   "source": [
+    "## Actions"
    ]
   },
   {
@@ -119,11 +177,19 @@
     "from nbdev.export import notebook2script\n",
     "notebook2script()"
    ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b19da654",
+   "metadata": {},
+   "source": [
+    "## Settings"
+   ]
   }
  ],
  "metadata": {
   "kernelspec": {
-   "display_name": "Python 3",
+   "display_name": "Python 3 (ipykernel)",
    "language": "python",
    "name": "python3"
   }
