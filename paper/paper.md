@@ -37,9 +37,9 @@ Jupyter is one of the most popular tools for data science [@wang2019how] and is 
 
 # Infinitely hackable annotation framework
 
-Ipyannotator uses Python libs that abstract the HTML and Javascript interactions, allowing developers to design UI interactions and HTML elements using Python. Python's dynamic nature allows users to modify classes or modules in runtime, due to the libs mentioned users can change the default behavior of Ipyannotator's UI interactions and elements, hacking the library. Browser interaction like mouse moving and HTML elements like dropdowns are some of the examples that can be changed in runtime when using Ipyannotator.
+Ipyannotator uses Python libs, such as Ipywidgets [@ipywidgets2022], Ipycanvas [@ipycanvas2022] and Ipyevents [@ipyevents2022], that abstract the HTML and Javascript interactions, allowing developers to design UI interactions and elements using Python. Python's dynamic nature allows users to modify classes or modules in runtime, due to the libs mentioned, users can change the default behavior of Ipyannotator's UI, hacking the library. Browser interaction like mouse moving and HTML elements like dropdowns are some of the examples that can be changed at runtime when using Ipyannotator.
 
-Being integrated with Jupyter notebooks makes Ipyannotator usage easily hacked. The data science team can change the library behavior while writing their own scripts on a platform and using a programming language that they already know.
+Being integrated with Jupyter notebooks makes Ipyannotator usage easy to modify at different abstraction levels. The data science team can change the library behavior while writing their own scripts on a platform and using a programming language that they already know.
 
 In addition to the ability to change Ipyannotator's browser interaction using Python, the library also provides a flexible API that enables adding custom annotators. With a custom pair of input and output classes, the user can create and register a new annotator while reusing the library resources.
 
@@ -106,8 +106,7 @@ annotator.improve()
 ## Jupyter Notebook all the way down
 Jupyter Notebook is used by many researcher relaying on open source software to create and document their work.
 Ipyannotator not only runs directly in Jupyter Notebook but is also developed as a collection of notebooks. This collection
-constitues a library, user documentation, and executable tutorials. This workflow is enabled by the innovative fastai library [@nbdev2022]
-that turns Jupyter Notebook into a literate programming environment.
+constitues a library, user documentation, and executable tutorials. This workflow is enabled by the innovative fastai library [@nbdev2022] that turns Jupyter Notebook into a literate programming environment.
 
 For the development of the user interface (UI) the Ipywidget library [@ipywidgets2022] was used to build a graphical user interface (GUI) in Jupyter Notebook. Furthermore, the voila library [@voila2022], which uses Jupyter Notebook as a web-app, was also incorporated in the Ipayannotator project to create the GUI for an easy to access web application.
 
