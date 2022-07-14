@@ -30,9 +30,18 @@ Ipyannotator provides a [simple API](https://palaimon.github.io/ipyannotator/nbs
 
 ### Run ipyannotator tests
 
-The tests can be executed using `nbdev_test_nbs` on the terminal. 
+Ipyannotator's tests were written on the Jupyter Notebook, following the literate programming style used on the library, and can be executed by running `nbdev_test_nbs` on the terminal.
 
-Ipyannotator notebooks contains the development dependencies: [pytest](https://docs.pytest.org/en/7.1.x/) and [ipytest](https://github.com/chmp/ipytest). Make sure this dependencies are installed to run the tests.
+[Nbdev](https://nbdev.fast.ai/#A-Motivating-Example) it's the tool that allow Ipyannotator to be written in notebooks. The tool uses cell comments, such as `#exports`, to output the library code, and cells without comments to be executed as tests. Nbdev by itselft doesn't guarantee that the tests are self-contained, that's why Ipyannotator uses [pytest](https://docs.pytest.org/en/7.1.x/) and [ipytest](https://github.com/chmp/ipytest) as dev dependencies. To execute the tests the dev dependencies mentioned need to be installed.
+
+When installing the repository using poetry, all dev dependencies are installed.
+
+When using pip make sure to install `pytest` and `ipytest`:
+
+```shell
+pip install pytest
+pip install ipytest
+```
 
 ### Run ipyannotator as stand-alone web app using voila
 
