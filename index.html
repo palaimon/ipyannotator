@@ -266,8 +266,14 @@
 <p>Ipyannotator provides a <a class="reference external" href="https://palaimon.github.io/ipyannotator/nbs/21_api_doc.html">simple API</a> that provides the ability to explore, create and improve annotation datasets by using a pair of input/outputs. All pair of input/output are <a class="reference external" href="https://palaimon.github.io/ipyannotator/nbs/22_input_output_doc.html">listed on Ipyannotator’s docs</a>. Check <a class="reference external" href="https://palaimon.github.io/ipyannotator/docs/tutorials.html">Ipyannotator tutorials</a> for a quickly demonstration of the library.</p>
 <section id="run-ipyannotator-tests">
 <h3>Run ipyannotator tests<a class="headerlink" href="#run-ipyannotator-tests" title="Permalink to this headline">¶</a></h3>
-<p>The tests can be executed using <code class="docutils literal notranslate"><span class="pre">nbdev_test_nbs</span></code> on the terminal.</p>
-<p>Ipyannotator notebooks contains the development dependencies: <a class="reference external" href="https://docs.pytest.org/en/7.1.x/">pytest</a> and <a class="reference external" href="https://github.com/chmp/ipytest">ipytest</a>. Make sure this dependencies are installed to run the tests.</p>
+<p>Ipyannotator’s tests are directly integrated in the Jupyter Notebooks that make up the libraries source code, this is a consequence of following the literate programming style made possible by the library <code class="docutils literal notranslate"><span class="pre">nbdev</span></code>. Tests can be executed by running <code class="docutils literal notranslate"><span class="pre">nbdev_test_nbs</span></code> on the terminal.</p>
+<p>When installing the repository using poetry, all dev dependencies are installed by default.</p>
+<p>When using pip for installation make sure to install the two dev dependencies <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and <code class="docutils literal notranslate"><span class="pre">ipytest</span></code>, with the versions listed in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, manually:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install pytest
+pip install ipytest
+</pre></div>
+</div>
+<p><a class="reference external" href="https://nbdev.fast.ai/#A-Motivating-Example">Nbdev</a> uses comments on the Jupyter notebook cells, such as <code class="docutils literal notranslate"><span class="pre">#exports</span></code>, to output the library code, and cells without comments to be executed as tests. Nbdev by itself doesn’t guarantee that the tests are self-contained, that’s why Ipyannotator uses <a class="reference external" href="https://docs.pytest.org/en/7.1.x/">pytest</a> and <a class="reference external" href="https://github.com/chmp/ipytest">ipytest</a> as dev dependencies.</p>
 </section>
 <section id="run-ipyannotator-as-stand-alone-web-app-using-voila">
 <h3>Run ipyannotator as stand-alone web app using voila<a class="headerlink" href="#run-ipyannotator-as-stand-alone-web-app-using-voila" title="Permalink to this headline">¶</a></h3>
