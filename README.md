@@ -35,7 +35,7 @@ To run Ipyannotator's tests:
 1. Install [poetry](https://python-poetry.org/docs/#installation)
 2. Create the test environment with `poetry install`
 3. Activate the poetry environment using `poetry shell`
-3. Run tests by executing `nbdev_test_nbs`
+4. Run tests by executing `nbdev_test_nbs`
 
 ### Run ipyannotator as stand-alone web app using voila
 
