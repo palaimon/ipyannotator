@@ -43,6 +43,11 @@ pip install ipytest
 
 [Nbdev](https://nbdev.fast.ai/#A-Motivating-Example) uses comments on the Jupyter notebook cells, such as `#exports`, to output the library code, and cells without comments to be executed as tests. Nbdev by itself doesn't guarantee that the tests are self-contained, that's why Ipyannotator uses [pytest](https://docs.pytest.org/en/7.1.x/) and [ipytest](https://github.com/chmp/ipytest) as dev dependencies.
 
+### Run ipyannotator coverage
+
+Coverage can be executed using `pytest --cov=ipyannotator`. Coverage feature adapted [from FastAI Forum](https://forums.fast.ai/t/nbdev-code-coverage-n-tests/73993).
+
+
 ### Run ipyannotator as stand-alone web app using voila
 
 Ipyannotator can be executed as a web app using the [voila](https://github.com/voila-dashboards/voila) library. The following sections describe how to run using poetry and pip.
