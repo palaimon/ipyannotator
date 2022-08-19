@@ -88,7 +88,7 @@ Jupyter Notebook is used by many researcher relaying on open source software to 
 Ipyannotator not only runs directly in Jupyter Notebook but is also developed as a collection of notebooks. This collection
 constitues a library, user documentation, and executable tutorials. This workflow is enabled by the innovative fastai library [@nbdev2022] that turns Jupyter Notebook into a literate programming environment.
 
-For the development of the user interface (UI) the Ipywidget library [@ipywidgets2022] was used to build a graphical user interface (GUI) in Jupyter Notebook. Furthermore, the voila library [@voila2022], which uses Jupyter Notebook as a web-app, was also incorporated in the Ipayannotator project to create the GUI for an easy to access web application.
+For the development of the user interface (UI) the Ipywidget library [@ipywidgets2022] was used to build a graphical user interface (GUI) in Jupyter Notebook. Furthermore, the voila library [@voila2022], which uses Jupyter Notebook as a web-app, was also incorporated in the Ipyannotator project to create the GUI for an easy to access web application.
 
 ## Architecture
 Ipyannotator's architecture consists of three main systems components that comprise the user interface (UI), the server, and the data storage. These components are targeted at two different user types. A non-code architecture, which is schematically illustrated in \autoref{fig:non-technical-annotator}, is included for non-technical annotators. The setup for a wide range of technically experienced annotators, schematically shown in \autoref{fig:technical-user-architecture}, target users typically involved in research projects, e.g. data scientists, domain experts, and software developer.
