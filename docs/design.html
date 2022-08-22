@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Design Decisions &#8212; Ipyannotator  documentation</title>
+    
+    <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    
+    <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">Ipyannotator</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="tutorials.html">
+  Tutorials
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="internal-components.html">
+  Internal Components
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../nbs/22_input_output_doc.html">
+  Input/Output Types
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../nbs/21_api_doc.html">
+  API
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/palaimon/ipyannotator" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jupyter-notebook-all-the-way-down">
+   Jupyter Notebook all the way down
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#architecture">
+   Architecture
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#layers">
+   Layers
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="design-decisions">
+<h1>Design Decisions<a class="headerlink" href="#design-decisions" title="Permalink to this headline">¶</a></h1>
+<section id="jupyter-notebook-all-the-way-down">
+<h2>Jupyter Notebook all the way down<a class="headerlink" href="#jupyter-notebook-all-the-way-down" title="Permalink to this headline">¶</a></h2>
+<p>Jupyter Notebook is used by many researcher relaying on open source software
+to create and document their work. Ipyannotator not only runs directly in
+Jupyter Notebook but is also developed as a collection of notebooks. This
+collection constitues a library, user documentation, and executable tutorials.
+This workflow is enabled by the innovative fastai library that turns
+Jupyter Notebook into a literate programming environment.</p>
+<p>For the development of the user interface (UI) the Ipywidget library was used
+to build a graphical user interface (GUI) in Jupyter Notebook.
+Furthermore, the voila library, which uses Jupyter Notebook as a web-app, was
+also incorporated in the Ipyannotator project to create the GUI for an easy
+access to a web application.</p>
+</section>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+<p>Ipyannotator’s architecture consists of three main systems components that
+comprise the user interface (UI), the server, and the data storage. These
+components are targeted at two different user types. A non-code architecture
+is included for non-technical annotators. The setup for a wide range of
+technically experienced annotators target users typically involved in research
+projects, e.g. data scientists, domain experts, and software developer.</p>
+<img alt="../_images/non-technical-user-architecture.png" src="../_images/non-technical-user-architecture.png" />
+<img alt="../_images/technical-user-architecture.png" src="../_images/technical-user-architecture.png" />
+<p>For the technical user multiple tutorials are provided, demonstrating
+Ipyannotator’s utilization. The tutorials make it easier for new users
+get started and adapt the notebooks to their tasks. They also
+demonstrate annotation workflow and different features.</p>
+</section>
+<section id="layers">
+<h2>Layers<a class="headerlink" href="#layers" title="Permalink to this headline">¶</a></h2>
+<p>The layering design leads to loosely coupled systems, isolating
+responsibilities and allows to easier implement changes. Ipyannotator is
+separated into multiple layers to provide an architecture that allows the
+annotator to easier add extensions. The library uses four layers: view,
+controller, storage, and state. Each layer can be rewritten, extended and
+customized.</p>
+<ul class="simple">
+<li><p>The <em>View</em> layer is responsible for rendering the visualizations. Ipyannotator uses ipycanvas and ipywidgets to structure and mount the visualization layer. Additionally, internal components such as the navigation menue were developed which helps the users to navigate through the images that need to be annotated.</p></li>
+<li><p>The <em>Storage</em> layer is the layer that receives the data and stores it. Ipyannotator uses different types of storage formats like .txt and .SQLite.</p></li>
+<li><p>The <em>Controller</em> layer acts as a mediator between state, storage and view. This layer tells when the information from the state will be stored.</p></li>
+<li><p><em>Model/State (in memory)</em> is the central function of the Ipyannotator layer structure. It is assigned to centralize the data and ensures the syncronization across the applications. If something changes in the Model/State layer, the information is passed on to other layers, ensuring  synchronization of information.</p></li>
+</ul>
+<img alt="../_images/layer-communication.png" src="../_images/layer-communication.png" />
+<p>In the present state, Ipyannotator uses SQLite and JSON files as storage
+formats. Due to the project setup, the storage layer can be customized by
+other users to implement different storage formats.</p>
+<p>The Ipyannotator comprises four annotation types: bounding box annotator,
+video annotator, capture annotator, and explore annotator.
+All types can be combined in the data analysis.</p>
+<ul class="simple">
+<li><p>Bounding box annotator: Allow users to investigate and produce annotations on images, the annotations are limited to the bounding boxes format.</p></li>
+<li><p>Video annotator: Designed to work with multiple frames of a video, this annotator allow users to inspect objects over the frames, visualizing the object’s trajectories and improving it. The annotations it’s also limited to the bounding box format.</p></li>
+<li><p>Capture annotator: Enables users to navigate across a grid of images or labels and select multiple options. This annotator can be used in Ipyannotator’s improve step to check if image classification is correct, for example.</p></li>
+<li><p>Explore annotator: Aims to be a quickly, easy configuration annotator, it can be used to navigate across images without worring about the Output in the Annotator API.</p></li>
+</ul>
+<img alt="../_images/bounding-box-annotator.png" src="../_images/bounding-box-annotator.png" />
+<p>The bounding box annotator tool, displayed in the image above, contains three
+rectangluar annotations exemplifying how the user can draw on the canvas.
+The navigation menu at the bottom of the image allows users to explore all
+images. The navigation menu is common to all annotator tools. After an
+annotation is drawn, the tool allows the association with a semantic label
+located at the dropdown menue on the right. Additionally to the labeling,
+the annotator tool also permits to apply change to the coordinates of the
+drawing, enabling users to improve annotations.</p>
+<p>It has to be emphasized that the entire interactive UI has been implemented
+using Python code only and without additional complex build steps. This allows
+every user with Python scripting experience to customize the annotation
+interface for domain specific requirements.</p>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+        &copy; Copyright  <a href="https://palaimon.io/">2022, Palaimon GmbH</a>.<br>
+    </p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
