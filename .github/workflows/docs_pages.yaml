@@ -11,10 +11,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
+    - uses: actions/setup-python@v4.1.0
       with:
         python-version: '3.8'
-    - uses: abatilo/actions-poetry@v2.1.4
+    - uses: abatilo/actions-poetry@v2.1.5
       with:
         poetry-version: 1.1.0
     - name: install
@@ -27,7 +27,7 @@ jobs:
         cp -r _build/html/* ./gh-pages/
     - name: Deploy documentation
       if: ${{ github.event_name == 'push' }}
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      uses: JamesIves/github-pages-deploy-action@v4.4.0
       with:
         branch: gh-pages
         folder: gh-pages
