@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.8.4] - 2022-08-23
+
+- Expanded and improved documentation based on [Carl Simon Adorf](https://github.com/csadorf) and [Matthew Feickert](https://github.com/matthewfeickert) feedback.
+    - Added better API description and a new design section by [Ítalo Epifânio](https://github.com/itepifanio).
+    - Properly described: tests execution and "infinitely hackable" claim by [Ítalo Epifânio](https://github.com/itepifanio).
+- Made Ipyannotator dependencies more flexible as suggested by [Matthew Feickert](https://github.com/matthewfeickert).
+    - Fixed minimum version of the dependencies by [Ítalo Epifânio](https://github.com/itepifanio).
+- Update dependencies descriptions as advise by [Carl Simon Adorf](https://github.com/csadorf) and [Matthew Feickert](https://github.com/matthewfeickert).
+    - Removed fixed dependencies from README by [Ítalo Epifânio](https://github.com/itepifanio).
+    - Synced setup.py with pyproject.toml dependencies by [Ítalo Epifânio](https://github.com/itepifanio).
+- Improved Ipyannotator support for Python versions according to [Matthew Feickert](https://github.com/matthewfeickert) feedback.
+    - CI testing now runs for all Python versions supported by Ipyannotator [Ítalo Epifânio](https://github.com/itepifanio).
+    - Properly build Ipyannotator on Python 3.10 by updating scikit-image minimum version to 1.9.3, pandas minimum version to 1.2.0, and ipywidgets minimum version to 7.6.0 [Ítalo Epifânio](https://github.com/itepifanio).
+
 ## [0.8.3] - 2022-05-06
 
 ### Added
