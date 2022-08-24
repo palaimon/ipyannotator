@@ -40,6 +40,11 @@ To run Ipyannotator's tests:
 3. Activate the poetry environment using `poetry shell`
 4. Run tests by executing `nbdev_test_nbs`
 
+### Run ipyannotator coverage
+
+Coverage can be executed using `pytest --cov=ipyannotator`. Coverage feature adapted [from FastAI Forum](https://forums.fast.ai/t/nbdev-code-coverage-n-tests/73993).
+
+
 ### Run ipyannotator as stand-alone web app using voila
 
 Ipyannotator can be executed as a web app using the [voila](https://github.com/voila-dashboards/voila) library. The following sections describe how to run using poetry and pip.
