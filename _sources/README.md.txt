@@ -1,6 +1,9 @@
 # Ipyannotator - the infinitely hackable annotation framework
 
 ![CI-Badge](https://github.com/palaimon/ipyannotator/workflows/CI/badge.svg)
+[![DOI](https://zenodo.org/badge/303424016.svg)](https://zenodo.org/badge/latestdoi/303424016)
+
+
 
 Ipyannotator is a flexible annotation system. Developed to allow users to hack its features by extending and customizing it. 
 
