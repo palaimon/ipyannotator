@@ -1,6 +1,7 @@
 # Ipyannotator - the infinitely hackable annotation framework
 
 ![CI-Badge](https://github.com/palaimon/ipyannotator/workflows/CI/badge.svg)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.04480/status.svg)](https://doi.org/10.21105/joss.04480)
 [![DOI](https://zenodo.org/badge/303424016.svg)](https://zenodo.org/badge/latestdoi/303424016)
 
 
