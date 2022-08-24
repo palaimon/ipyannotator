@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.8.4] - 2022-08-23
 
+This release include improvements based on review feedback from our [JOSS](https://joss.theoj.org/) submission. We want to thank our reviewers [Carl Simon Adorf](https://github.com/csadorf), [Matthew Feickert](https://github.com/matthewfeickert) and our editor [Daniel S. Katz](https://github.com/danielskatz) for their valuable contributions.
+
 - Expanded and improved documentation based on [Carl Simon Adorf](https://github.com/csadorf) and [Matthew Feickert](https://github.com/matthewfeickert) feedback.
     - Added better API description and a new design section by [Ítalo Epifânio](https://github.com/itepifanio).
     - Properly described: tests execution and "infinitely hackable" claim by [Ítalo Epifânio](https://github.com/itepifanio).
