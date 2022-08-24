@@ -2,8 +2,6 @@
 
 ![CI-Badge](https://github.com/palaimon/ipyannotator/workflows/CI/badge.svg)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.04480/status.svg)](https://doi.org/10.21105/joss.04480)
-[![DOI](https://zenodo.org/badge/303424016.svg)](https://zenodo.org/badge/latestdoi/303424016)
-
 
 
 Ipyannotator is a flexible annotation system. Developed to allow users to hack its features by extending and customizing it. 
@@ -21,6 +19,23 @@ At https://palaimon.io we have used the concepts underlying Ipyannotator interna
 ## Please star, fork and open issues!
 
 Please let us know if you find this repository useful. Your feedback will help us to turn this proof of concept into a comprehensive library.
+
+## Citation
+
+If you make use of this software for your work we would appreciate it if you would cite the paper from the Journal of Open Source Software:
+
+```bibtex
+@article{Epifânio2022,
+   title = {Ipyannotator: the infinitely hackable annotation framework},
+   author = {Ítalo Epifânio and Oleksandr Pysarenko and Immanuel Bayer},
+   journal = {Journal of Open Source Software},
+   publisher = {The Open Journal},
+   volume = {7},
+   number = {76},
+   pages = {4480},
+   year = {2022}
+} 
+```
 
 ## Install
 
