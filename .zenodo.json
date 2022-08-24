@@ -1,0 +1,35 @@
+{
+    "description": "<p>This release include improvements based on review feedback from our <a href=\"https://joss.theoj.org/\">JOSS</a> submission. We want to thank our reviewers <a href=\"https://github.com/csadorf\">Carl Simon Adorf</a>, <a href=\"https://github.com/matthewfeickert\">Matthew Feickert</a> and our editor <a href=\"https://github.com/danielskatz\">Daniel S. Katz</a> for their valuable contributions.</p>", 
+    "license": " Apache-2.0", 
+    "title": "Ipyannotator: the infinitely hackable annotation framework", 
+    "version": "v0.8.5", 
+    "upload_type": "software", 
+    "publication_date": "2022-08-24", 
+    "creators": [
+        {
+            "affiliation": "Palaimon", 
+            "name": "\u00cdtalo Epif\u00e2nio"
+        }, 
+        {
+            "affiliation": "Palaimon", 
+            "name": "Oleksandr Pysarenko"
+        },
+        {
+            "affiliation": "Palaimon", 
+            "name": "Immanuel Bayer"
+        }
+    ], 
+    "access_right": "open", 
+    "related_identifiers": [
+        {
+            "scheme": "url", 
+            "identifier": "https://github.com/palaimon/ipyannotator/tree/v0.8.5", 
+            "relation": "isSupplementTo"
+        }, 
+        {
+            "scheme": "doi", 
+            "identifier": "10.5281/zenodo.7018310", 
+            "relation": "isVersionOf"
+        }
+    ]
+}
