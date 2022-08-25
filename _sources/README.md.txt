@@ -136,7 +136,4 @@ The authors acknowledge the financial support by the Federal Ministry for Digita
 Copyright 2022 onwards, Palaimon GmbH. Licensed under the Apache License, Version 2.0 (the "License"); you may not use this project's files except in compliance with the License. A copy of the License is provided in the LICENSE file in this repository.
 
 
-
-<!-- Matomo Image Tracker-->
-<img referrerpolicy="no-referrer-when-downgrade" src="https://matomo.palaimon.io/matomo.php?idsite=4&amp;rec=1" style="border:0" alt="" />
-<!-- End Matomo -->
+<img src="https://palaimon.goatcounter.com/count?p=/ipyannotator">
