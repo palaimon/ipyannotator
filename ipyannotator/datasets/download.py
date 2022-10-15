@@ -42,7 +42,26 @@ def _extract_tar(tar_path: Path, output_dir: Path):
     try:
         print('Extracting...')
         with tarfile.open(tar_path) as tar:
-            tar.extractall(output_dir)
+            def is_within_directory(directory, target):
+                
+                abs_directory = os.path.abspath(directory)
+                abs_target = os.path.abspath(target)
+            
+                prefix = os.path.commonprefix([abs_directory, abs_target])
+                
+                return prefix == abs_directory
+            
+            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+            
+                for member in tar.getmembers():
+                    member_path = os.path.join(path, member.name)
+                    if not is_within_directory(path, member_path):
+                        raise Exception("Attempted Path Traversal in Tar File")
+            
+                tar.extractall(path, members, numeric_owner=numeric_owner) 
+                
+            
+            safe_extract(tar, output_dir)
     except (tarfile.TarError, IOError, zlib.error) as e:
         print('Failed to extract!', e)
 
